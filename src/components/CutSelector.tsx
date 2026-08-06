@@ -3,7 +3,7 @@ import type { CutId } from '../types/timeline';
 const OPTIONS: Array<{ id: CutId; label: string }> = [
   { id: 'outreach45', label: 'The 45-second version' },
   { id: 'investor60', label: 'The 60-second version' },
-  { id: 'full', label: 'Full boardroom (7:37)' },
+  { id: 'full', label: 'Full boardroom (4:34)' },
 ];
 
 interface Props {

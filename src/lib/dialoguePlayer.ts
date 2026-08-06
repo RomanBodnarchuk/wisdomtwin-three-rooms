@@ -60,6 +60,8 @@ function publicAudioUrl(basename: string): string {
 export class DialoguePlayer {
   private audio: HTMLAudioElement | null = null;
   private currentKey: string | null = null;
+  /** Timeline startMs of the first window mapped to the current audio file. */
+  private fileStartMs = 0;
   private muted = false;
   private unlocked = false;
   private missing = new Set<string>();
@@ -118,8 +120,9 @@ export class DialoguePlayer {
     const basename = DIALOGUE_AUDIO_MAP[opts.eventId];
     // Key by audio file so split caption windows (e.g. CTO full/decline) don't restart VO
     const key = basename ?? `${opts.eventId}`;
-    // For multi-event same file, offset from the earliest known start of that file in this session
-    const offsetSec = Math.max(0, (opts.timeMs - opts.startMs) / 1000);
+    // For multi-window files, position is measured from the first window of the file
+    if (this.currentKey !== key) this.fileStartMs = opts.startMs;
+    const offsetSec = Math.max(0, (opts.timeMs - this.fileStartMs) / 1000);
 
     if (!basename || this.missing.has(basename)) {
       if (this.useSpeechFallback && speechSupported() && this.currentKey !== key) {
@@ -136,9 +139,8 @@ export class DialoguePlayer {
       if (this.audio.paused && opts.playing) {
         void this.audio.play().catch(() => undefined);
       }
-      // Drift correction only when seek jumped significantly
-      if (Math.abs(this.audio.currentTime - offsetSec) > 1.2 && offsetSec < 2) {
-        // Only hard-seek near the start of a line; mid-line caption splits should not seek
+      // Drift correction against the file-relative position (scrub or stall recovery)
+      if (Math.abs(this.audio.currentTime - offsetSec) > 1.5) {
         try {
           this.audio.currentTime = offsetSec;
         } catch {
