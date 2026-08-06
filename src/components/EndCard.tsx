@@ -63,15 +63,17 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
         {endCard.stage >= 5 && (
           <div className="mx-auto mt-4 max-w-md space-y-4">
             <a
-              href="mailto:roman@n5r.com?subject=Executive%20Briefing%20Request%20%E2%80%94%20WisdomTwin&body=Hi%20Roman%2C%0A%0AI%20just%20watched%20the%20WisdomTwin%20Executive%20Huddle%20demo.%20I%27d%20like%20to%20book%20a%2020-minute%20Executive%20Briefing.%0A%0AName%3A%0ACompany%3A%0ARole%3A%0A"
+              href="https://calendly.com/romanbodnarchuk/20min"
               target="_blank"
               rel="noreferrer"
               data-testid="end-cta"
               className="block w-full rounded-2xl bg-[var(--cream)] px-6 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
             >
-              Book a 20-Minute Executive Briefing
+              Book Your Executive Huddle Demo
             </a>
-            <p className="text-xs tracking-[0.16em] text-[var(--cream-dim)]">wisdomtwin.ai</p>
+            <p className="text-xs tracking-[0.08em] text-[var(--cream-dim)]">
+              wisdomtwin.ai · Text anytime with questions or to book: 416 220 5314
+            </p>
             <div className="flex flex-wrap justify-center gap-2 pt-2">
               <button
                 type="button"

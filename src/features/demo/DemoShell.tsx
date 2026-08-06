@@ -24,6 +24,9 @@ import { dialoguePlayer } from '../../lib/dialoguePlayer';
  */
 export function DemoShell() {
   const playback = useDemoPlayback('outreach45');
+  // Investor mode is for investors only — enable with ?investor in the URL
+  const investorParam =
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('investor');
   const {
     snapshot,
     phase,
@@ -183,7 +186,7 @@ export function DemoShell() {
         <div className="relative z-20 flex min-h-[100dvh] items-end justify-center px-3 pt-[26vh] pb-4 md:absolute md:inset-y-0 md:right-0 md:w-[40%] md:items-center md:px-5 md:pt-0">
           <div className="flex h-[min(760px,74dvh)] w-full max-w-[400px] flex-col items-center md:h-[min(860px,94dvh)]">
             <p className="mb-2 hidden text-[10px] tracking-[0.2em] text-[var(--cream-dim)] uppercase md:block">
-              iPhone 19 Max · Buzz live
+              Live Executive Huddle · iPhone
             </p>
             <div className="h-full w-full">
               <BuzzDevice
@@ -227,7 +230,7 @@ export function DemoShell() {
                   setCut(c);
                 }}
               />
-              <InvestorModeToggle on={investorMode} onChange={setInvestorMode} />
+              {investorParam && <InvestorModeToggle on={investorMode} onChange={setInvestorMode} />}
             </div>
           </div>
         )}
@@ -237,6 +240,7 @@ export function DemoShell() {
           <StartExperience
             cutId={cutId}
             investorMode={investorMode}
+            showInvestorToggle={investorParam}
             onCutChange={setCut}
             onInvestorModeChange={setInvestorMode}
             onStart={() => void handleStart()}
@@ -263,13 +267,13 @@ export function DemoShell() {
         {/* Persistent booking CTA — one ask, always visible while live */}
         {live && snapshot.scene !== 'end-card' && (
           <a
-            href="mailto:roman@n5r.com?subject=Executive%20Briefing%20Request%20%E2%80%94%20WisdomTwin&body=Hi%20Roman%2C%0A%0AI%20just%20watched%20the%20WisdomTwin%20Executive%20Huddle%20demo.%20I%27d%20like%20to%20book%20a%2020-minute%20Executive%20Briefing.%0A%0AName%3A%0ACompany%3A%0ARole%3A%0A"
+            href="https://calendly.com/romanbodnarchuk/20min"
             target="_blank"
             rel="noreferrer"
             data-testid="live-cta"
             className="absolute right-3 bottom-3 z-30 rounded-full bg-[var(--cream)] px-4 py-2 text-[11px] font-semibold tracking-[0.12em] text-[var(--ink)] uppercase shadow-lg transition hover:bg-white md:right-[calc(40%+1rem)]"
           >
-            Book Briefing
+            Book Demo
           </a>
         )}
       </div>

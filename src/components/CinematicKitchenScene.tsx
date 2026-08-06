@@ -100,7 +100,7 @@ export function CinematicKitchenScene({ snapshot, live = false }: Props) {
         {live && (
           <div className="kitchen-live-badge" data-testid="kitchen-live-badge">
             <span className="dot" aria-hidden />
-            Live · iPhone 19 Max · Buzz
+            Live · iPhone · WisdomTwin
           </div>
         )}
         <div className="rounded-xl border border-white/10 bg-black/45 px-3 py-2 backdrop-blur-md">

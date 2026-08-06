@@ -91,9 +91,24 @@ export function useDemoPlayback(initialCut: CutId = 'full'): DemoPlaybackApi {
     el.muted = muted;
   }, [muted, cutId]);
 
+  // Tab switching is the norm for emailed links — pause cleanly on hide, resume on return
+  const pausedByHideRef = useRef(false);
   useEffect(() => {
     const onVis = () => {
-      if (document.hidden) return;
+      if (document.hidden) {
+        if (phaseRef.current === 'playing') {
+          pausedByHideRef.current = true;
+          clockRef.current?.pause();
+          setPhase('paused');
+        }
+        return;
+      }
+      if (pausedByHideRef.current && phaseRef.current === 'paused') {
+        pausedByHideRef.current = false;
+        setPhase('playing');
+        clockRef.current?.play();
+        return;
+      }
       if (clockRef.current && phaseRef.current === 'playing') {
         setTimeMs(clockRef.current.now());
       }

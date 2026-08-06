@@ -5,7 +5,7 @@ const events: DemoEvent[] = [
   { id: 'sc-black', type: 'scene', startMs: 0, endMs: 600, scene: 'black', ceoPose: 'tired', lighting: 'cold' },
   { id: 'sc-kitchen', type: 'scene', startMs: 600, scene: 'kitchen-cold', ceoPose: 'tired', lighting: 'cold' },
   { id: 'music-none', type: 'music', startMs: 0, bed: 'none' },
-  { id: 'dlg-narr', type: 'dialogue', startMs: 800, endMs: 4500, speaker: 'narrator', text: 'Board meeting Thursday. Her officers take three weeks to convene. She has one button.' },
+  { id: 'dlg-narr', type: 'dialogue', startMs: 800, endMs: 4500, speaker: 'narrator', text: 'Board meeting Thursday. His officers take three weeks to convene. He has one button.' },
   { id: 'sfx-tap', type: 'sound', startMs: 4700, soundId: 'phone-tap' },
   { id: 'sfx-secure', type: 'sound', startMs: 4900, soundId: 'secure-room' },
   { id: 'sfx-joins', type: 'sound', startMs: 5100, soundId: 'join-tones' },

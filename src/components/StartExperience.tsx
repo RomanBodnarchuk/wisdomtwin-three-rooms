@@ -6,6 +6,7 @@ import type { CutId } from '../types/timeline';
 interface Props {
   cutId: CutId;
   investorMode: boolean;
+  showInvestorToggle?: boolean;
   onCutChange: (cut: CutId) => void;
   onInvestorModeChange: (on: boolean) => void;
   onStart: () => void;
@@ -20,6 +21,7 @@ const OUTCOME_LINES = [
 export function StartExperience({
   cutId,
   investorMode,
+  showInvestorToggle = false,
   onCutChange,
   onInvestorModeChange,
   onStart,
@@ -75,7 +77,9 @@ export function StartExperience({
         <div className="mt-5 space-y-3 border-t border-white/5 pt-4">
           <p className="text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">Cut length</p>
           <CutSelector value={cutId} onChange={onCutChange} />
-          <InvestorModeToggle on={investorMode} onChange={onInvestorModeChange} />
+          {showInvestorToggle && (
+            <InvestorModeToggle on={investorMode} onChange={onInvestorModeChange} />
+          )}
         </div>
 
         {/* Compliance footer — small, last, out of the way of the story */}

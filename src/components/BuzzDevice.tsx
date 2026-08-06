@@ -37,7 +37,7 @@ interface Props {
 }
 
 /**
- * Live Buzz iPhone app inside a photoreal iPhone 19 Pro Max frame.
+ * Live Buzz iPhone app inside a photoreal iPhone Pro Max frame.
  * Status bar / Dynamic Island come from IPhoneFrame — not duplicated here.
  */
 export function BuzzDevice({
