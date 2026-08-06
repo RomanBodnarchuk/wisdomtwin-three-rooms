@@ -1,9 +1,8 @@
 import type { CutId } from '../types/timeline';
 
 const OPTIONS: Array<{ id: CutId; label: string }> = [
-  { id: 'outreach45', label: 'The 45-second version' },
+  { id: 'full', label: 'Original boardroom film (8:07)' },
   { id: 'investor60', label: 'The 60-second version' },
-  { id: 'full', label: 'Full boardroom (8:07)' },
 ];
 
 interface Props {

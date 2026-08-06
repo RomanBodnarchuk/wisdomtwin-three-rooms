@@ -23,7 +23,7 @@ import { dialoguePlayer } from '../../lib/dialoguePlayer';
  * Dialogue: ElevenLabs executive VO (Web Speech only if an asset is missing).
  */
 export function DemoShell() {
-  const playback = useDemoPlayback('outreach45');
+  const playback = useDemoPlayback('full');
   // Investor mode is for investors only — enable with ?investor in the URL
   const investorParam =
     typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('investor');
