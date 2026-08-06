@@ -29,18 +29,23 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   Source rebuilt from sourcemaps (Vite + React + TS + Tailwind v4); workflow builds dist on push.
 - [x] v2.1 (2026-08-06) — Calendly CTA + phone line, Her/She→His/He fix, outcome cut labels,
   "iPhone 19 Max"→"iPhone", investor mode behind ?investor, tab-switch pause/resume.
-- [x] v2.2 (2026-08-06) — Full-film recut 7:37→4:34: rapid-fire cold open (was 1:38), safe decline
-  at 0:29–0:45 (was 3:03), narrator explains after proof, Legal trimmed to gate one, honest label.
+- [x] v2.2 (2026-08-06) — Full-film recut 7:37→4:34: rapid-fire cold open, safe decline at 0:45.
   Also fixed dialoguePlayer multi-window drift bug (analysis replayed over decline caption).
-- [x] v2.3 (2026-08-06) — hero_B_2 wired as the cinematic hero image (272KB optimized JPEG);
-  three unused kitchen stills removed. NOTE: scene image path is now
-  images/scene/ceo-kitchen-hero.jpg.
+- [x] v2.3 (2026-08-06) — hero_B_2 wired as the cinematic hero image (272KB optimized JPEG).
+  NOTE: scene image path is images/scene/ceo-kitchen-hero.jpg.
+- [x] v2.4 (2026-08-06) — **ROMAN DECISION: the ORIGINAL full boardroom film is canonical.**
+  v2.2's aggressive recut was reverted; all 118 original events restored (narrator cold open,
+  all speakers, full Legal block, CRO/CMO beats). Fixed the endcard overlap bug in the original
+  (endcards fired at 5:36, covering the finale — now start at 7:34). durationMs 487000,
+  label 'Full boardroom (8:07)'. The 45s cut stays the default for cold traffic.
+  DO NOT recut/reorder the full film's story again; improve it in place (pacing, visuals,
+  audio polish) per the backlog.
 
 ## Backlog (in priority order — one per day)
 
-1. [ ] ~~Full film honest recut to ~3:30~~ → DONE in v2.2 as 4:34. Optional further tightening:
-   drop cmo-01 category line (−11.5s) and buzz-blockers (−7.2s) to reach ~4:10, or slice
-   legal-03/cfo-03 windows to reach sub-4:00. Renumber remaining items when picking.
+1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
+   film is canonical. Improve it in place instead. The remaining items below all apply to the
+   ORIGINAL film (same event ids in fullTimeline.ts).
 2. [ ] **Delete the five spoken twin introductions** ("Your CRO's twin." etc.) — roles already
    on screen. Buys back ~8s. Caption/text change only if audio lines are separate files;
    if intros are baked into the role audio files, skip audio and trim where clean.
