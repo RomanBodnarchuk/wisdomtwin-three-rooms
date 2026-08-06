@@ -1,0 +1,291 @@
+{
+  "generatedAt": "2026-08-06T15:23:54.618Z",
+  "model": "eleven_multilingual_v2",
+  "format": "mp3_44100_192",
+  "provider": "elevenlabs",
+  "voices": {
+    "narrator": {
+      "id": "49vhYxEUh38kSeEtxRj8",
+      "name": "Narrator — Documentary Deep Close-Mic",
+      "stability": 0.55,
+      "similarity": 0.82,
+      "style": 0.05,
+      "speed": 0.96
+    },
+    "ceo": {
+      "id": "lJRgoWnKmFEzLYZGwmtN",
+      "name": "Daniel Mercer — CEO (Three Rooms)",
+      "stability": 0.42,
+      "similarity": 0.85,
+      "style": 0.18,
+      "speed": 0.98
+    },
+    "cfo": {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel — Steady Broadcaster",
+      "stability": 0.58,
+      "similarity": 0.8,
+      "style": 0.08,
+      "speed": 1
+    },
+    "cto": {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian — Deep Resonant",
+      "stability": 0.52,
+      "similarity": 0.82,
+      "style": 0.1,
+      "speed": 0.99
+    },
+    "cro": {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric — Smooth Trustworthy",
+      "stability": 0.48,
+      "similarity": 0.8,
+      "style": 0.14,
+      "speed": 1.02
+    },
+    "cmo": {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice — Clear Engaging Educator",
+      "stability": 0.46,
+      "similarity": 0.8,
+      "style": 0.16,
+      "speed": 1.03
+    },
+    "legal": {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill — Wise Mature Balanced",
+      "stability": 0.6,
+      "similarity": 0.84,
+      "style": 0.06,
+      "speed": 0.97
+    },
+    "buzz": {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River — Relaxed Neutral Informative",
+      "stability": 0.72,
+      "similarity": 0.78,
+      "style": 0,
+      "speed": 0.95
+    }
+  },
+  "lines": [
+    {
+      "id": "narrator-cold-open",
+      "speaker": "narrator",
+      "path": "dialogue/narrator-cold-open.mp3",
+      "durationSec": 20.201,
+      "chars": 231
+    },
+    {
+      "id": "buzz-activation",
+      "speaker": "buzz",
+      "path": "dialogue/buzz-activation.mp3",
+      "durationSec": 11.331,
+      "chars": 141
+    },
+    {
+      "id": "ceo-01",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-01.mp3",
+      "durationSec": 28.096,
+      "chars": 371
+    },
+    {
+      "id": "cro-01",
+      "speaker": "cro",
+      "path": "dialogue/cro-01.mp3",
+      "durationSec": 20.201,
+      "chars": 286
+    },
+    {
+      "id": "cmo-01",
+      "speaker": "cmo",
+      "path": "dialogue/cmo-01.mp3",
+      "durationSec": 11.471,
+      "chars": 156
+    },
+    {
+      "id": "ceo-02",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-02.mp3",
+      "durationSec": 1.95,
+      "chars": 20
+    },
+    {
+      "id": "ceo-03",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-03.mp3",
+      "durationSec": 1.115,
+      "chars": 13
+    },
+    {
+      "id": "legal-01",
+      "speaker": "legal",
+      "path": "dialogue/legal-01.mp3",
+      "durationSec": 1.254,
+      "chars": 13
+    },
+    {
+      "id": "cfo-01",
+      "speaker": "cfo",
+      "path": "dialogue/cfo-01.mp3",
+      "durationSec": 0.882,
+      "chars": 7
+    },
+    {
+      "id": "cto-01",
+      "speaker": "cto",
+      "path": "dialogue/cto-01.mp3",
+      "durationSec": 0.882,
+      "chars": 6
+    },
+    {
+      "id": "ceo-04",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-04.mp3",
+      "durationSec": 0.975,
+      "chars": 12
+    },
+    {
+      "id": "legal-02",
+      "speaker": "legal",
+      "path": "dialogue/legal-02.mp3",
+      "durationSec": 38.127,
+      "chars": 462
+    },
+    {
+      "id": "cfo-02",
+      "speaker": "cfo",
+      "path": "dialogue/cfo-02.mp3",
+      "durationSec": 18.715,
+      "chars": 240
+    },
+    {
+      "id": "cto-02",
+      "speaker": "cto",
+      "path": "dialogue/cto-02.mp3",
+      "durationSec": 34.691,
+      "chars": 555
+    },
+    {
+      "id": "ceo-05",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-05.mp3",
+      "durationSec": 1.393,
+      "chars": 22
+    },
+    {
+      "id": "cto-03",
+      "speaker": "cto",
+      "path": "dialogue/cto-03.mp3",
+      "durationSec": 4.458,
+      "chars": 72
+    },
+    {
+      "id": "buzz-blockers",
+      "speaker": "buzz",
+      "path": "dialogue/buzz-blockers.mp3",
+      "durationSec": 7.152,
+      "chars": 111
+    },
+    {
+      "id": "ceo-06",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-06.mp3",
+      "durationSec": 1.347,
+      "chars": 15
+    },
+    {
+      "id": "legal-03",
+      "speaker": "legal",
+      "path": "dialogue/legal-03.mp3",
+      "durationSec": 15.975,
+      "chars": 210
+    },
+    {
+      "id": "cfo-03",
+      "speaker": "cfo",
+      "path": "dialogue/cfo-03.mp3",
+      "durationSec": 16.161,
+      "chars": 215
+    },
+    {
+      "id": "cto-04",
+      "speaker": "cto",
+      "path": "dialogue/cto-04.mp3",
+      "durationSec": 12.028,
+      "chars": 192
+    },
+    {
+      "id": "cro-02",
+      "speaker": "cro",
+      "path": "dialogue/cro-02.mp3",
+      "durationSec": 6.827,
+      "chars": 112
+    },
+    {
+      "id": "cmo-02",
+      "speaker": "cmo",
+      "path": "dialogue/cmo-02.mp3",
+      "durationSec": 3.947,
+      "chars": 61
+    },
+    {
+      "id": "ceo-07",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-07.mp3",
+      "durationSec": 1.207,
+      "chars": 15
+    },
+    {
+      "id": "buzz-pattern",
+      "speaker": "buzz",
+      "path": "dialogue/buzz-pattern.mp3",
+      "durationSec": 10.17,
+      "chars": 156
+    },
+    {
+      "id": "ceo-08",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-08.mp3",
+      "durationSec": 0.975,
+      "chars": 10
+    },
+    {
+      "id": "buzz-sequence",
+      "speaker": "buzz",
+      "path": "dialogue/buzz-sequence.mp3",
+      "durationSec": 17.276,
+      "chars": 259
+    },
+    {
+      "id": "ceo-09",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-09.mp3",
+      "durationSec": 1.625,
+      "chars": 25
+    },
+    {
+      "id": "buzz-output",
+      "speaker": "buzz",
+      "path": "dialogue/buzz-output.mp3",
+      "durationSec": 18.901,
+      "chars": 272
+    },
+    {
+      "id": "ceo-10",
+      "speaker": "ceo",
+      "path": "dialogue/ceo-10.mp3",
+      "durationSec": 2.879,
+      "chars": 42
+    },
+    {
+      "id": "buzz-close",
+      "speaker": "buzz",
+      "path": "dialogue/buzz-close.mp3",
+      "durationSec": 8.034,
+      "chars": 119
+    }
+  ]
+}
