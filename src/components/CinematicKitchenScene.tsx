@@ -10,15 +10,15 @@ interface Props {
 }
 
 const SCENE_IMG = {
-  /** Photoreal CEO on iPhone Pro Max mid-call (kitchen night) */
-  idle: `${import.meta.env.BASE_URL}images/scene/ceo-kitchen-call.jpg`,
-  /** Same identity, mouth open / speaking energy */
-  speaking: `${import.meta.env.BASE_URL}images/scene/ceo-kitchen-speaking.jpg`,
+  /** hero_B_2: screen-to-camera, Buzz roster on glass, night kitchen */
+  idle: `${import.meta.env.BASE_URL}images/scene/ceo-kitchen-hero.jpg`,
+  /** Same still while CEO VO is active (do not flip to phone-away frames) */
+  speaking: `${import.meta.env.BASE_URL}images/scene/ceo-kitchen-hero.jpg`,
 };
 
 /**
- * Photoreal Sunday-night kitchen: CEO Daniel Mercer on a live Buzz call
- * with his iPhone Pro Max. Interactive Buzz lives in the hero iPhone frame.
+ * Photoreal Sunday-night kitchen: CEO Daniel Mercer holds the phone screen to camera.
+ * Interactive Buzz also lives in the hero iPhone frame on the right.
  */
 export function CinematicKitchenScene({ snapshot, live = false }: Props) {
   const reduced = useReducedMotion();
