@@ -29,13 +29,18 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   Source rebuilt from sourcemaps (Vite + React + TS + Tailwind v4); workflow builds dist on push.
 - [x] v2.1 (2026-08-06) — Calendly CTA + phone line, Her/She→His/He fix, outcome cut labels,
   "iPhone 19 Max"→"iPhone", investor mode behind ?investor, tab-switch pause/resume.
+- [x] v2.2 (2026-08-06) — Full-film recut 7:37→4:34: rapid-fire cold open (was 1:38), safe decline
+  at 0:29–0:45 (was 3:03), narrator explains after proof, Legal trimmed to gate one, honest label.
+  Also fixed dialoguePlayer multi-window drift bug (analysis replayed over decline caption).
+- [x] v2.3 (2026-08-06) — hero_B_2 wired as the cinematic hero image (272KB optimized JPEG);
+  three unused kitchen stills removed. NOTE: scene image path is now
+  images/scene/ceo-kitchen-hero.jpg.
 
 ## Backlog (in priority order — one per day)
 
-1. [ ] **Full film honest recut to ~3:30.** durationMs 456958 (7:37) is mislabeled by structure,
-   not just text. Cold open on the rapid-fire exchange ("Biggest hole?" "Public cloud." "Budget."
-   "Scale." "Legal first." — currently at 1:38), safe decline at 0:45, then narrator explains.
-   Proof first, explanation second. Reuse existing audio files; retime events in fullTimeline.ts.
+1. [ ] ~~Full film honest recut to ~3:30~~ → DONE in v2.2 as 4:34. Optional further tightening:
+   drop cmo-01 category line (−11.5s) and buzz-blockers (−7.2s) to reach ~4:10, or slice
+   legal-03/cfo-03 windows to reach sub-4:00. Renumber remaining items when picking.
 2. [ ] **Delete the five spoken twin introductions** ("Your CRO's twin." etc.) — roles already
    on screen. Buys back ~8s. Caption/text change only if audio lines are separate files;
    if intros are baked into the role audio files, skip audio and trim where clean.
