@@ -1,0 +1,104 @@
+{
+  "full": {
+    "segments": [
+      {
+        "startMs": 0,
+        "endMs": 209999
+      }
+    ],
+    "gapMs": 0,
+    "approxMs": 209999
+  },
+  "investor60": {
+    "segments": [
+      {
+        "startMs": 850,
+        "endMs": 8550
+      },
+      {
+        "startMs": 17318,
+        "endMs": 32431
+      },
+      {
+        "startMs": 50129,
+        "endMs": 51328
+      },
+      {
+        "startMs": 51378,
+        "endMs": 52554
+      },
+      {
+        "startMs": 51728,
+        "endMs": 52565
+      },
+      {
+        "startMs": 52078,
+        "endMs": 52740
+      },
+      {
+        "startMs": 91857,
+        "endMs": 101107
+      },
+      {
+        "startMs": 114149,
+        "endMs": 116423
+      },
+      {
+        "startMs": 160764,
+        "endMs": 170270
+      },
+      {
+        "startMs": 170870,
+        "endMs": 174195
+      },
+      {
+        "startMs": 187056,
+        "endMs": 188919
+      },
+      {
+        "startMs": 191037,
+        "endMs": 199749
+      },
+      {
+        "startMs": 200599,
+        "endMs": 209599
+      }
+    ],
+    "gapMs": 300,
+    "approxMs": 74217
+  },
+  "outreach45": {
+    "segments": [
+      {
+        "startMs": 850,
+        "endMs": 8550
+      },
+      {
+        "startMs": 91857,
+        "endMs": 101107
+      },
+      {
+        "startMs": 160764,
+        "endMs": 170270
+      },
+      {
+        "startMs": 170870,
+        "endMs": 174195
+      },
+      {
+        "startMs": 187056,
+        "endMs": 188919
+      },
+      {
+        "startMs": 191037,
+        "endMs": 199749
+      },
+      {
+        "startMs": 200599,
+        "endMs": 207599
+      }
+    ],
+    "gapMs": 300,
+    "approxMs": 49156
+  }
+}

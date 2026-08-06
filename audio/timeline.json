@@ -1,0 +1,3505 @@
+{
+ "title": "THREE ROOMS \u2014 The Midnight Board Crisis",
+ "durationMs": 209999,
+ "labels": {
+  "DANIEL": "DANIEL \u00b7 CEO",
+  "CRO": "DEBORAH \u00b7 CRO TWIN",
+  "CMO": "JENNIFER \u00b7 CMO TWIN",
+  "LEGAL": "SARAH \u00b7 LEGAL TWIN",
+  "CFO": "MARCUS \u00b7 CFO TWIN",
+  "CTO": "BILL \u00b7 CTO TWIN",
+  "BUZZ": "BUZZ"
+ },
+ "events": [
+  {
+   "type": "dialogue",
+   "id": "dan_0",
+   "speaker": "DANIEL",
+   "scene": "hook",
+   "startMs": 1000,
+   "endMs": 8400,
+   "text": "This board decision took eight minutes and forty-two seconds. It used to take nineteen days. Watch how."
+  },
+  {
+   "type": "dialogue",
+   "id": "cto_2_hook",
+   "speaker": "CTO",
+   "scene": "hook",
+   "startMs": 9000,
+   "endMs": 10200,
+   "text": "I am declining to answer."
+  },
+  {
+   "type": "silence",
+   "reason": "decline",
+   "startMs": 10250,
+   "endMs": 11200
+  },
+  {
+   "type": "sfx",
+   "name": "rewind",
+   "startMs": 11900
+  },
+  {
+   "type": "sfx",
+   "name": "unlock",
+   "startMs": 12400
+  },
+  {
+   "type": "dialogue",
+   "id": "buzz_1",
+   "speaker": "BUZZ",
+   "scene": "one_button",
+   "startMs": 13000,
+   "endMs": 16318,
+   "text": "WisdomTwin huddle live. Five role twins present."
+  },
+  {
+   "type": "room_mode",
+   "mode": "DREAM",
+   "startMs": 16718
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_2",
+   "speaker": "DANIEL",
+   "scene": "dream",
+   "startMs": 17468,
+   "endMs": 32281,
+   "text": "Board packet locks in eight hours. The board thinks we're late on AI \u2014 some think I'm the reason. So nobody protects me tonight. The bet: cut prior-auth approval from fourteen days to one, and sell that speed to every payer. Why does it work?"
+  },
+  {
+   "type": "dialogue",
+   "id": "cro_1",
+   "speaker": "CRO",
+   "scene": "dream",
+   "startMs": 32831,
+   "endMs": 46300,
+   "text": "Five years of renewal calls and loss reviews say one thing: our largest customers want faster decisions they can defend \u2014 not more automation. Eight of our top ten accounts ranked speed first. Three-year potential: nine figures."
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_3",
+   "speaker": "DANIEL",
+   "scene": "dream",
+   "startMs": 46850,
+   "endMs": 49129,
+   "text": "Good. Now destroy it."
+  },
+  {
+   "type": "room_mode",
+   "mode": "STRESS-TEST",
+   "startMs": 49529
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_4",
+   "speaker": "DANIEL",
+   "scene": "stress",
+   "startMs": 50279,
+   "endMs": 51178,
+   "text": "What kills this?"
+  },
+  {
+   "type": "dialogue",
+   "id": "legal_0",
+   "speaker": "LEGAL",
+   "scene": "stress",
+   "startMs": 51528,
+   "endMs": 52404,
+   "text": "Public cloud."
+  },
+  {
+   "type": "dialogue",
+   "id": "cfo_0",
+   "speaker": "CFO",
+   "scene": "stress",
+   "startMs": 51878,
+   "endMs": 52415,
+   "text": "Capital."
+  },
+  {
+   "type": "dialogue",
+   "id": "cto_0",
+   "speaker": "CTO",
+   "scene": "stress",
+   "startMs": 52228,
+   "endMs": 52590,
+   "text": "Scale."
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_5",
+   "speaker": "DANIEL",
+   "scene": "stress",
+   "startMs": 53090,
+   "endMs": 53744,
+   "text": "Legal."
+  },
+  {
+   "type": "dialogue",
+   "id": "legal_1",
+   "speaker": "LEGAL",
+   "scene": "attack",
+   "startMs": 54244,
+   "endMs": 68719,
+   "text": "Three gates. Patient data cannot touch a public model. Material revenue initiatives trigger disclosure obligations. Four states require named-human approval on every denial. Pure automation fails review."
+  },
+  {
+   "type": "sfx",
+   "name": "focus_cfo",
+   "startMs": 69019
+  },
+  {
+   "type": "dialogue",
+   "id": "cfo_1",
+   "speaker": "CFO",
+   "scene": "attack",
+   "startMs": 69369,
+   "endMs": 81635,
+   "text": "New-program spend is capped at eleven million. Seven-to-two, in March. Both dissenting arguments preserved. Above the cap needs approval Thursday. Not next quarter. Thursday."
+  },
+  {
+   "type": "sfx",
+   "name": "focus_cto",
+   "startMs": 81935
+  },
+  {
+   "type": "dialogue",
+   "id": "cto_1",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 82285,
+   "endMs": 90907,
+   "text": "I reviewed twelve thousand four hundred decisions. Ninety-one percent follow six policy gates. The nine percent are where clinical judgment changed the outcome."
+  },
+  {
+   "type": "dialogue",
+   "id": "cto_2",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 92007,
+   "endMs": 100957,
+   "text": "One unresolved risk. No precedent for peak-load throughput at this volume. Confidence is below governance threshold. I am declining to answer."
+  },
+  {
+   "type": "silence",
+   "reason": "decline",
+   "startMs": 101007,
+   "endMs": 102257
+  },
+  {
+   "type": "dialogue",
+   "id": "cto_3",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 102257,
+   "endMs": 107981,
+   "text": "Human escalation created. VP of Clinical Operations. Estimated review: thirty-eight minutes."
+  },
+  {
+   "type": "silence",
+   "reason": "escalation",
+   "startMs": 108031,
+   "endMs": 108881
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_8",
+   "speaker": "DANIEL",
+   "scene": "attack",
+   "startMs": 108881,
+   "endMs": 110178,
+   "text": "That can stop the launch."
+  },
+  {
+   "type": "dialogue",
+   "id": "cto_4",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 110578,
+   "endMs": 112949,
+   "text": "It can stop this architecture. Not the strategy."
+  },
+  {
+   "type": "sfx",
+   "name": "register",
+   "startMs": 113399
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_9",
+   "speaker": "DANIEL",
+   "scene": "attack",
+   "startMs": 114299,
+   "endMs": 116273,
+   "text": "Build something I can defend under oath."
+  },
+  {
+   "type": "room_mode",
+   "mode": "BUILD",
+   "startMs": 116623
+  },
+  {
+   "type": "dialogue",
+   "id": "legal_2",
+   "speaker": "LEGAL",
+   "scene": "build",
+   "startMs": 117373,
+   "endMs": 126719,
+   "text": "Private deployment removes the cloud gate. Patient data never leaves the enterprise. Route the nine percent to named clinicians \u2014 the compliant product."
+  },
+  {
+   "type": "dialogue",
+   "id": "cfo_2",
+   "speaker": "CFO",
+   "scene": "build",
+   "startMs": 127169,
+   "endMs": 134020,
+   "text": "Phase one: seven-point-four million. Below the cap. Thursday becomes a governed plan with precedent attached."
+  },
+  {
+   "type": "dialogue",
+   "id": "cto_5",
+   "speaker": "CTO",
+   "scene": "build",
+   "startMs": 134470,
+   "endMs": 143570,
+   "text": "Start with low-complexity authorizations. Inference and policy stay in-enterprise. Escalate below-threshold cases. Measure ninety days. Then expand."
+  },
+  {
+   "type": "dialogue",
+   "id": "cro_2",
+   "speaker": "CRO",
+   "scene": "build",
+   "startMs": 143970,
+   "endMs": 148176,
+   "text": "Don't sell automation. Sell faster, defensible decisions."
+  },
+  {
+   "type": "dialogue",
+   "id": "cmo_2",
+   "speaker": "CMO",
+   "scene": "build",
+   "startMs": 148576,
+   "endMs": 151006,
+   "text": "Don't lead with revenue. Lead with risk."
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_10",
+   "speaker": "DANIEL",
+   "scene": "build",
+   "startMs": 151506,
+   "endMs": 151985,
+   "text": "Why?"
+  },
+  {
+   "type": "sfx",
+   "name": "detect",
+   "startMs": 152385
+  },
+  {
+   "type": "dialogue",
+   "id": "buzz_3",
+   "speaker": "BUZZ",
+   "scene": "build",
+   "startMs": 152935,
+   "endMs": 159395,
+   "text": "Six years of board minutes: directors rejected every comparable initiative above eleven million... except one."
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_11",
+   "speaker": "DANIEL",
+   "scene": "build",
+   "startMs": 159795,
+   "endMs": 160414,
+   "text": "Which one?"
+  },
+  {
+   "type": "dialogue",
+   "id": "buzz_4",
+   "speaker": "BUZZ",
+   "scene": "build",
+   "startMs": 160914,
+   "endMs": 170120,
+   "text": "Cybersecurity. Regulatory exposure was quantified before financial upside. Sequence: risk, governance, human control, revenue."
+  },
+  {
+   "type": "silence",
+   "reason": "settle",
+   "startMs": 170170,
+   "endMs": 171020
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_12",
+   "speaker": "DANIEL",
+   "scene": "build",
+   "startMs": 171020,
+   "endMs": 174045,
+   "text": "There it is. That's the presentation."
+  },
+  {
+   "type": "sfx",
+   "name": "package",
+   "startMs": 174445
+  },
+  {
+   "type": "dialogue",
+   "id": "buzz_5",
+   "speaker": "BUZZ",
+   "scene": "package",
+   "startMs": 174745,
+   "endMs": 182817,
+   "text": "WisdomTwin board package complete. Dissent preserved. Three objections anticipated. Consensus: ninety-four percent."
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_13",
+   "speaker": "DANIEL",
+   "scene": "package",
+   "startMs": 183117,
+   "endMs": 186306,
+   "text": "Keep the Clinical escalation open until the human answer lands."
+  },
+  {
+   "type": "sfx",
+   "name": "confirmed",
+   "startMs": 186656
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_14",
+   "speaker": "DANIEL",
+   "scene": "package",
+   "startMs": 187206,
+   "endMs": 188769,
+   "text": "Now I can walk into that room."
+  },
+  {
+   "type": "sfx",
+   "name": "endhuddle",
+   "startMs": 189269
+  },
+  {
+   "type": "dialogue",
+   "id": "buzz_7",
+   "speaker": "BUZZ",
+   "scene": "close",
+   "startMs": 189569,
+   "endMs": 190387,
+   "text": "Huddle ended."
+  },
+  {
+   "type": "sfx",
+   "name": "completion",
+   "startMs": 190787
+  },
+  {
+   "type": "dialogue",
+   "id": "dan_15",
+   "speaker": "DANIEL",
+   "scene": "cta",
+   "startMs": 191187,
+   "endMs": 199599,
+   "text": "That's WisdomTwin. Book a twenty-minute deployment review at wisdomtwin dot ai. We will replay your board's last decision."
+  },
+  {
+   "type": "reveal",
+   "startMs": 200599,
+   "endMs": 209599
+  }
+ ],
+ "words": [
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "This",
+   "startMs": 1000,
+   "endMs": 1250
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "board",
+   "startMs": 1262,
+   "endMs": 1488
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "decision",
+   "startMs": 1500,
+   "endMs": 1950
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "took",
+   "startMs": 1975,
+   "endMs": 2162
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "eight",
+   "startMs": 2188,
+   "endMs": 2375
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "minutes",
+   "startMs": 2388,
+   "endMs": 2750
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "and",
+   "startMs": 2762,
+   "endMs": 2888
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "forty-two",
+   "startMs": 2912,
+   "endMs": 3425
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "seconds",
+   "startMs": 3450,
+   "endMs": 4012
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "It",
+   "startMs": 4888,
+   "endMs": 5075
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "used",
+   "startMs": 5100,
+   "endMs": 5325
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "to",
+   "startMs": 5350,
+   "endMs": 5413
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "take",
+   "startMs": 5438,
+   "endMs": 5688
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "nineteen",
+   "startMs": 5700,
+   "endMs": 6163
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "days",
+   "startMs": 6175,
+   "endMs": 6650
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "Watch",
+   "startMs": 7525,
+   "endMs": 7925
+  },
+  {
+   "line": "dan_0",
+   "speaker": "DANIEL",
+   "text": "how",
+   "startMs": 7950,
+   "endMs": 8400
+  },
+  {
+   "line": "cto_2_hook",
+   "speaker": "CTO",
+   "text": "I",
+   "startMs": 9000,
+   "endMs": 9088
+  },
+  {
+   "line": "cto_2_hook",
+   "speaker": "CTO",
+   "text": "am",
+   "startMs": 9100,
+   "endMs": 9188
+  },
+  {
+   "line": "cto_2_hook",
+   "speaker": "CTO",
+   "text": "declining",
+   "startMs": 9200,
+   "endMs": 9625
+  },
+  {
+   "line": "cto_2_hook",
+   "speaker": "CTO",
+   "text": "to",
+   "startMs": 9638,
+   "endMs": 9738
+  },
+  {
+   "line": "cto_2_hook",
+   "speaker": "CTO",
+   "text": "answer",
+   "startMs": 9750,
+   "endMs": 10200
+  },
+  {
+   "line": "buzz_1",
+   "speaker": "BUZZ",
+   "text": "WisdomTwin",
+   "startMs": 13000,
+   "endMs": 13689
+  },
+  {
+   "line": "buzz_1",
+   "speaker": "BUZZ",
+   "text": "huddle",
+   "startMs": 13701,
+   "endMs": 13993
+  },
+  {
+   "line": "buzz_1",
+   "speaker": "BUZZ",
+   "text": "live",
+   "startMs": 14005,
+   "endMs": 14449
+  },
+  {
+   "line": "buzz_1",
+   "speaker": "BUZZ",
+   "text": "Five",
+   "startMs": 14787,
+   "endMs": 15185
+  },
+  {
+   "line": "buzz_1",
+   "speaker": "BUZZ",
+   "text": "role",
+   "startMs": 15196,
+   "endMs": 15407
+  },
+  {
+   "line": "buzz_1",
+   "speaker": "BUZZ",
+   "text": "twins",
+   "startMs": 15418,
+   "endMs": 15745
+  },
+  {
+   "line": "buzz_1",
+   "speaker": "BUZZ",
+   "text": "present",
+   "startMs": 15757,
+   "endMs": 16318
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "Board",
+   "startMs": 17468,
+   "endMs": 17748
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "packet",
+   "startMs": 17771,
+   "endMs": 18099
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "locks",
+   "startMs": 18122,
+   "endMs": 18426
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "in",
+   "startMs": 18449,
+   "endMs": 18578
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "eight",
+   "startMs": 18601,
+   "endMs": 18764
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "hours",
+   "startMs": 18788,
+   "endMs": 19220
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "The",
+   "startMs": 20038,
+   "endMs": 20155
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "board",
+   "startMs": 20178,
+   "endMs": 20400
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "thinks",
+   "startMs": 20423,
+   "endMs": 20657
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "we're",
+   "startMs": 20669,
+   "endMs": 20797
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "late",
+   "startMs": 20821,
+   "endMs": 21007
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "on",
+   "startMs": 21031,
+   "endMs": 21159
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "AI",
+   "startMs": 21183,
+   "endMs": 21475
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "some",
+   "startMs": 21592,
+   "endMs": 21767
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "think",
+   "startMs": 21790,
+   "endMs": 22000
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "I'm",
+   "startMs": 22012,
+   "endMs": 22106
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "the",
+   "startMs": 22129,
+   "endMs": 22211
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "reason",
+   "startMs": 22222,
+   "endMs": 22620
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "So",
+   "startMs": 23437,
+   "endMs": 23648
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "nobody",
+   "startMs": 23671,
+   "endMs": 24127
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "protects",
+   "startMs": 24150,
+   "endMs": 24617
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "me",
+   "startMs": 24629,
+   "endMs": 24746
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "tonight",
+   "startMs": 24769,
+   "endMs": 25225
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "The",
+   "startMs": 26031,
+   "endMs": 26159
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "bet",
+   "startMs": 26183,
+   "endMs": 26428
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "cut",
+   "startMs": 26592,
+   "endMs": 26779
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "prior-auth",
+   "startMs": 26790,
+   "endMs": 27222
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "approval",
+   "startMs": 27246,
+   "endMs": 27631
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "from",
+   "startMs": 27655,
+   "endMs": 27818
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "fourteen",
+   "startMs": 27842,
+   "endMs": 28262
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "days",
+   "startMs": 28286,
+   "endMs": 28484
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "to",
+   "startMs": 28507,
+   "endMs": 28601
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "one",
+   "startMs": 28624,
+   "endMs": 28881
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "and",
+   "startMs": 29103,
+   "endMs": 29197
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "sell",
+   "startMs": 29220,
+   "endMs": 29419
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "that",
+   "startMs": 29430,
+   "endMs": 29559
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "speed",
+   "startMs": 29571,
+   "endMs": 29804
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "to",
+   "startMs": 29816,
+   "endMs": 29898
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "every",
+   "startMs": 29921,
+   "endMs": 30131
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "payer",
+   "startMs": 30155,
+   "endMs": 30552
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "Why",
+   "startMs": 31381,
+   "endMs": 31580
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "does",
+   "startMs": 31592,
+   "endMs": 31755
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "it",
+   "startMs": 31779,
+   "endMs": 31884
+  },
+  {
+   "line": "dan_2",
+   "speaker": "DANIEL",
+   "text": "work",
+   "startMs": 31907,
+   "endMs": 32281
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "Five",
+   "startMs": 32831,
+   "endMs": 33123
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "years",
+   "startMs": 33135,
+   "endMs": 33368
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "of",
+   "startMs": 33380,
+   "endMs": 33450
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "renewal",
+   "startMs": 33462,
+   "endMs": 33812
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "calls",
+   "startMs": 33824,
+   "endMs": 34163
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "and",
+   "startMs": 34174,
+   "endMs": 34303
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "loss",
+   "startMs": 34314,
+   "endMs": 34595
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "reviews",
+   "startMs": 34607,
+   "endMs": 34957
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "say",
+   "startMs": 34969,
+   "endMs": 35132
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "one",
+   "startMs": 35144,
+   "endMs": 35401
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "thing",
+   "startMs": 35413,
+   "endMs": 35775
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "our",
+   "startMs": 36043,
+   "endMs": 36172
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "largest",
+   "startMs": 36184,
+   "endMs": 36616
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "customers",
+   "startMs": 36628,
+   "endMs": 37142
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "want",
+   "startMs": 37153,
+   "endMs": 37340
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "faster",
+   "startMs": 37352,
+   "endMs": 37726
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "decisions",
+   "startMs": 37737,
+   "endMs": 38275
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "they",
+   "startMs": 38286,
+   "endMs": 38380
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "can",
+   "startMs": 38392,
+   "endMs": 38543
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "defend",
+   "startMs": 38555,
+   "endMs": 39046
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "not",
+   "startMs": 39233,
+   "endMs": 39455
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "more",
+   "startMs": 39466,
+   "endMs": 39630
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "automation",
+   "startMs": 39642,
+   "endMs": 40331
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "Eight",
+   "startMs": 41137,
+   "endMs": 41300
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "of",
+   "startMs": 41312,
+   "endMs": 41382
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "our",
+   "startMs": 41394,
+   "endMs": 41511
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "top",
+   "startMs": 41522,
+   "endMs": 41768
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "ten",
+   "startMs": 41779,
+   "endMs": 41966
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "accounts",
+   "startMs": 41978,
+   "endMs": 42387
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "ranked",
+   "startMs": 42399,
+   "endMs": 42644
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "speed",
+   "startMs": 42656,
+   "endMs": 42878
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "first",
+   "startMs": 42889,
+   "endMs": 43427
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "Three-year",
+   "startMs": 44233,
+   "endMs": 44607
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "potential",
+   "startMs": 44618,
+   "endMs": 45272
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "nine",
+   "startMs": 45448,
+   "endMs": 45693
+  },
+  {
+   "line": "cro_1",
+   "speaker": "CRO",
+   "text": "figures",
+   "startMs": 45705,
+   "endMs": 46300
+  },
+  {
+   "line": "dan_3",
+   "speaker": "DANIEL",
+   "text": "Good",
+   "startMs": 46850,
+   "endMs": 47306
+  },
+  {
+   "line": "dan_3",
+   "speaker": "DANIEL",
+   "text": "Now",
+   "startMs": 48112,
+   "endMs": 48416
+  },
+  {
+   "line": "dan_3",
+   "speaker": "DANIEL",
+   "text": "destroy",
+   "startMs": 48428,
+   "endMs": 48930
+  },
+  {
+   "line": "dan_3",
+   "speaker": "DANIEL",
+   "text": "it",
+   "startMs": 48942,
+   "endMs": 49129
+  },
+  {
+   "line": "dan_4",
+   "speaker": "DANIEL",
+   "text": "What",
+   "startMs": 50279,
+   "endMs": 50489
+  },
+  {
+   "line": "dan_4",
+   "speaker": "DANIEL",
+   "text": "kills",
+   "startMs": 50512,
+   "endMs": 50804
+  },
+  {
+   "line": "dan_4",
+   "speaker": "DANIEL",
+   "text": "this",
+   "startMs": 50816,
+   "endMs": 51178
+  },
+  {
+   "line": "legal_0",
+   "speaker": "LEGAL",
+   "text": "Public",
+   "startMs": 51528,
+   "endMs": 51890
+  },
+  {
+   "line": "legal_0",
+   "speaker": "LEGAL",
+   "text": "cloud",
+   "startMs": 51902,
+   "endMs": 52404
+  },
+  {
+   "line": "cfo_0",
+   "speaker": "CFO",
+   "text": "Capital",
+   "startMs": 51878,
+   "endMs": 52415
+  },
+  {
+   "line": "cto_0",
+   "speaker": "CTO",
+   "text": "Scale",
+   "startMs": 52228,
+   "endMs": 52590
+  },
+  {
+   "line": "dan_5",
+   "speaker": "DANIEL",
+   "text": "Legal",
+   "startMs": 53090,
+   "endMs": 53744
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "Three",
+   "startMs": 54244,
+   "endMs": 54490
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "gates",
+   "startMs": 54501,
+   "endMs": 55015
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "Patient",
+   "startMs": 55821,
+   "endMs": 56230
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "data",
+   "startMs": 56242,
+   "endMs": 56534
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "cannot",
+   "startMs": 56546,
+   "endMs": 56908
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "touch",
+   "startMs": 56920,
+   "endMs": 57165
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "a",
+   "startMs": 57177,
+   "endMs": 57235
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "public",
+   "startMs": 57247,
+   "endMs": 57574
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "model",
+   "startMs": 57586,
+   "endMs": 57983
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "Material",
+   "startMs": 58800,
+   "endMs": 59385
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "revenue",
+   "startMs": 59396,
+   "endMs": 59758
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "initiatives",
+   "startMs": 59770,
+   "endMs": 60378
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "trigger",
+   "startMs": 60389,
+   "endMs": 60716
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "disclosure",
+   "startMs": 60728,
+   "endMs": 61324
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "obligations",
+   "startMs": 61336,
+   "endMs": 62177
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "Four",
+   "startMs": 62994,
+   "endMs": 63205
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "states",
+   "startMs": 63216,
+   "endMs": 63579
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "require",
+   "startMs": 63590,
+   "endMs": 64034
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "named-human",
+   "startMs": 64046,
+   "endMs": 64571
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "approval",
+   "startMs": 64583,
+   "endMs": 65121
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "on",
+   "startMs": 65132,
+   "endMs": 65331
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "every",
+   "startMs": 65343,
+   "endMs": 65576
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "denial",
+   "startMs": 65588,
+   "endMs": 66102
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "Pure",
+   "startMs": 66920,
+   "endMs": 67247
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "automation",
+   "startMs": 67258,
+   "endMs": 67843
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "fails",
+   "startMs": 67854,
+   "endMs": 68240
+  },
+  {
+   "line": "legal_1",
+   "speaker": "LEGAL",
+   "text": "review",
+   "startMs": 68251,
+   "endMs": 68719
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "New-program",
+   "startMs": 69369,
+   "endMs": 70035
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "spend",
+   "startMs": 70046,
+   "endMs": 70432
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "is",
+   "startMs": 70443,
+   "endMs": 70560
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "capped",
+   "startMs": 70572,
+   "endMs": 70922
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "at",
+   "startMs": 70934,
+   "endMs": 71016
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "eleven",
+   "startMs": 71028,
+   "endMs": 71378
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "million",
+   "startMs": 71390,
+   "endMs": 71799
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "Seven-to-two",
+   "startMs": 72408,
+   "endMs": 73214
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "in",
+   "startMs": 73296,
+   "endMs": 73413
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "March",
+   "startMs": 73425,
+   "endMs": 73845
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "Both",
+   "startMs": 74455,
+   "endMs": 74689
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "dissenting",
+   "startMs": 74700,
+   "endMs": 75214
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "arguments",
+   "startMs": 75226,
+   "endMs": 75658
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "preserved",
+   "startMs": 75670,
+   "endMs": 76266
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "Above",
+   "startMs": 76876,
+   "endMs": 77203
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "the",
+   "startMs": 77214,
+   "endMs": 77308
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "cap",
+   "startMs": 77320,
+   "endMs": 77588
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "needs",
+   "startMs": 77600,
+   "endMs": 77857
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "approval",
+   "startMs": 77869,
+   "endMs": 78278
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "Thursday",
+   "startMs": 78289,
+   "endMs": 78897
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "Not",
+   "startMs": 79518,
+   "endMs": 79775
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "next",
+   "startMs": 79787,
+   "endMs": 80032
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "quarter",
+   "startMs": 80044,
+   "endMs": 80453
+  },
+  {
+   "line": "cfo_1",
+   "speaker": "CFO",
+   "text": "Thursday",
+   "startMs": 81063,
+   "endMs": 81635
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "I",
+   "startMs": 82285,
+   "endMs": 82367
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "reviewed",
+   "startMs": 82379,
+   "endMs": 82787
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "twelve",
+   "startMs": 82846,
+   "endMs": 83196
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "thousand",
+   "startMs": 83208,
+   "endMs": 83687
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "four",
+   "startMs": 83757,
+   "endMs": 84061
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "hundred",
+   "startMs": 84072,
+   "endMs": 84329
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "decisions",
+   "startMs": 84341,
+   "endMs": 84972
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "Ninety-one",
+   "startMs": 85357,
+   "endMs": 85731
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "percent",
+   "startMs": 85743,
+   "endMs": 86175
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "follow",
+   "startMs": 86187,
+   "endMs": 86467
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "six",
+   "startMs": 86479,
+   "endMs": 86724
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "policy",
+   "startMs": 86736,
+   "endMs": 87110
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "gates",
+   "startMs": 87121,
+   "endMs": 87542
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "The",
+   "startMs": 87939,
+   "endMs": 87986
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "nine",
+   "startMs": 87998,
+   "endMs": 88220
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "percent",
+   "startMs": 88231,
+   "endMs": 88687
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "are",
+   "startMs": 88815,
+   "endMs": 88921
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "where",
+   "startMs": 88932,
+   "endMs": 89084
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "clinical",
+   "startMs": 89096,
+   "endMs": 89516
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "judgment",
+   "startMs": 89528,
+   "endMs": 89984
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "changed",
+   "startMs": 90112,
+   "endMs": 90404
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "the",
+   "startMs": 90416,
+   "endMs": 90498
+  },
+  {
+   "line": "cto_1",
+   "speaker": "CTO",
+   "text": "outcome",
+   "startMs": 90509,
+   "endMs": 90907
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "One",
+   "startMs": 92007,
+   "endMs": 92344
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "unresolved",
+   "startMs": 92432,
+   "endMs": 92994
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "risk",
+   "startMs": 93007,
+   "endMs": 93444
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "No",
+   "startMs": 93857,
+   "endMs": 94019
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "precedent",
+   "startMs": 94032,
+   "endMs": 94507
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "for",
+   "startMs": 94519,
+   "endMs": 94682
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "peak-load",
+   "startMs": 94694,
+   "endMs": 95294
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "throughput",
+   "startMs": 95307,
+   "endMs": 95894
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "at",
+   "startMs": 96007,
+   "endMs": 96119
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "this",
+   "startMs": 96132,
+   "endMs": 96294
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "volume",
+   "startMs": 96307,
+   "endMs": 96732
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "Confidence",
+   "startMs": 97144,
+   "endMs": 97669
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "is",
+   "startMs": 97782,
+   "endMs": 97882
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "below",
+   "startMs": 97894,
+   "endMs": 98269
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "governance",
+   "startMs": 98282,
+   "endMs": 98732
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "threshold",
+   "startMs": 98744,
+   "endMs": 99344
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "I",
+   "startMs": 99757,
+   "endMs": 99844
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "am",
+   "startMs": 99857,
+   "endMs": 99944
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "declining",
+   "startMs": 99957,
+   "endMs": 100382
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "to",
+   "startMs": 100394,
+   "endMs": 100494
+  },
+  {
+   "line": "cto_2",
+   "speaker": "CTO",
+   "text": "answer",
+   "startMs": 100507,
+   "endMs": 100957
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "Human",
+   "startMs": 102257,
+   "endMs": 102490
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "escalation",
+   "startMs": 102502,
+   "endMs": 103016
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "created",
+   "startMs": 103028,
+   "endMs": 103471
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "VP",
+   "startMs": 103857,
+   "endMs": 104231
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "of",
+   "startMs": 104243,
+   "endMs": 104324
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "Clinical",
+   "startMs": 104336,
+   "endMs": 104698
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "Operations",
+   "startMs": 104710,
+   "endMs": 105387
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "Estimated",
+   "startMs": 105773,
+   "endMs": 106240
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "review",
+   "startMs": 106252,
+   "endMs": 106637
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "thirty-eight",
+   "startMs": 107000,
+   "endMs": 107490
+  },
+  {
+   "line": "cto_3",
+   "speaker": "CTO",
+   "text": "minutes",
+   "startMs": 107502,
+   "endMs": 107981
+  },
+  {
+   "line": "dan_8",
+   "speaker": "DANIEL",
+   "text": "That",
+   "startMs": 108881,
+   "endMs": 109138
+  },
+  {
+   "line": "dan_8",
+   "speaker": "DANIEL",
+   "text": "can",
+   "startMs": 109161,
+   "endMs": 109313
+  },
+  {
+   "line": "dan_8",
+   "speaker": "DANIEL",
+   "text": "stop",
+   "startMs": 109336,
+   "endMs": 109629
+  },
+  {
+   "line": "dan_8",
+   "speaker": "DANIEL",
+   "text": "the",
+   "startMs": 109652,
+   "endMs": 109745
+  },
+  {
+   "line": "dan_8",
+   "speaker": "DANIEL",
+   "text": "launch",
+   "startMs": 109769,
+   "endMs": 110178
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "It",
+   "startMs": 110578,
+   "endMs": 110636
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "can",
+   "startMs": 110648,
+   "endMs": 110753
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "stop",
+   "startMs": 110764,
+   "endMs": 111033
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "this",
+   "startMs": 111045,
+   "endMs": 111197
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "architecture",
+   "startMs": 111208,
+   "endMs": 111828
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "Not",
+   "startMs": 112213,
+   "endMs": 112342
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "the",
+   "startMs": 112353,
+   "endMs": 112412
+  },
+  {
+   "line": "cto_4",
+   "speaker": "CTO",
+   "text": "strategy",
+   "startMs": 112423,
+   "endMs": 112949
+  },
+  {
+   "line": "dan_9",
+   "speaker": "DANIEL",
+   "text": "Build",
+   "startMs": 114299,
+   "endMs": 114579
+  },
+  {
+   "line": "dan_9",
+   "speaker": "DANIEL",
+   "text": "something",
+   "startMs": 114603,
+   "endMs": 114965
+  },
+  {
+   "line": "dan_9",
+   "speaker": "DANIEL",
+   "text": "I",
+   "startMs": 114977,
+   "endMs": 115047
+  },
+  {
+   "line": "dan_9",
+   "speaker": "DANIEL",
+   "text": "can",
+   "startMs": 115058,
+   "endMs": 115175
+  },
+  {
+   "line": "dan_9",
+   "speaker": "DANIEL",
+   "text": "defend",
+   "startMs": 115199,
+   "endMs": 115654
+  },
+  {
+   "line": "dan_9",
+   "speaker": "DANIEL",
+   "text": "under",
+   "startMs": 115666,
+   "endMs": 115923
+  },
+  {
+   "line": "dan_9",
+   "speaker": "DANIEL",
+   "text": "oath",
+   "startMs": 115935,
+   "endMs": 116273
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "Private",
+   "startMs": 117373,
+   "endMs": 117747
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "deployment",
+   "startMs": 117759,
+   "endMs": 118308
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "removes",
+   "startMs": 118320,
+   "endMs": 118693
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "the",
+   "startMs": 118705,
+   "endMs": 118799
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "cloud",
+   "startMs": 118810,
+   "endMs": 119114
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "gate",
+   "startMs": 119126,
+   "endMs": 119523
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "Patient",
+   "startMs": 120329,
+   "endMs": 120738
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "data",
+   "startMs": 120750,
+   "endMs": 120995
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "never",
+   "startMs": 121007,
+   "endMs": 121322
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "leaves",
+   "startMs": 121334,
+   "endMs": 121602
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "the",
+   "startMs": 121614,
+   "endMs": 121707
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "enterprise",
+   "startMs": 121719,
+   "endMs": 122502
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "Route",
+   "startMs": 123308,
+   "endMs": 123600
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "the",
+   "startMs": 123612,
+   "endMs": 123682
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "nine",
+   "startMs": 123693,
+   "endMs": 123950
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "percent",
+   "startMs": 123962,
+   "endMs": 124348
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "to",
+   "startMs": 124359,
+   "endMs": 124429
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "named",
+   "startMs": 124441,
+   "endMs": 124721
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "clinicians",
+   "startMs": 124733,
+   "endMs": 125341
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "the",
+   "startMs": 125539,
+   "endMs": 125621
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "compliant",
+   "startMs": 125633,
+   "endMs": 126123
+  },
+  {
+   "line": "legal_2",
+   "speaker": "LEGAL",
+   "text": "product",
+   "startMs": 126135,
+   "endMs": 126719
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "Phase",
+   "startMs": 127169,
+   "endMs": 127496
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "one",
+   "startMs": 127508,
+   "endMs": 127765
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "seven-point-four",
+   "startMs": 128092,
+   "endMs": 128840
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "million",
+   "startMs": 128851,
+   "endMs": 129284
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "Below",
+   "startMs": 129893,
+   "endMs": 130174
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "the",
+   "startMs": 130186,
+   "endMs": 130291
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "cap",
+   "startMs": 130302,
+   "endMs": 130676
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "Thursday",
+   "startMs": 131286,
+   "endMs": 131742
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "becomes",
+   "startMs": 131753,
+   "endMs": 132150
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "a",
+   "startMs": 132162,
+   "endMs": 132221
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "governed",
+   "startMs": 132232,
+   "endMs": 132536
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "plan",
+   "startMs": 132548,
+   "endMs": 132816
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "with",
+   "startMs": 132828,
+   "endMs": 132957
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "precedent",
+   "startMs": 132968,
+   "endMs": 133400
+  },
+  {
+   "line": "cfo_2",
+   "speaker": "CFO",
+   "text": "attached",
+   "startMs": 133412,
+   "endMs": 134020
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "Start",
+   "startMs": 134470,
+   "endMs": 134715
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "with",
+   "startMs": 134727,
+   "endMs": 134867
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "low-complexity",
+   "startMs": 134879,
+   "endMs": 135708
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "authorizations",
+   "startMs": 135720,
+   "endMs": 136572
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "Inference",
+   "startMs": 136958,
+   "endMs": 137332
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "and",
+   "startMs": 137343,
+   "endMs": 137425
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "policy",
+   "startMs": 137437,
+   "endMs": 137904
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "stay",
+   "startMs": 137916,
+   "endMs": 138173
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "in-enterprise",
+   "startMs": 138185,
+   "endMs": 138956
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "Escalate",
+   "startMs": 139341,
+   "endMs": 139797
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "below-threshold",
+   "startMs": 139808,
+   "endMs": 140568
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "cases",
+   "startMs": 140579,
+   "endMs": 141093
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "Measure",
+   "startMs": 141479,
+   "endMs": 141748
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "ninety",
+   "startMs": 141829,
+   "endMs": 142098
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "days",
+   "startMs": 142110,
+   "endMs": 142542
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "Then",
+   "startMs": 142939,
+   "endMs": 143009
+  },
+  {
+   "line": "cto_5",
+   "speaker": "CTO",
+   "text": "expand",
+   "startMs": 143021,
+   "endMs": 143570
+  },
+  {
+   "line": "cro_2",
+   "speaker": "CRO",
+   "text": "Don't",
+   "startMs": 143970,
+   "endMs": 144215
+  },
+  {
+   "line": "cro_2",
+   "speaker": "CRO",
+   "text": "sell",
+   "startMs": 144227,
+   "endMs": 144426
+  },
+  {
+   "line": "cro_2",
+   "speaker": "CRO",
+   "text": "automation",
+   "startMs": 144437,
+   "endMs": 145115
+  },
+  {
+   "line": "cro_2",
+   "speaker": "CRO",
+   "text": "Sell",
+   "startMs": 145921,
+   "endMs": 146213
+  },
+  {
+   "line": "cro_2",
+   "speaker": "CRO",
+   "text": "faster",
+   "startMs": 146225,
+   "endMs": 146762
+  },
+  {
+   "line": "cro_2",
+   "speaker": "CRO",
+   "text": "defensible",
+   "startMs": 146937,
+   "endMs": 147428
+  },
+  {
+   "line": "cro_2",
+   "speaker": "CRO",
+   "text": "decisions",
+   "startMs": 147440,
+   "endMs": 148176
+  },
+  {
+   "line": "cmo_2",
+   "speaker": "CMO",
+   "text": "Don't",
+   "startMs": 148576,
+   "endMs": 148786
+  },
+  {
+   "line": "cmo_2",
+   "speaker": "CMO",
+   "text": "lead",
+   "startMs": 148798,
+   "endMs": 148996
+  },
+  {
+   "line": "cmo_2",
+   "speaker": "CMO",
+   "text": "with",
+   "startMs": 149008,
+   "endMs": 149195
+  },
+  {
+   "line": "cmo_2",
+   "speaker": "CMO",
+   "text": "revenue",
+   "startMs": 149207,
+   "endMs": 149756
+  },
+  {
+   "line": "cmo_2",
+   "speaker": "CMO",
+   "text": "Lead",
+   "startMs": 150129,
+   "endMs": 150340
+  },
+  {
+   "line": "cmo_2",
+   "speaker": "CMO",
+   "text": "with",
+   "startMs": 150351,
+   "endMs": 150538
+  },
+  {
+   "line": "cmo_2",
+   "speaker": "CMO",
+   "text": "risk",
+   "startMs": 150550,
+   "endMs": 151006
+  },
+  {
+   "line": "dan_10",
+   "speaker": "DANIEL",
+   "text": "Why",
+   "startMs": 151506,
+   "endMs": 151985
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "Six",
+   "startMs": 152935,
+   "endMs": 153332
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "years",
+   "startMs": 153343,
+   "endMs": 153636
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "of",
+   "startMs": 153647,
+   "endMs": 153799
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "board",
+   "startMs": 153811,
+   "endMs": 154044
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "minutes",
+   "startMs": 154056,
+   "endMs": 154465
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "directors",
+   "startMs": 154757,
+   "endMs": 155283
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "rejected",
+   "startMs": 155294,
+   "endMs": 155843
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "every",
+   "startMs": 155960,
+   "endMs": 156241
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "comparable",
+   "startMs": 156252,
+   "endMs": 156731
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "initiative",
+   "startMs": 156743,
+   "endMs": 157175
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "above",
+   "startMs": 157187,
+   "endMs": 157572
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "eleven",
+   "startMs": 157643,
+   "endMs": 158016
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "million",
+   "startMs": 158028,
+   "endMs": 158449
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "except",
+   "startMs": 158682,
+   "endMs": 159056
+  },
+  {
+   "line": "buzz_3",
+   "speaker": "BUZZ",
+   "text": "one",
+   "startMs": 159068,
+   "endMs": 159395
+  },
+  {
+   "line": "dan_11",
+   "speaker": "DANIEL",
+   "text": "Which",
+   "startMs": 159795,
+   "endMs": 160029
+  },
+  {
+   "line": "dan_11",
+   "speaker": "DANIEL",
+   "text": "one",
+   "startMs": 160052,
+   "endMs": 160414
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "Cybersecurity",
+   "startMs": 160914,
+   "endMs": 161977
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "Regulatory",
+   "startMs": 162316,
+   "endMs": 163029
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "exposure",
+   "startMs": 163040,
+   "endMs": 163659
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "was",
+   "startMs": 163671,
+   "endMs": 163823
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "quantified",
+   "startMs": 163835,
+   "endMs": 164465
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "before",
+   "startMs": 164489,
+   "endMs": 164851
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "financial",
+   "startMs": 164863,
+   "endMs": 165377
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "upside",
+   "startMs": 165388,
+   "endMs": 165937
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "Sequence",
+   "startMs": 166276,
+   "endMs": 166954
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "risk",
+   "startMs": 167316,
+   "endMs": 167748
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "governance",
+   "startMs": 167818,
+   "endMs": 168449
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "human",
+   "startMs": 168519,
+   "endMs": 168800
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "control",
+   "startMs": 168811,
+   "endMs": 169360
+  },
+  {
+   "line": "buzz_4",
+   "speaker": "BUZZ",
+   "text": "revenue",
+   "startMs": 169641,
+   "endMs": 170120
+  },
+  {
+   "line": "dan_12",
+   "speaker": "DANIEL",
+   "text": "There",
+   "startMs": 171020,
+   "endMs": 171295
+  },
+  {
+   "line": "dan_12",
+   "speaker": "DANIEL",
+   "text": "it",
+   "startMs": 171307,
+   "endMs": 171395
+  },
+  {
+   "line": "dan_12",
+   "speaker": "DANIEL",
+   "text": "is",
+   "startMs": 171420,
+   "endMs": 171820
+  },
+  {
+   "line": "dan_12",
+   "speaker": "DANIEL",
+   "text": "That's",
+   "startMs": 172707,
+   "endMs": 173057
+  },
+  {
+   "line": "dan_12",
+   "speaker": "DANIEL",
+   "text": "the",
+   "startMs": 173070,
+   "endMs": 173182
+  },
+  {
+   "line": "dan_12",
+   "speaker": "DANIEL",
+   "text": "presentation",
+   "startMs": 173195,
+   "endMs": 174045
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "WisdomTwin",
+   "startMs": 174745,
+   "endMs": 175492
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "board",
+   "startMs": 175504,
+   "endMs": 175854
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "package",
+   "startMs": 175866,
+   "endMs": 176263
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "complete",
+   "startMs": 176275,
+   "endMs": 176801
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "Dissent",
+   "startMs": 177139,
+   "endMs": 177560
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "preserved",
+   "startMs": 177572,
+   "endMs": 178191
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "Three",
+   "startMs": 178530,
+   "endMs": 178798
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "objections",
+   "startMs": 178810,
+   "endMs": 179406
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "anticipated",
+   "startMs": 179418,
+   "endMs": 180224
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "Consensus",
+   "startMs": 180562,
+   "endMs": 181427
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "ninety-four",
+   "startMs": 181766,
+   "endMs": 182280
+  },
+  {
+   "line": "buzz_5",
+   "speaker": "BUZZ",
+   "text": "percent",
+   "startMs": 182291,
+   "endMs": 182817
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "Keep",
+   "startMs": 183117,
+   "endMs": 183362
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "the",
+   "startMs": 183386,
+   "endMs": 183491
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "Clinical",
+   "startMs": 183503,
+   "endMs": 183923
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "escalation",
+   "startMs": 183946,
+   "endMs": 184507
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "open",
+   "startMs": 184531,
+   "endMs": 184799
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "until",
+   "startMs": 184823,
+   "endMs": 185068
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "the",
+   "startMs": 185080,
+   "endMs": 185161
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "human",
+   "startMs": 185173,
+   "endMs": 185512
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "answer",
+   "startMs": 185535,
+   "endMs": 185816
+  },
+  {
+   "line": "dan_13",
+   "speaker": "DANIEL",
+   "text": "lands",
+   "startMs": 185839,
+   "endMs": 186306
+  },
+  {
+   "line": "dan_14",
+   "speaker": "DANIEL",
+   "text": "Now",
+   "startMs": 187206,
+   "endMs": 187469
+  },
+  {
+   "line": "dan_14",
+   "speaker": "DANIEL",
+   "text": "I",
+   "startMs": 187494,
+   "endMs": 187569
+  },
+  {
+   "line": "dan_14",
+   "speaker": "DANIEL",
+   "text": "can",
+   "startMs": 187594,
+   "endMs": 187756
+  },
+  {
+   "line": "dan_14",
+   "speaker": "DANIEL",
+   "text": "walk",
+   "startMs": 187769,
+   "endMs": 188019
+  },
+  {
+   "line": "dan_14",
+   "speaker": "DANIEL",
+   "text": "into",
+   "startMs": 188031,
+   "endMs": 188231
+  },
+  {
+   "line": "dan_14",
+   "speaker": "DANIEL",
+   "text": "that",
+   "startMs": 188256,
+   "endMs": 188469
+  },
+  {
+   "line": "dan_14",
+   "speaker": "DANIEL",
+   "text": "room",
+   "startMs": 188481,
+   "endMs": 188769
+  },
+  {
+   "line": "buzz_7",
+   "speaker": "BUZZ",
+   "text": "Huddle",
+   "startMs": 189569,
+   "endMs": 189978
+  },
+  {
+   "line": "buzz_7",
+   "speaker": "BUZZ",
+   "text": "ended",
+   "startMs": 189989,
+   "endMs": 190387
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "That's",
+   "startMs": 191187,
+   "endMs": 191524
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "WisdomTwin",
+   "startMs": 191537,
+   "endMs": 192387
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "Book",
+   "startMs": 193249,
+   "endMs": 193462
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "a",
+   "startMs": 193474,
+   "endMs": 193549
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "twenty-minute",
+   "startMs": 193562,
+   "endMs": 194149
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "deployment",
+   "startMs": 194174,
+   "endMs": 194674
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "review",
+   "startMs": 194699,
+   "endMs": 195049
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "at",
+   "startMs": 195062,
+   "endMs": 195174
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "wisdomtwin",
+   "startMs": 195199,
+   "endMs": 195837
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "dot",
+   "startMs": 195862,
+   "endMs": 196087
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "ai",
+   "startMs": 196099,
+   "endMs": 196574
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "We",
+   "startMs": 197462,
+   "endMs": 197637
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "will",
+   "startMs": 197649,
+   "endMs": 197824
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "replay",
+   "startMs": 197849,
+   "endMs": 198224
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "your",
+   "startMs": 198249,
+   "endMs": 198424
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "board's",
+   "startMs": 198437,
+   "endMs": 198762
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "last",
+   "startMs": 198787,
+   "endMs": 199049
+  },
+  {
+   "line": "dan_15",
+   "speaker": "DANIEL",
+   "text": "decision",
+   "startMs": 199074,
+   "endMs": 199599
+  }
+ ],
+ "dialogue": [
+  {
+   "id": "dan_0",
+   "speaker": "DANIEL",
+   "scene": "hook",
+   "startMs": 1000,
+   "endMs": 8400,
+   "text": "This board decision took eight minutes and forty-two seconds. It used to take nineteen days. Watch how."
+  },
+  {
+   "id": "cto_2_hook",
+   "speaker": "CTO",
+   "scene": "hook",
+   "startMs": 9000,
+   "endMs": 10200,
+   "text": "I am declining to answer."
+  },
+  {
+   "id": "buzz_1",
+   "speaker": "BUZZ",
+   "scene": "one_button",
+   "startMs": 13000,
+   "endMs": 16318,
+   "text": "WisdomTwin huddle live. Five role twins present."
+  },
+  {
+   "id": "dan_2",
+   "speaker": "DANIEL",
+   "scene": "dream",
+   "startMs": 17468,
+   "endMs": 32281,
+   "text": "Board packet locks in eight hours. The board thinks we're late on AI \u2014 some think I'm the reason. So nobody protects me tonight. The bet: cut prior-auth approval from fourteen days to one, and sell that speed to every payer. Why does it work?"
+  },
+  {
+   "id": "cro_1",
+   "speaker": "CRO",
+   "scene": "dream",
+   "startMs": 32831,
+   "endMs": 46300,
+   "text": "Five years of renewal calls and loss reviews say one thing: our largest customers want faster decisions they can defend \u2014 not more automation. Eight of our top ten accounts ranked speed first. Three-year potential: nine figures."
+  },
+  {
+   "id": "dan_3",
+   "speaker": "DANIEL",
+   "scene": "dream",
+   "startMs": 46850,
+   "endMs": 49129,
+   "text": "Good. Now destroy it."
+  },
+  {
+   "id": "dan_4",
+   "speaker": "DANIEL",
+   "scene": "stress",
+   "startMs": 50279,
+   "endMs": 51178,
+   "text": "What kills this?"
+  },
+  {
+   "id": "legal_0",
+   "speaker": "LEGAL",
+   "scene": "stress",
+   "startMs": 51528,
+   "endMs": 52404,
+   "text": "Public cloud."
+  },
+  {
+   "id": "cfo_0",
+   "speaker": "CFO",
+   "scene": "stress",
+   "startMs": 51878,
+   "endMs": 52415,
+   "text": "Capital."
+  },
+  {
+   "id": "cto_0",
+   "speaker": "CTO",
+   "scene": "stress",
+   "startMs": 52228,
+   "endMs": 52590,
+   "text": "Scale."
+  },
+  {
+   "id": "dan_5",
+   "speaker": "DANIEL",
+   "scene": "stress",
+   "startMs": 53090,
+   "endMs": 53744,
+   "text": "Legal."
+  },
+  {
+   "id": "legal_1",
+   "speaker": "LEGAL",
+   "scene": "attack",
+   "startMs": 54244,
+   "endMs": 68719,
+   "text": "Three gates. Patient data cannot touch a public model. Material revenue initiatives trigger disclosure obligations. Four states require named-human approval on every denial. Pure automation fails review."
+  },
+  {
+   "id": "cfo_1",
+   "speaker": "CFO",
+   "scene": "attack",
+   "startMs": 69369,
+   "endMs": 81635,
+   "text": "New-program spend is capped at eleven million. Seven-to-two, in March. Both dissenting arguments preserved. Above the cap needs approval Thursday. Not next quarter. Thursday."
+  },
+  {
+   "id": "cto_1",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 82285,
+   "endMs": 90907,
+   "text": "I reviewed twelve thousand four hundred decisions. Ninety-one percent follow six policy gates. The nine percent are where clinical judgment changed the outcome."
+  },
+  {
+   "id": "cto_2",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 92007,
+   "endMs": 100957,
+   "text": "One unresolved risk. No precedent for peak-load throughput at this volume. Confidence is below governance threshold. I am declining to answer."
+  },
+  {
+   "id": "cto_3",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 102257,
+   "endMs": 107981,
+   "text": "Human escalation created. VP of Clinical Operations. Estimated review: thirty-eight minutes."
+  },
+  {
+   "id": "dan_8",
+   "speaker": "DANIEL",
+   "scene": "attack",
+   "startMs": 108881,
+   "endMs": 110178,
+   "text": "That can stop the launch."
+  },
+  {
+   "id": "cto_4",
+   "speaker": "CTO",
+   "scene": "attack",
+   "startMs": 110578,
+   "endMs": 112949,
+   "text": "It can stop this architecture. Not the strategy."
+  },
+  {
+   "id": "dan_9",
+   "speaker": "DANIEL",
+   "scene": "attack",
+   "startMs": 114299,
+   "endMs": 116273,
+   "text": "Build something I can defend under oath."
+  },
+  {
+   "id": "legal_2",
+   "speaker": "LEGAL",
+   "scene": "build",
+   "startMs": 117373,
+   "endMs": 126719,
+   "text": "Private deployment removes the cloud gate. Patient data never leaves the enterprise. Route the nine percent to named clinicians \u2014 the compliant product."
+  },
+  {
+   "id": "cfo_2",
+   "speaker": "CFO",
+   "scene": "build",
+   "startMs": 127169,
+   "endMs": 134020,
+   "text": "Phase one: seven-point-four million. Below the cap. Thursday becomes a governed plan with precedent attached."
+  },
+  {
+   "id": "cto_5",
+   "speaker": "CTO",
+   "scene": "build",
+   "startMs": 134470,
+   "endMs": 143570,
+   "text": "Start with low-complexity authorizations. Inference and policy stay in-enterprise. Escalate below-threshold cases. Measure ninety days. Then expand."
+  },
+  {
+   "id": "cro_2",
+   "speaker": "CRO",
+   "scene": "build",
+   "startMs": 143970,
+   "endMs": 148176,
+   "text": "Don't sell automation. Sell faster, defensible decisions."
+  },
+  {
+   "id": "cmo_2",
+   "speaker": "CMO",
+   "scene": "build",
+   "startMs": 148576,
+   "endMs": 151006,
+   "text": "Don't lead with revenue. Lead with risk."
+  },
+  {
+   "id": "dan_10",
+   "speaker": "DANIEL",
+   "scene": "build",
+   "startMs": 151506,
+   "endMs": 151985,
+   "text": "Why?"
+  },
+  {
+   "id": "buzz_3",
+   "speaker": "BUZZ",
+   "scene": "build",
+   "startMs": 152935,
+   "endMs": 159395,
+   "text": "Six years of board minutes: directors rejected every comparable initiative above eleven million... except one."
+  },
+  {
+   "id": "dan_11",
+   "speaker": "DANIEL",
+   "scene": "build",
+   "startMs": 159795,
+   "endMs": 160414,
+   "text": "Which one?"
+  },
+  {
+   "id": "buzz_4",
+   "speaker": "BUZZ",
+   "scene": "build",
+   "startMs": 160914,
+   "endMs": 170120,
+   "text": "Cybersecurity. Regulatory exposure was quantified before financial upside. Sequence: risk, governance, human control, revenue."
+  },
+  {
+   "id": "dan_12",
+   "speaker": "DANIEL",
+   "scene": "build",
+   "startMs": 171020,
+   "endMs": 174045,
+   "text": "There it is. That's the presentation."
+  },
+  {
+   "id": "buzz_5",
+   "speaker": "BUZZ",
+   "scene": "package",
+   "startMs": 174745,
+   "endMs": 182817,
+   "text": "WisdomTwin board package complete. Dissent preserved. Three objections anticipated. Consensus: ninety-four percent."
+  },
+  {
+   "id": "dan_13",
+   "speaker": "DANIEL",
+   "scene": "package",
+   "startMs": 183117,
+   "endMs": 186306,
+   "text": "Keep the Clinical escalation open until the human answer lands."
+  },
+  {
+   "id": "dan_14",
+   "speaker": "DANIEL",
+   "scene": "package",
+   "startMs": 187206,
+   "endMs": 188769,
+   "text": "Now I can walk into that room."
+  },
+  {
+   "id": "buzz_7",
+   "speaker": "BUZZ",
+   "scene": "close",
+   "startMs": 189569,
+   "endMs": 190387,
+   "text": "Huddle ended."
+  },
+  {
+   "id": "dan_15",
+   "speaker": "DANIEL",
+   "scene": "cta",
+   "startMs": 191187,
+   "endMs": 199599,
+   "text": "That's WisdomTwin. Book a twenty-minute deployment review at wisdomtwin dot ai. We will replay your board's last decision."
+  }
+ ]
+}
