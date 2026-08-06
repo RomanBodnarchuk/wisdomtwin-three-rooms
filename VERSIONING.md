@@ -43,6 +43,9 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   audio quality, CTA, analytics. The 8:07 original remains in git history (tag commits v2.4) if
   ever needed; investor60/outreach45 configs stay in code but are not shown in UI.
 
+- [x] v2.7 (2026-08-06) — **Longest cut only = original 8:07 boardroom film.** Restored fullTimeline
+  from v2.4 (487000ms). No cut selector. 4:34 recut remains in git history (v2.2/v2.6) if needed.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full

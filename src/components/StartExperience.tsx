@@ -64,7 +64,7 @@ export function StartExperience({
         </button>
 
         <p className="mt-3 text-center text-[11px] text-[var(--cream-dim)]">
-          The boardroom film · 4:34 · Space to pause · M mute · C captions
+          Original boardroom film · 8:07 · Space to pause · M mute · C captions
         </p>
 
         {showInvestorToggle && (

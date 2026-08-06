@@ -20,7 +20,7 @@ import { dialoguePlayer } from '../../lib/dialoguePlayer';
  * Desktop: cinematic kitchen + Buzz phone.
  * Mobile: Buzz prioritized, kitchen as atmosphere.
  * Dialogue: ElevenLabs executive VO (Web Speech only if an asset is missing).
- * Cut: the 4:34 boardroom film only. Short cuts are not offered in UI.
+ * Cut: the original full boardroom film only (8:07). Short cuts are not offered in UI.
  */
 export function DemoShell() {
   const playback = useDemoPlayback('full');
@@ -217,7 +217,7 @@ export function DemoShell() {
           <div className="absolute top-3 right-3 left-3 z-30 flex flex-wrap items-center justify-between gap-2 md:right-[42%]">
             <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur">
               <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-                WisdomTwin · Boardroom film · 4:34
+                WisdomTwin · Full boardroom · 8:07
               </p>
             </div>
             {investorParam && (
