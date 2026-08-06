@@ -1,0 +1,278 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDemoPlayback } from '../../hooks/useDemoPlayback';
+import { useKeyboardControls } from '../../hooks/useKeyboardControls';
+import { PreloadManager } from '../../components/PreloadManager';
+import { StartExperience } from '../../components/StartExperience';
+import { ErrorState } from '../../components/ErrorState';
+import { CinematicKitchenScene } from '../../components/CinematicKitchenScene';
+import { BuzzDevice } from '../../components/BuzzDevice';
+import { CaptionLayer } from '../../components/CaptionLayer';
+import { RoomMode } from '../../components/RoomMode';
+import { EndCard } from '../../components/EndCard';
+import { CutSelector } from '../../components/CutSelector';
+import { InvestorModeToggle } from '../../components/InvestorModeToggle';
+import { SyntheticDataDisclosure } from '../../components/SyntheticDataDisclosure';
+import { EVIDENCE_CARDS } from '../../data/evidence';
+import { EvidenceCard } from '../../components/EvidenceCard';
+import { dialoguePlayer } from '../../lib/dialoguePlayer';
+
+/**
+ * Top-level Three Rooms experience shell.
+ * Desktop: cinematic kitchen + Buzz phone.
+ * Mobile: Buzz prioritized, kitchen as atmosphere.
+ * Dialogue: ElevenLabs executive VO (Web Speech only if an asset is missing).
+ */
+export function DemoShell() {
+  const playback = useDemoPlayback('outreach45');
+  const {
+    snapshot,
+    phase,
+    cutId,
+    muted,
+    captionsOn,
+    investorMode,
+    timeMs,
+    durationMs,
+    mediaRef,
+    start,
+    pause,
+    resume,
+    togglePlay,
+    restart,
+    replay,
+    seek,
+    toggleMute,
+    setCaptionsOn,
+    setInvestorMode,
+    setCut,
+    error,
+  } = playback;
+
+  const [started, setStarted] = useState(false);
+  const live = started && phase !== 'ready';
+  const active = snapshot.activeSpeaker;
+
+  useEffect(() => {
+    dialoguePlayer.setMuted(muted);
+  }, [muted]);
+
+  // ElevenLabs executive VO — synced to the timeline clock
+  useEffect(() => {
+    if (phase === 'ready') {
+      dialoguePlayer.stop();
+      return;
+    }
+    if (!live || !active?.speaker || !active.eventId) return;
+    void dialoguePlayer.playEvent({
+      eventId: active.eventId,
+      speaker: active.speaker,
+      text: active.text,
+      startMs: active.startMs,
+      endMs: active.endMs,
+      timeMs,
+      playing: phase === 'playing' && !muted,
+    });
+  }, [live, phase, muted, active, timeMs]);
+
+  const handleStart = useCallback(async () => {
+    setStarted(true);
+    await dialoguePlayer.unlock();
+    await start();
+  }, [start]);
+
+  const handleRestart = useCallback(() => {
+    dialoguePlayer.stop();
+    setStarted(false);
+    restart();
+  }, [restart]);
+
+  const handleReplay = useCallback(async () => {
+    dialoguePlayer.stop();
+    setStarted(true);
+    await dialoguePlayer.unlock();
+    await replay();
+  }, [replay]);
+
+  const keyboardHandlers = useMemo(
+    () => ({
+      onTogglePlay: () => {
+        if (!started) {
+          void handleStart();
+          return;
+        }
+        togglePlay();
+      },
+      onMute: toggleMute,
+      onCaptions: () => setCaptionsOn(!captionsOn),
+      onRestart: handleRestart,
+      onSeekRelative: (delta: number) => {
+        if (!started) return;
+        seek(timeMs + delta);
+      },
+      onEscape: () => {
+        /* drawers managed inside BuzzDevice */
+      },
+      enabled: true,
+    }),
+    [started, handleStart, togglePlay, toggleMute, captionsOn, setCaptionsOn, handleRestart, seek, timeMs],
+  );
+
+  useKeyboardControls(keyboardHandlers);
+
+  if (error) {
+    return <ErrorState message={error} onRetry={() => void handleStart()} />;
+  }
+
+  const showRoomOverlay =
+    live &&
+    (snapshot.room === 'dream' || snapshot.room === 'stress-test' || snapshot.room === 'build') &&
+    // Show overlay briefly at room start — approximate via confidence null + early room
+    snapshot.focus !== 'end-card';
+
+  const sideEvidenceId = snapshot.visibleEvidenceIds[snapshot.visibleEvidenceIds.length - 1];
+  const sideEvidence = sideEvidenceId ? EVIDENCE_CARDS[sideEvidenceId] : null;
+
+  return (
+    <PreloadManager>
+      <div
+        className="relative min-h-[100dvh] w-full overflow-hidden bg-[var(--ink)]"
+        data-testid="demo-shell"
+        data-phase={phase}
+        data-room={snapshot.room}
+      >
+        {/* Hidden master media element — attach real mix at public/audio/master/{cut}.mp3 */}
+        <audio
+          ref={mediaRef}
+          preload="none"
+          playsInline
+          className="hidden"
+          data-testid="master-audio"
+          src={`/audio/master/${cutId}.mp3`}
+          onError={() => {
+            /* Missing master audio is expected; performance clock + speech fallback used */
+          }}
+        />
+
+        {/* Cinematic environment — CEO live on iPhone 19 Max */}
+        <div className="absolute inset-0 md:right-[40%]">
+          <CinematicKitchenScene snapshot={snapshot} live={live} />
+          {showRoomOverlay && phase === 'playing' && (
+            <div className="pointer-events-none absolute inset-0 z-10 hidden md:flex">
+              <RoomMode room={snapshot.room} overlay />
+            </div>
+          )}
+        </div>
+
+        {/* Desktop side evidence / context */}
+        {live && sideEvidence && snapshot.scene !== 'end-card' && (
+          <div className="pointer-events-none absolute top-8 left-8 z-20 hidden w-72 lg:block">
+            <div className="pointer-events-auto opacity-90">
+              <EvidenceCard card={sideEvidence} highlighted={snapshot.focus === 'evidence'} />
+            </div>
+          </div>
+        )}
+
+        {/* Captions */}
+        <CaptionLayer
+          visible={captionsOn && live && snapshot.scene !== 'end-card'}
+          speaker={snapshot.caption?.speaker ?? null}
+          text={snapshot.caption?.text ?? null}
+        />
+
+        {/* Hero iPhone 19 Max — live Buzz app */}
+        <div className="relative z-20 flex min-h-[100dvh] items-end justify-center px-3 pt-[26vh] pb-4 md:absolute md:inset-y-0 md:right-0 md:w-[40%] md:items-center md:px-5 md:pt-0">
+          <div className="flex h-[min(760px,74dvh)] w-full max-w-[400px] flex-col items-center md:h-[min(860px,94dvh)]">
+            <p className="mb-2 hidden text-[10px] tracking-[0.2em] text-[var(--cream-dim)] uppercase md:block">
+              iPhone 19 Max · Buzz live
+            </p>
+            <div className="h-full w-full">
+              <BuzzDevice
+                snapshot={snapshot}
+                phase={phase}
+                cutId={cutId}
+                timeMs={timeMs}
+                durationMs={durationMs}
+                muted={muted}
+                captionsOn={captionsOn}
+                live={live}
+                onTogglePlay={() => {
+                  if (phase === 'playing') pause();
+                  else if (phase === 'paused') resume();
+                  else void handleStart();
+                }}
+                onRestart={handleRestart}
+                onToggleMute={toggleMute}
+                onToggleCaptions={() => setCaptionsOn(!captionsOn)}
+                onSeek={seek}
+                onStartHuddle={() => void handleStart()}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Top chrome when live */}
+        {live && snapshot.scene !== 'end-card' && (
+          <div className="absolute top-3 right-3 left-3 z-30 flex flex-wrap items-center justify-between gap-2 md:right-[42%]">
+            <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur">
+              <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
+                WisdomTwin · Executive Huddle
+              </p>
+            </div>
+            <div className="hidden items-center gap-3 rounded-2xl border border-white/10 bg-black/40 px-3 py-2 backdrop-blur sm:flex">
+              <CutSelector
+                value={cutId}
+                onChange={(c) => {
+                  dialoguePlayer.stop();
+                  setStarted(false);
+                  setCut(c);
+                }}
+              />
+              <InvestorModeToggle on={investorMode} onChange={setInvestorMode} />
+            </div>
+          </div>
+        )}
+
+        {/* Start gate */}
+        {!started && phase !== 'complete' && (
+          <StartExperience
+            cutId={cutId}
+            investorMode={investorMode}
+            onCutChange={setCut}
+            onInvestorModeChange={setInvestorMode}
+            onStart={() => void handleStart()}
+          />
+        )}
+
+        {/* End card */}
+        {snapshot.endCard && (phase === 'complete' || snapshot.scene === 'end-card') && (
+          <EndCard
+            endCard={snapshot.endCard}
+            investorMode={investorMode}
+            onReplay={() => void handleReplay()}
+            onRestart={handleRestart}
+          />
+        )}
+
+        {/* Footer disclosure on start only handled in StartExperience; live compact */}
+        {live && snapshot.scene !== 'end-card' && (
+          <div className="pointer-events-none absolute bottom-2 left-3 z-20 hidden md:block">
+            <SyntheticDataDisclosure compact />
+          </div>
+        )}
+
+        {/* Persistent booking CTA — one ask, always visible while live */}
+        {live && snapshot.scene !== 'end-card' && (
+          <a
+            href="mailto:roman@n5r.com?subject=Executive%20Briefing%20Request%20%E2%80%94%20WisdomTwin&body=Hi%20Roman%2C%0A%0AI%20just%20watched%20the%20WisdomTwin%20Executive%20Huddle%20demo.%20I%27d%20like%20to%20book%20a%2020-minute%20Executive%20Briefing.%0A%0AName%3A%0ACompany%3A%0ARole%3A%0A"
+            target="_blank"
+            rel="noreferrer"
+            data-testid="live-cta"
+            className="absolute right-3 bottom-3 z-30 rounded-full bg-[var(--cream)] px-4 py-2 text-[11px] font-semibold tracking-[0.12em] text-[var(--ink)] uppercase shadow-lg transition hover:bg-white md:right-[calc(40%+1rem)]"
+          >
+            Book Briefing
+          </a>
+        )}
+      </div>
+    </PreloadManager>
+  );
+}
