@@ -33,13 +33,15 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   Also fixed dialoguePlayer multi-window drift bug (analysis replayed over decline caption).
 - [x] v2.3 (2026-08-06) — hero_B_2 wired as the cinematic hero image (272KB optimized JPEG).
   NOTE: scene image path is images/scene/ceo-kitchen-hero.jpg.
-- [x] v2.4 (2026-08-06) — **ROMAN DECISION: the ORIGINAL full boardroom film is canonical.**
-  v2.2's aggressive recut was reverted; all 118 original events restored (narrator cold open,
-  all speakers, full Legal block, CRO/CMO beats). Fixed the endcard overlap bug in the original
-  (endcards fired at 5:36, covering the finale — now start at 7:34). durationMs 487000,
-  label 'Full boardroom (8:07)'. The 45s cut stays the default for cold traffic.
-  DO NOT recut/reorder the full film's story again; improve it in place (pacing, visuals,
-  audio polish) per the backlog.
+- [x] v2.4 (2026-08-06) — Restored the original full film (superseded same-day, see v2.6).
+- [x] v2.5 (2026-08-06, parallel session) — Removed 45s cut from selector, defaulted to full film.
+- [x] v2.6 (2026-08-06) — **FINAL DECISION, locked by Roman: "I like the long 4 minute version
+  best."** The 4:34 recut (rapid-fire cold open, safe decline at 0:45, narrator after proof,
+  Legal trimmed to gate one) IS the demo. Single-film experience: no cut selector, one button,
+  useDemoPlayback('full'). DO NOT resurrect the 8:07 cut as the default, do not re-add cut
+  toggles, do not recut the story. Improve THIS film in place: pacing polish, visuals, captions,
+  audio quality, CTA, analytics. The 8:07 original remains in git history (tag commits v2.4) if
+  ever needed; investor60/outreach45 configs stay in code but are not shown in UI.
 
 ## Backlog (in priority order — one per day)
 
