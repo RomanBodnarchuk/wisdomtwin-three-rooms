@@ -1,8 +1,8 @@
 import type { CutId } from '../types/timeline';
 
+/** Retained for type compatibility. UI no longer offers short cuts — full film only. */
 const OPTIONS: Array<{ id: CutId; label: string }> = [
-  { id: 'full', label: 'Original boardroom film (8:07)' },
-  { id: 'investor60', label: 'The 60-second version' },
+  { id: 'full', label: 'The boardroom film (4:34)' },
 ];
 
 interface Props {

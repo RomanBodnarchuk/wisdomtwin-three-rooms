@@ -1,28 +1,22 @@
 import { SyntheticDataDisclosure } from './SyntheticDataDisclosure';
-import { CutSelector } from './CutSelector';
 import { InvestorModeToggle } from './InvestorModeToggle';
-import type { CutId } from '../types/timeline';
 
 interface Props {
-  cutId: CutId;
   investorMode: boolean;
   showInvestorToggle?: boolean;
-  onCutChange: (cut: CutId) => void;
   onInvestorModeChange: (on: boolean) => void;
   onStart: () => void;
 }
 
 const OUTCOME_LINES = [
-  'Board package complete — slide 14 updated, financial appendix regenerated',
+  'Board package complete: slide 14 updated, financial appendix regenerated',
   'Dissent preserved · legal citations attached · 3 objections pre-answered',
-  'Consensus confidence 94% — with a full audit trail',
+  'Consensus confidence 94% with a full audit trail',
 ];
 
 export function StartExperience({
-  cutId,
   investorMode,
   showInvestorToggle = false,
-  onCutChange,
   onInvestorModeChange,
   onStart,
 }: Props) {
@@ -42,11 +36,10 @@ export function StartExperience({
           Watch a CEO get board-ready in one night.
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-[var(--cream-dim)]">
-          Sunday, 9:40 p.m. Board packet locks tomorrow. His five senior officers take three weeks
+          Sunday, 9:40 p.m. Board packet locks tomorrow. His five senior officers take nineteen days
           to convene. He has one button.
         </p>
 
-        {/* Outcome first — the artifact, before the mechanism */}
         <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
           <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
             What Sunday night produces for Thursday morning
@@ -67,22 +60,19 @@ export function StartExperience({
           data-testid="btn-start"
           className="mt-6 w-full rounded-2xl bg-[var(--cream)] px-4 py-3.5 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
         >
-          Watch how it happens
+          Watch the full boardroom film
         </button>
 
         <p className="mt-3 text-center text-[11px] text-[var(--cream-dim)]">
-          Audio begins only after you press start. Space to pause · M mute · C captions
+          The boardroom film · 4:34 · Space to pause · M mute · C captions
         </p>
 
-        <div className="mt-5 space-y-3 border-t border-white/5 pt-4">
-          <p className="text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">Cut length</p>
-          <CutSelector value={cutId} onChange={onCutChange} />
-          {showInvestorToggle && (
+        {showInvestorToggle && (
+          <div className="mt-5 space-y-3 border-t border-white/5 pt-4">
             <InvestorModeToggle on={investorMode} onChange={onInvestorModeChange} />
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Compliance footer — small, last, out of the way of the story */}
         <div className="mt-4 text-center">
           <SyntheticDataDisclosure compact />
         </div>

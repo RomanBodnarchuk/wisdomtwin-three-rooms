@@ -9,7 +9,6 @@ import { BuzzDevice } from '../../components/BuzzDevice';
 import { CaptionLayer } from '../../components/CaptionLayer';
 import { RoomMode } from '../../components/RoomMode';
 import { EndCard } from '../../components/EndCard';
-import { CutSelector } from '../../components/CutSelector';
 import { InvestorModeToggle } from '../../components/InvestorModeToggle';
 import { SyntheticDataDisclosure } from '../../components/SyntheticDataDisclosure';
 import { EVIDENCE_CARDS } from '../../data/evidence';
@@ -21,6 +20,7 @@ import { dialoguePlayer } from '../../lib/dialoguePlayer';
  * Desktop: cinematic kitchen + Buzz phone.
  * Mobile: Buzz prioritized, kitchen as atmosphere.
  * Dialogue: ElevenLabs executive VO (Web Speech only if an asset is missing).
+ * Cut: the 4:34 boardroom film only. Short cuts are not offered in UI.
  */
 export function DemoShell() {
   const playback = useDemoPlayback('full');
@@ -47,7 +47,6 @@ export function DemoShell() {
     toggleMute,
     setCaptionsOn,
     setInvestorMode,
-    setCut,
     error,
   } = playback;
 
@@ -218,30 +217,22 @@ export function DemoShell() {
           <div className="absolute top-3 right-3 left-3 z-30 flex flex-wrap items-center justify-between gap-2 md:right-[42%]">
             <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur">
               <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-                WisdomTwin · Executive Huddle
+                WisdomTwin · Boardroom film · 4:34
               </p>
             </div>
-            <div className="hidden items-center gap-3 rounded-2xl border border-white/10 bg-black/40 px-3 py-2 backdrop-blur sm:flex">
-              <CutSelector
-                value={cutId}
-                onChange={(c) => {
-                  dialoguePlayer.stop();
-                  setStarted(false);
-                  setCut(c);
-                }}
-              />
-              {investorParam && <InvestorModeToggle on={investorMode} onChange={setInvestorMode} />}
-            </div>
+            {investorParam && (
+              <div className="hidden items-center gap-3 rounded-2xl border border-white/10 bg-black/40 px-3 py-2 backdrop-blur sm:flex">
+                <InvestorModeToggle on={investorMode} onChange={setInvestorMode} />
+              </div>
+            )}
           </div>
         )}
 
         {/* Start gate */}
         {!started && phase !== 'complete' && (
           <StartExperience
-            cutId={cutId}
             investorMode={investorMode}
             showInvestorToggle={investorParam}
-            onCutChange={setCut}
             onInvestorModeChange={setInvestorMode}
             onStart={() => void handleStart()}
           />
