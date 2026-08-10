@@ -77,6 +77,10 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   display 0:00 at Daniel's entry and 2:54 at the close, while seeking remains synchronized to the
   underlying source timeline. All visible runtime labels now identify the film as 2:54.
 
+- [x] v3.2.1 (2026-08-10) — **Clean Daniel's opening handoff.** Suppressed the residual narrator
+  caption during the sub-second transition into Daniel Mercer's opening line. The investor cut now
+  opens on Daniel as CEO with no narrator voice or narrator caption.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full

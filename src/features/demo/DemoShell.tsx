@@ -30,7 +30,7 @@ const FILM_ENTRY_MS = 65_800;
  * Desktop: cinematic kitchen + Buzz phone.
  * Mobile: Buzz prioritized, kitchen as atmosphere.
  * Dialogue: ElevenLabs executive VO (Web Speech only if an asset is missing).
- * Cut: the 4:00 investor film is the default experience. The 8:07 original stays
+ * Cut: the 2:54 investor film is the default experience. The 8:07 original stays
  * in code (useDemoPlayback('full')) but short cuts are not offered in UI.
  */
 export function DemoShell() {
@@ -148,6 +148,8 @@ export function DemoShell() {
     ({ startMs, endMs }) => timeMs >= startMs && timeMs < endMs,
   );
   const showRoomOverlay = live && Boolean(roomOverlay) && snapshot.focus !== 'end-card';
+  const visibleCaption =
+    timeMs >= FILM_ENTRY_MS && snapshot.caption?.speaker === 'narrator' ? null : snapshot.caption;
 
   return (
     <PreloadManager>
@@ -187,8 +189,8 @@ export function DemoShell() {
         {/* Captions */}
         <CaptionLayer
           visible={captionsOn && live && snapshot.scene !== 'end-card'}
-          speaker={snapshot.caption?.speaker ?? null}
-          text={snapshot.caption?.text ?? null}
+          speaker={visibleCaption?.speaker ?? null}
+          text={visibleCaption?.text ?? null}
         />
 
         {/* Hero iPhone 19 Max — live Buzz app */}
