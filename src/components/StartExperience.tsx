@@ -36,7 +36,7 @@ export function StartExperience({
           Watch a CEO get board-ready in one night.
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-[var(--cream-dim)]">
-          Sunday, 9:40 p.m. Board packet locks tomorrow. His five senior officers take nineteen days
+          Sunday, 9:40 p.m. Board packet locks tomorrow. His five senior officers take three weeks
           to convene. He has one button.
         </p>
 

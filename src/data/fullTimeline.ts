@@ -109,7 +109,7 @@ const events: DemoEvent[] = [
   { id: 'art-7', type: 'artifact', startMs: 203200, artifactId: 'art_memo', action: 'ready', title: 'Board memo ready' },
   { id: 'dlg-ceo-sleep', type: 'dialogue', startMs: 442595, endMs: 445474, speaker: 'ceo', text: 'I can actually sleep tonight. Thank you.' },
   { id: 'sc-relieved', type: 'scene', startMs: 206500, scene: 'kitchen-resolved', ceoPose: 'relieved', lighting: 'resolve' },
-  { id: 'dlg-buzz-close', type: 'dialogue', startMs: 445924, endMs: 453958, speaker: 'buzz', text: 'Executive Huddle ended. Duration: eight minutes, forty-two seconds. Equivalent scheduling delay avoided: nineteen days.' },
+  { id: 'dlg-buzz-close', type: 'dialogue', startMs: 445924, endMs: 453958, speaker: 'buzz', text: 'Executive Huddle ended. Duration: eight minutes, forty-two seconds. Equivalent scheduling delay avoided: twenty-one days.' },
   { id: 'sfx-close', type: 'sound', startMs: 216800, soundId: 'huddle-close' },
   { id: 'room-complete', type: 'room-transition', startMs: 217000, room: 'complete', label: 'COMPLETE' },
   { id: 'music-lift', type: 'music', startMs: 217500, bed: 'lift', volume: 0.03 },

@@ -81,5 +81,5 @@ export const COMPLETION_SUMMARY = {
   citations: 'Attached',
   dissent: 'Preserved',
   auditRecord: 'Complete',
-  schedulingDelayAvoided: '19 days',
+  schedulingDelayAvoided: '21 days',
 } as const;
