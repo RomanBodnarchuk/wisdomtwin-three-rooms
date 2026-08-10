@@ -26,6 +26,7 @@ interface Props {
   cutId: CutId;
   timeMs: number;
   durationMs: number;
+  timelineStartMs?: number;
   muted: boolean;
   captionsOn: boolean;
   live: boolean;
@@ -47,6 +48,7 @@ export function BuzzDevice({
   cutId,
   timeMs,
   durationMs,
+  timelineStartMs = 0,
   muted,
   captionsOn,
   live,
@@ -166,6 +168,7 @@ export function BuzzDevice({
           phase={phase}
           timeMs={timeMs}
           durationMs={durationMs}
+          timelineStartMs={timelineStartMs}
           muted={muted}
           captionsOn={captionsOn}
           onTogglePlay={onTogglePlay}
@@ -209,6 +212,7 @@ export function BuzzDevice({
         open={drawer === 'transcript'}
         cutId={cutId}
         timeMs={timeMs}
+        timelineStartMs={timelineStartMs}
         onClose={close}
         onSeek={onSeek}
       />
