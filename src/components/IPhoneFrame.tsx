@@ -31,7 +31,7 @@ export function IPhoneFrame({
       data-model={model}
       data-live={live ? 'true' : 'false'}
       role="presentation"
-      aria-label={`iPhone ${model === '19-max' ? '19' : '17'} Pro Max with Buzz`}
+      aria-label={`iPhone ${model === '19-max' ? '19' : '17'} Pro Max with WisdomTwin Executive Huddle`}
     >
       {/* Outer titanium shell */}
       <div className="iphone-shell relative h-full w-full">

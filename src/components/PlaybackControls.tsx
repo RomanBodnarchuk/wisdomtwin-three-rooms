@@ -71,7 +71,7 @@ export function PlaybackControls({
             pressed={captionsOn}
           />
         </div>
-        <div className="flex items-center gap-1">
+        <div className="hidden items-center gap-1 sm:flex">
           <ControlButton label="Evidence" onClick={onOpenEvidence} testId="btn-evidence" />
           <ControlButton label="Blockers" onClick={onOpenBlockers} testId="btn-blockers" />
           <ControlButton label="Escalate" onClick={onOpenEscalations} testId="btn-escalations" />

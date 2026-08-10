@@ -27,7 +27,7 @@ export const SPEAKER_LABELS: Record<SpeakerId, string> = {
   cro: 'CRO Twin',
   cmo: 'CMO Twin',
   legal: 'Chief Legal Officer Twin',
-  buzz: 'Buzz',
+  buzz: 'WisdomTwin',
   system: 'System',
 };
 

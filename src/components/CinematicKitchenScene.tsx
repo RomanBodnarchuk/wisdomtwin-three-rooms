@@ -68,7 +68,7 @@ export function CinematicKitchenScene({ snapshot, live = false }: Props) {
       data-ceo-pose={ceoPose}
       data-lighting={lighting}
       data-live={live ? 'true' : 'false'}
-      aria-label="Sunday night kitchen. Daniel Mercer on a live Buzz call with his iPhone."
+      aria-label="Sunday night kitchen. Daniel Mercer in a live WisdomTwin Executive Huddle on his iPhone."
     >
       {/* Photoreal hero still — CEO mid-call on iPhone Pro Max */}
       <motion.div
@@ -96,7 +96,7 @@ export function CinematicKitchenScene({ snapshot, live = false }: Props) {
       <div className="kitchen-photo-vignette" />
 
       {/* LIVE call chrome */}
-      <div className="absolute top-5 left-5 z-10 flex max-w-[min(92%,360px)] flex-col gap-2">
+      <div className="absolute top-5 left-5 z-10 flex max-w-[min(92%,360px)] flex-col gap-2 lg:hidden">
         {live && (
           <div className="kitchen-live-badge" data-testid="kitchen-live-badge">
             <span className="dot" aria-hidden />
@@ -121,7 +121,7 @@ export function CinematicKitchenScene({ snapshot, live = false }: Props) {
             >
               <p className="text-[9px] tracking-[0.16em] text-[var(--warm)] uppercase">
                 {speakerLabel}
-                {activeSpeaker?.speaker === 'ceo' ? ' · on device' : ' · in Buzz'}
+                {activeSpeaker?.speaker === 'ceo' ? ' · on device' : ' · in Huddle'}
               </p>
               {activeSpeaker?.text && (
                 <p className="mt-1 line-clamp-2 text-xs leading-snug text-[var(--cream)]">
