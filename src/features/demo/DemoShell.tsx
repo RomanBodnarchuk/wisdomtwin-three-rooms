@@ -20,10 +20,11 @@ import { dialoguePlayer } from '../../lib/dialoguePlayer';
  * Desktop: cinematic kitchen + Buzz phone.
  * Mobile: Buzz prioritized, kitchen as atmosphere.
  * Dialogue: ElevenLabs executive VO (Web Speech only if an asset is missing).
- * Cut: the original full boardroom film only (8:07). Short cuts are not offered in UI.
+ * Cut: the 4:00 investor film is the default experience. The 8:07 original stays
+ * in code (useDemoPlayback('full')) but short cuts are not offered in UI.
  */
 export function DemoShell() {
-  const playback = useDemoPlayback('full');
+  const playback = useDemoPlayback('investor240');
   // Investor mode is for investors only — enable with ?investor in the URL
   const investorParam =
     typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('investor');
@@ -217,7 +218,7 @@ export function DemoShell() {
           <div className="absolute top-3 right-3 left-3 z-30 flex flex-wrap items-center justify-between gap-2 md:right-[42%]">
             <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur">
               <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-                WisdomTwin · Full boardroom · 8:07
+                WisdomTwin · Investor cut · 4:00
               </p>
             </div>
             {investorParam && (

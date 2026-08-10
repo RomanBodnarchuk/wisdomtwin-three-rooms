@@ -3,7 +3,7 @@
  * Reconstructed from compiled source maps; types are erased at runtime.
  */
 
-export type CutId = 'full' | 'investor60' | 'outreach45';
+export type CutId = 'full' | 'investor60' | 'outreach45' | 'investor240';
 
 export type DemoPhase = 'ready' | 'playing' | 'paused' | 'complete' | 'error';
 

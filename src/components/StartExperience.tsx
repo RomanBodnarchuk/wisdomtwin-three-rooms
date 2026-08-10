@@ -39,6 +39,9 @@ export function StartExperience({
           Sunday, 9:40 p.m. Board packet locks tomorrow. His five senior officers take three weeks
           to convene. He has one button.
         </p>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--cream)]">
+          One press moves the decision forward. No links. No calendar ping-pong.
+        </p>
 
         <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
           <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
@@ -60,11 +63,11 @@ export function StartExperience({
           data-testid="btn-start"
           className="mt-6 w-full rounded-2xl bg-[var(--cream)] px-4 py-3.5 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
         >
-          Watch the full boardroom film
+          Watch the investor film
         </button>
 
         <p className="mt-3 text-center text-[11px] text-[var(--cream-dim)]">
-          Original boardroom film · 8:07 · Space to pause · M mute · C captions
+          Investor cut · 4:00 · Space to pause · M mute · C captions
         </p>
 
         {showInvestorToggle && (

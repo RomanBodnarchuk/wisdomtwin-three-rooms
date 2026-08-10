@@ -45,6 +45,17 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 
 - [x] v2.7 (2026-08-06) — **Longest cut only = original 8:07 boardroom film.** Restored fullTimeline
   from v2.4 (487000ms). No cut selector. 4:34 recut remains in git history (v2.2/v2.6) if needed.
+- [x] v2.8 (2026-08-10, parallel session) — 19 vs 21 days: matched narrator "three weeks" across
+  start screen, close caption, data model. NOTE: buzz-close AUDIO still says "nineteen days"
+  (baked mp3) — caption reverted to match audio in v2.9 until the line is re-recorded.
+- [x] v2.9 (2026-08-10) — **Investor cut (4:00) is the default film** (V6 source-of-truth alignment:
+  decks promise "1-4 min audio huddles"). Based on the v2.6 4:34 film Roman locked, trimmed:
+  CMO category line, CEO sleep beat, end cards 34s→16s. End card stage 5 = V6 closer
+  ("Every employee, backed by a Wisdom Twin." / "We sell speed. One press moves the decision forward.").
+  Start screen + chrome updated. Removed dead WalkingAtmosphere ("The Walk") component.
+  Re-applied the 8:07 timeline audio resync (evidence/blockers/scene events anchored to dialogue;
+  legal-build window 348528→230854) — it had been wiped uncommitted. QA: 400/400 data checks pass
+  (wisdomtwin-three-rooms-qa/validate.js).
 - [x] v2.8 (2026-08-10) — **Fix 19 vs 21 days.** Start screen, buzz-close caption, and blockers data
   model all now read "three weeks" / "twenty-one days" to match narrator audio. Items #2–#3 blocked
   (intros baked into per-role MP3s; no ElevenLabs API key to re-render or trim).

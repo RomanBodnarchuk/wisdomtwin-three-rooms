@@ -6,11 +6,13 @@ import type { CutId, DemoPhase, DemoSnapshot, TimelineConfig } from '../types/ti
 import { FULL_TIMELINE } from '../data/fullTimeline';
 import { INVESTOR_60_TIMELINE } from '../data/investor60Timeline';
 import { OUTREACH_45_TIMELINE } from '../data/outreach45Timeline';
+import { INVESTOR_240_TIMELINE } from '../data/investor240Timeline';
 
 const CUTS: Record<CutId, TimelineConfig> = {
   full: FULL_TIMELINE,
   investor60: INVESTOR_60_TIMELINE,
   outreach45: OUTREACH_45_TIMELINE,
+  investor240: INVESTOR_240_TIMELINE,
 };
 
 export interface DemoPlaybackApi {
