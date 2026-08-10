@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import type { EndCardEvent } from '../types/timeline';
 import { SyntheticDataDisclosure } from './SyntheticDataDisclosure';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { DecisionEconomicsCard } from './DecisionEconomicsCard';
+import { trackInvestorEvent } from '../lib/investorAnalytics';
 
 interface Props {
   endCard: EndCardEvent | null;
@@ -18,11 +20,11 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
 
   return (
     <div
-      className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black px-6 text-center"
+      className="absolute inset-0 z-50 flex flex-col items-center justify-start overflow-y-auto bg-black px-5 py-6 text-center md:justify-center md:px-6"
       data-testid="end-card"
       data-stage={endCard.stage}
     >
-      <div className="max-w-xl space-y-5">
+      <div className="w-full max-w-3xl space-y-5">
         {endCard.lines.map((line, i) => (
           <motion.p
             key={`${endCard.stage}-${i}-${line}`}
@@ -31,69 +33,55 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
             transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : i * 0.12 }}
             className={`leading-relaxed text-[var(--cream)] ${
               endCard.stage >= 5 && i === 0
-                ? 'text-2xl font-semibold tracking-[0.2em] md:text-3xl'
+                ? 'text-sm font-semibold tracking-[0.24em] text-[var(--brand-gold)] md:text-base'
+                : endCard.stage >= 5 && i === 1
+                  ? 'text-3xl leading-tight md:text-5xl'
                 : endCard.stage >= 5
-                  ? 'text-sm tracking-[0.12em] text-[var(--cream-dim)] uppercase'
+                  ? 'text-sm tracking-[0.08em] text-[var(--cream-dim)]'
                   : 'text-lg md:text-xl'
             }`}
-            style={{ fontFamily: i === 0 && endCard.stage >= 5 ? 'var(--font-display)' : undefined }}
+            style={{ fontFamily: i === 1 && endCard.stage >= 5 ? 'var(--font-display)' : undefined }}
           >
             {line}
           </motion.p>
         ))}
 
-        {endCard.moneyCard && endCard.stage >= 4 && (
-          <motion.div
-            initial={reduced ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.3 }}
-            className="mx-auto mt-6 max-w-md rounded-2xl border border-[var(--warm)]/40 bg-[var(--warm-soft)] px-5 py-4 text-left"
-            data-testid="money-math-card"
-          >
-            <p className="text-[10px] tracking-[0.22em] text-[var(--warm)] uppercase">
-              The cost of waiting
-            </p>
-            <ul className="mt-2 space-y-1.5">
-              {endCard.moneyCard.map((line, i) => (
-                <li
-                  key={i}
-                  className={`text-sm leading-snug ${i === 0 ? 'font-medium text-[var(--warm)]' : 'text-[var(--cream)]'}`}
-                >
-                  {line}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-
         {showInvestor && endCard.stage >= 4 && (
           <motion.div
             initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mx-auto mt-6 max-w-sm rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left"
+            className="mx-auto mt-6 grid max-w-2xl gap-3 md:grid-cols-2"
             data-testid="investor-contrast"
           >
-            <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-              Institutional judgment layer
-            </p>
-            <ul className="mt-2 space-y-1 text-sm text-[var(--cream)]">
-              <li>Search finds documents</li>
-              <li>Twins preserve people</li>
-              <li className="font-medium text-[var(--warm)]">WisdomTwin preserves decisions</li>
-            </ul>
+            <DecisionEconomicsCard />
+            <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left">
+              <p className="text-[10px] font-semibold tracking-[0.18em] text-[var(--cream-dim)] uppercase">
+                The compounding asset
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--cream)]">
+                Every governed decision strengthens the enterprise judgment layer.
+              </p>
+              <ul className="mt-3 grid grid-cols-2 gap-2 text-xs text-[var(--cream-dim)]">
+                <li className="rounded-lg border border-white/8 px-2 py-2">Policy memory</li>
+                <li className="rounded-lg border border-white/8 px-2 py-2">Decision precedent</li>
+                <li className="rounded-lg border border-white/8 px-2 py-2">Dissent history</li>
+                <li className="rounded-lg border border-white/8 px-2 py-2">Escalation outcomes</li>
+              </ul>
+            </section>
           </motion.div>
         )}
 
         {endCard.stage >= 5 && (
-          <div className="mx-auto mt-4 max-w-md space-y-4">
+          <div className="mx-auto mt-4 max-w-lg space-y-4">
             <a
               href="https://calendly.com/romanbodnarchuk/20min"
               target="_blank"
               rel="noreferrer"
               data-testid="end-cta"
+              onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'end-card' })}
               className="block w-full rounded-2xl bg-[var(--cream)] px-6 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
             >
-              Book Your Executive Huddle Demo
+              Book a 20-minute investor demo
             </a>
             <p className="text-xs tracking-[0.08em] text-[var(--cream-dim)]">
               wisdomtwin.ai · Text anytime with questions or to book: 416 220 5314

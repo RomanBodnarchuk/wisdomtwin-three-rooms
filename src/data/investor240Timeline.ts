@@ -35,8 +35,9 @@ const events: DemoEvent[] = [
   // ── THE MOAT: safe decline lands at 0:29–0:45 ───────────────────────────
   { id: 'dlg-cto-full', type: 'dialogue', startMs: 10000, endMs: 29080, speaker: 'cto', text: "Your CTO's twin. I reviewed 12,400 historical authorization decisions. Ninety-one percent follow six documented policy gates and can be processed inside our private environment. The remaining nine percent are exactly where clinical judgment changed the outcome." },
   { id: 'ev-cto', type: 'evidence', startMs: 10500, endMs: 45000, evidenceId: 'cto_history', action: 'show' },
-  { id: 'music-silence', type: 'music', startMs: 28500, bed: 'silence' },
-  { id: 'sfx-decline', type: 'sound', startMs: 28800, soundId: 'safe-decline' },
+  // Full stop: silence lands 1.5s before the governed refusal.
+  { id: 'music-silence', type: 'music', startMs: 27800, bed: 'silence' },
+  { id: 'sfx-decline', type: 'sound', startMs: 29100, soundId: 'safe-decline' },
   { id: 'safe-decline-on', type: 'safe-decline', startMs: 29100, endMs: 44690, active: true },
   { id: 'focus-escalation', type: 'visual-focus', startMs: 29100, target: 'escalation' },
   { id: 'dlg-cto-decline', type: 'dialogue', startMs: 29380, endMs: 44690, speaker: 'cto', text: 'One warning. I found no reliable precedent for peak-load throughput at the proposed volume. Confidence is below governance threshold. I am declining to answer. Recommended human reviewer: Vice President of Clinical Operations. Estimated review time: thirty-eight minutes.' },
@@ -123,14 +124,14 @@ const events: DemoEvent[] = [
   { id: 'room-complete', type: 'room-transition', startMs: 223800, room: 'complete', label: 'COMPLETE' },
   { id: 'music-lift', type: 'music', startMs: 224000, bed: 'lift', volume: 0.03 },
 
-  // ── END CARDS (compressed — V6 source-of-truth closer) ───────────────────
+  // ── END CARDS: coordination tax -> governed outcome -> investor thesis ───
   { id: 'sc-end', type: 'scene', startMs: 224200, scene: 'end-card', ceoPose: 'relieved', lighting: 'resolve' },
   { id: 'focus-end', type: 'visual-focus', startMs: 224200, target: 'end-card' },
-  { id: 'end-1', type: 'end-card', startMs: 224600, endMs: 227600, stage: 1, lines: ['The first generation of enterprise AI helped people find information.'] },
-  { id: 'end-2', type: 'end-card', startMs: 227600, endMs: 230600, stage: 2, lines: ['The first generation of enterprise AI helped people find information.', 'The second preserved individual knowledge.'] },
-  { id: 'end-3', type: 'end-card', startMs: 230600, endMs: 233600, stage: 3, lines: ['The first generation of enterprise AI helped people find information.', 'The second preserved individual knowledge.', 'WisdomTwin preserves institutional judgment.'] },
-  { id: 'end-4', type: 'end-card', startMs: 233600, endMs: 237400, stage: 4, lines: ['Search finds documents.', 'Digital twins preserve people.', 'WisdomTwin preserves decisions.'], showInvestorContrast: true, moneyCard: ['Nineteen days of a CEO and five senior officers waiting on one decision ≈ $400K of delayed execution.', 'One huddle: 8 minutes, 42 seconds. Full audit trail.', 'Thursday morning, he walks in with the board package.'] },
-  { id: 'end-5', type: 'end-card', startMs: 237400, stage: 5, lines: ['WISDOMTWIN.AI', 'WisdomTwin preserves institutional judgment.', 'We sell speed. One press moves the decision forward.'], showInvestorContrast: true },
+  { id: 'end-1', type: 'end-card', startMs: 224600, endMs: 227600, stage: 1, lines: ['Three weeks to convene five senior officers.'] },
+  { id: 'end-2', type: 'end-card', startMs: 227600, endMs: 230600, stage: 2, lines: ['Three weeks to convene five senior officers.', 'Eight minutes, forty-two seconds to reach a governed decision.'] },
+  { id: 'end-3', type: 'end-card', startMs: 230600, endMs: 233600, stage: 3, lines: ['Evidence attached.', 'Dissent preserved.', 'Human judgment protected.'] },
+  { id: 'end-4', type: 'end-card', startMs: 233600, endMs: 237400, stage: 4, lines: ['The product is speed.', 'The compounding asset is institutional judgment.'], showInvestorContrast: true },
+  { id: 'end-5', type: 'end-card', startMs: 237400, stage: 5, lines: ['WISDOMTWIN.AI', 'The judgment layer for the enterprise.', 'WisdomTwin preserves institutional judgment.'], showInvestorContrast: true },
 ];
 
 export const INVESTOR_240_TIMELINE: TimelineConfig = {

@@ -11,9 +11,17 @@ import { RoomMode } from '../../components/RoomMode';
 import { EndCard } from '../../components/EndCard';
 import { InvestorModeToggle } from '../../components/InvestorModeToggle';
 import { SyntheticDataDisclosure } from '../../components/SyntheticDataDisclosure';
-import { EVIDENCE_CARDS } from '../../data/evidence';
-import { EvidenceCard } from '../../components/EvidenceCard';
 import { dialoguePlayer } from '../../lib/dialoguePlayer';
+import { InvestorProofRail } from '../../components/InvestorProofRail';
+import { useInvestorAnalytics } from '../../hooks/useInvestorAnalytics';
+import { trackInvestorEvent } from '../../lib/investorAnalytics';
+
+const ROOM_OVERLAY_WINDOWS = [
+  { startMs: 800, endMs: 3_600 },
+  { startMs: 65_800, endMs: 70_200 },
+  { startMs: 94_600, endMs: 97_600 },
+  { startMs: 135_200, endMs: 138_500 },
+] as const;
 
 /**
  * Top-level Three Rooms experience shell.
@@ -121,19 +129,16 @@ export function DemoShell() {
   );
 
   useKeyboardControls(keyboardHandlers);
+  useInvestorAnalytics({ cutId, durationMs, phase, timeMs });
 
   if (error) {
     return <ErrorState message={error} onRetry={() => void handleStart()} />;
   }
 
-  const showRoomOverlay =
-    live &&
-    (snapshot.room === 'dream' || snapshot.room === 'stress-test' || snapshot.room === 'build') &&
-    // Show overlay briefly at room start — approximate via confidence null + early room
-    snapshot.focus !== 'end-card';
-
-  const sideEvidenceId = snapshot.visibleEvidenceIds[snapshot.visibleEvidenceIds.length - 1];
-  const sideEvidence = sideEvidenceId ? EVIDENCE_CARDS[sideEvidenceId] : null;
+  const roomOverlay = ROOM_OVERLAY_WINDOWS.find(
+    ({ startMs, endMs }) => timeMs >= startMs && timeMs < endMs,
+  );
+  const showRoomOverlay = live && Boolean(roomOverlay) && snapshot.focus !== 'end-card';
 
   return (
     <PreloadManager>
@@ -142,6 +147,7 @@ export function DemoShell() {
         data-testid="demo-shell"
         data-phase={phase}
         data-room={snapshot.room}
+        data-safe-decline={snapshot.safeDeclineActive ? 'true' : 'false'}
       >
         {/* Hidden master media element — attach real mix at public/audio/master/{cut}.mp3 */}
         <audio
@@ -166,14 +172,8 @@ export function DemoShell() {
           )}
         </div>
 
-        {/* Desktop side evidence / context */}
-        {live && sideEvidence && snapshot.scene !== 'end-card' && (
-          <div className="pointer-events-none absolute top-8 left-8 z-20 hidden w-72 lg:block">
-            <div className="pointer-events-auto opacity-90">
-              <EvidenceCard card={sideEvidence} highlighted={snapshot.focus === 'evidence'} />
-            </div>
-          </div>
-        )}
+        {/* Timed investor thesis — makes problem, moat, mechanism, and value explicit */}
+        {live && snapshot.scene !== 'end-card' && <InvestorProofRail timeMs={timeMs} />}
 
         {/* Captions */}
         <CaptionLayer
@@ -218,7 +218,7 @@ export function DemoShell() {
           <div className="absolute top-3 right-3 left-3 z-30 flex flex-wrap items-center justify-between gap-2 md:right-[42%]">
             <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur">
               <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-                WisdomTwin · Investor cut · 4:00
+                WisdomTwin · Judgment platform · Investor film · 4:00
               </p>
             </div>
             {investorParam && (
@@ -263,9 +263,10 @@ export function DemoShell() {
             target="_blank"
             rel="noreferrer"
             data-testid="live-cta"
+            onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'live' })}
             className="absolute right-3 bottom-3 z-30 rounded-full bg-[var(--cream)] px-4 py-2 text-[11px] font-semibold tracking-[0.12em] text-[var(--ink)] uppercase shadow-lg transition hover:bg-white md:right-[calc(40%+1rem)]"
           >
-            Book Demo
+            Book Investor Demo
           </a>
         )}
       </div>

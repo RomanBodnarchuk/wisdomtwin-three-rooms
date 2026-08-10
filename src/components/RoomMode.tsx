@@ -10,10 +10,16 @@ const LABELS: Record<string, string> = {
   idle: '',
 };
 
+const SUBLINES: Record<string, string> = {
+  dream: 'Define the ambition',
+  'stress-test': 'Expose what breaks',
+  build: 'Resolve with precedent',
+  complete: 'Decision ready',
+};
+
 interface Props {
   room: RoomModeType;
   overlay?: boolean;
-  /** One-shot structure card (e.g. "Three rooms. One night. One decision.") — first transition only. */
   subtitle?: string | null;
 }
 
@@ -39,18 +45,21 @@ export function RoomMode({ room, overlay = false, subtitle = null }: Props) {
             initial={reduced ? false : { opacity: 0, letterSpacing: '0.4em' }}
             animate={{ opacity: 1, letterSpacing: '0.35em' }}
             transition={{ duration: reduced ? 0 : 0.8 }}
-            className="rounded-3xl border border-white/10 bg-black/50 px-8 py-4 backdrop-blur-md"
+            className="rounded-3xl border border-white/10 bg-black/60 px-8 py-4 text-center backdrop-blur-md"
           >
-            <p className="text-center text-sm font-medium tracking-[0.35em] text-[var(--cream)] uppercase md:text-base">
+            <p className="text-sm font-medium tracking-[0.35em] text-[var(--cream)] uppercase md:text-base">
               {label}
+            </p>
+            <p className="mt-1 text-[10px] tracking-[0.12em] text-[var(--brand-gold)] uppercase">
+              {SUBLINES[room]}
             </p>
             {subtitle && (
               <motion.p
                 initial={reduced ? false : { opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: reduced ? 0 : 0.7, delay: reduced ? 0 : 0.5 }}
-                className="mt-2 text-center text-xs tracking-[0.12em] text-[var(--warm)] md:text-sm"
-                style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', textTransform: 'none', letterSpacing: '0.08em' }}
+                className="mt-3 border-t border-white/10 pt-3 text-xs tracking-[0.08em] text-[var(--cream-dim)] md:text-sm"
+                style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
                 data-testid="room-title-card"
               >
                 {subtitle}

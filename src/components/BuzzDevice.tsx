@@ -16,6 +16,7 @@ import { LiveTranscript } from './LiveTranscript';
 import { PlaybackControls } from './PlaybackControls';
 import { RoomMode } from './RoomMode';
 import { IPhoneFrame } from './IPhoneFrame';
+import { SafeDeclineBanner } from './SafeDeclineBanner';
 
 type Drawer = 'none' | 'evidence' | 'blockers' | 'escalations' | 'transcript';
 
@@ -69,7 +70,7 @@ export function BuzzDevice({
         className="buzz-frame relative flex h-full w-full flex-col overflow-hidden"
         data-testid="buzz-device"
         role="region"
-        aria-label="Buzz executive huddle iPhone app — live"
+        aria-label="WisdomTwin executive huddle iPhone app — live"
       >
       <HuddleHeader live={live} room={snapshot.room} />
 
@@ -106,14 +107,19 @@ export function BuzzDevice({
               timeMs > 0 && <RoomMode room={snapshot.room} />}
 
             <ActiveSpeaker active={snapshot.activeSpeaker} />
-            <ParticipantList participants={snapshot.participants} />
+            <SafeDeclineBanner active={snapshot.safeDeclineActive} />
+            <div className="hidden sm:block">
+              <ParticipantList participants={snapshot.participants} />
+            </div>
 
             {latestEvidence && (
-              <EvidenceCard card={latestEvidence} highlighted={snapshot.focus === 'evidence'} />
+              <div className="hidden sm:block">
+                <EvidenceCard card={latestEvidence} highlighted={snapshot.focus === 'evidence'} />
+              </div>
             )}
 
             {snapshot.showBlockerRegister && Object.keys(snapshot.blockers).length > 0 && (
-              <div>
+              <div className="hidden sm:block">
                 <p className="mb-1.5 text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">
                   Blocker register
                 </p>
@@ -133,7 +139,7 @@ export function BuzzDevice({
           </div>
 
           {/* Bottom rail */}
-          <div className="border-t border-[var(--ink-border)] px-2 py-2">
+          <div className="hidden border-t border-[var(--ink-border)] px-2 py-2 sm:block">
             <div className="mb-1 flex justify-around text-[10px] text-[var(--cream-dim)]">
               <button type="button" className="px-2 py-1" onClick={onToggleMute}>
                 {muted ? 'Unmute' : 'Mute'}

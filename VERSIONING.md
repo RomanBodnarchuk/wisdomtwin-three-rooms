@@ -59,17 +59,15 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 - [x] v2.8 (2026-08-10) — **Fix 19 vs 21 days.** Start screen, buzz-close caption, and blockers data
   model all now read "three weeks" / "twenty-one days" to match narrator audio. Items #2–#3 blocked
   (intros baked into per-role MP3s; no ElevenLabs API key to re-render or trim).
-- [x] v3.0 (2026-08-10) — **Investor-grade pass on the locked 4:00 cut** (backlog #6–#9, #11, #12, #14):
-  kinetic captions — bigger type, pop-in per line, money phrases highlighted warm gold
-  ("declining to answer", "seven to two", "eleven million dollars", "62→91%", "94%", "nineteen days",
-  "thirty-eight minutes", "8:42"); money-math endcard at stage 4 ("Nineteen days … ≈ $400K of delayed
-  execution. One huddle: 8 minutes, 42 seconds. Full audit trail." + "Thursday morning, he walks in
-  with the board package." — covers #12 as copy); "Three rooms. One night. One decision." title card
-  under the first room-transition label, now visible on mobile too; tagline open+close (start screen
-  subhead + end-5; competing "Every employee…" closer removed; investor contrast box untouched);
-  buzz dependency line on start screen (Teams / Zoom / Slack / Buzz app). End-4 window 233.6→237.4s,
-  end-5 starts 237.4s (CTA persists post-completion — no dwell lost). Deferred: #10 buzz voice
-  re-render (no ElevenLabs key), #13 analytics (no endpoint yet), #5 decline full-stop (recut-adjacent).
+- [x] v3.0 (2026-08-10) — **Complete investor-grade visual edit.** Preserved the locked 4:00
+  voice performance and added a six-chapter investor proof rail (governance moat → coordination
+  tax → enterprise constraints → decision engine → board-ready outputs → economics), a stronger
+  outcome-first start gate, kinetic number/decision captions, a full-stop safe-decline moment,
+  mobile-visible three-room structure cards, a nineteen-day/≈$400K decision-economics disclosure,
+  the Thursday-morning board-package payoff, compounding judgment-asset framing, one investor-meeting
+  CTA, and vendor-neutral start/25/50/75/100/CTA analytics events. End-card dwell runs through 237.4s.
+  The start screen also establishes Teams/Zoom/Slack/WisdomTwin-app surfaces. Brand UI now reads
+  WisdomTwin; Buzz remains only an internal code/audio id.
 
 ## Backlog (in priority order — one per day)
 
@@ -79,31 +77,29 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 2. [ ] ~~Delete the five spoken twin introductions~~ → BLOCKED: intros baked into single
    per-role MP3 files. No ELEVENLABS_API_KEY to re-render. Cannot trim without audio tooling.
    Defer until voice re-render pass (backlog #10) or audio editing tools available.
-3. [ ] **Break the 38-second Legal block** (legal-02, 1:45–2:23) — split into two beats with a
-   CEO interruption ("English. What kills it?") using existing ceo audio or a text-only caption beat.
+3. [x] **Break the 38-second Legal block.** The investor cut now uses the CEO's "Legal first"
+  interruption and a 12-second gate-one window; the long audio remains available to the archival cut.
 4. [x] **Fix 19 vs 21 days.** (v2.8, 2026-08-10) Narrator audio says "three weeks" (=21), buzz-close audio says
    "nineteen days". Re-record ONE line with ElevenLabs (buzz voice id SAz9YHcvj6GT2YYXdXww) if
    ELEVENLABS_API_KEY is available; otherwise change the on-screen completion card to match the
    narrator ("21 days") and queue the audio fix. Never ship captions that contradict the audio.
-5. [ ] **Decline-moment full stop.** At the safe-decline beat: drop music bed to silence 1.5s
+5. [x] **Decline-moment full stop.** At the safe-decline beat: drop music bed to silence 1.5s
    BEFORE the line, hold the blocker register visual, no other motion. Silence sells it.
-6. [x] **Money-math card after huddle end** (v3.0, 2026-08-10) — uses canonical "nineteen days" + 8:42, stage 4. ORIGINAL TEXT:.** "21 days of a CEO + five senior officers waiting
-   on a decision ≈ $400K in delayed execution. One huddle: 8 minutes." One card, endcard stage 4.
-7. [x] **Tagline consistency** (v3.0, 2026-08-10). ORIGINAL TEXT:.** "WisdomTwin preserves institutional judgment" — once at open
-   (start screen subhead), once at close. Remove competing closers except in investor contrast box.
-8. [x] **Captions: bigger, kinetic** (v3.0, 2026-08-10). ORIGINAL TEXT:, money phrases highlighted** in warm gold (#C8A45D):
-   "declining to answer", "seven to two", "twenty-one days", "ninety-one percent".
-9. [x] **"Three rooms. One night. One decision."** (v3.0, 2026-08-10). ORIGINAL TEXT: title card during first room transition so the
-   structure name pays off (internal mechanic may stay in code, not in copy).
+6. [x] **Money-math card after huddle end.** Uses the canonical nineteen-day completion audio,
+   8:42 huddle duration, and an explicitly illustrative ≈$400K delayed-execution estimate.
+7. [x] **Tagline consistency.** "WisdomTwin preserves institutional judgment" appears at open and close.
+8. [x] **Captions: bigger, kinetic, money phrases highlighted** in warm gold (#C8A45D).
+9. [x] **"Three rooms. One night. One decision."** title card appears on the first room transition.
 10. [ ] **Buzz voice authority pass.** Re-render the 6 buzz lines with a lower, slower, chief-of-staff
     voice (ElevenLabs). Deterministic playback beats browser TTS fallback.
-11. [x] **Mobile simplification** (v3.0, 2026-08-10 — verified existing + room overlay mobile-visible). ORIGINAL TEXT:.** Phones: hide side panels/evidence chrome; keep headline, captions,
-    play control, CTA. Verify at 390px width.
-12. [x] **Thursday boardroom closing** (v3.0, 2026-08-10 — as copy line in money-math card; image/VO still open). ORIGINAL TEXT: image or VO line** — the buyer buys the Monday morning after.
-13. [ ] **Analytics instrumentation.** Track start rate, 25/50/75/100% completion, CTA clicks
-    (privacy-friendly, e.g. Plausible or simple endpoint). Without these four numbers every future
-    change is guesswork.
-14. [x] **Buzz dependency line** (v3.0, 2026-08-10 — on start screen). ORIGINAL TEXT:.** One line establishing twins join any huddle surface
+11. [x] **Mobile simplification.** Phones hide side panels/evidence chrome and retain headline,
+    captions, play control, CTA, and the room structure card.
+12. [x] **Thursday boardroom closing.** Stage-four economics card now lands the board-package outcome;
+    a future re-render may promote it into VO.
+13. [ ] **Analytics provider hookup.** The privacy-friendly event layer tracks start,
+    25/50/75/100% completion, and CTA clicks to Plausible/dataLayer when present. Connect the chosen
+    provider so the events leave the browser; no identity or transcript data is included.
+14. [x] **WisdomTwin dependency line.** One line establishes that twins join any huddle surface
     (Teams, Zoom, Slack), so the demo doesn't read as a feature of someone else's product.
 
 ## Repo facts
