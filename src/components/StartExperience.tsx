@@ -39,7 +39,7 @@ export function StartExperience({
             WisdomTwin
           </p>
           <p className="text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">
-            Investor film · 4:00
+            Investor film · 2:54
           </p>
         </div>
         <h1
@@ -93,7 +93,7 @@ export function StartExperience({
           data-testid="btn-start"
           className="mt-6 w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
         >
-          Watch the 4-minute investor film
+          Watch the 2:54 investor film
         </button>
 
         <p className="mt-3 text-center text-[11px] text-[var(--cream-dim)]">

@@ -204,6 +204,7 @@ export function DemoShell() {
                 cutId={cutId}
                 timeMs={timeMs}
                 durationMs={durationMs}
+                timelineStartMs={FILM_ENTRY_MS}
                 muted={muted}
                 captionsOn={captionsOn}
                 live={live}
@@ -227,7 +228,7 @@ export function DemoShell() {
           <div className="absolute top-3 right-3 left-3 z-30 flex flex-wrap items-center justify-between gap-2 md:right-[42%]">
             <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur">
               <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-                WisdomTwin · Judgment platform · Investor film · 4:00
+                WisdomTwin · Judgment platform · Investor film · 2:54
               </p>
             </div>
             {investorParam && (

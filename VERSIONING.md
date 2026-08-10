@@ -73,6 +73,10 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   at 65.8 seconds, immediately after the obsolete Dana Calloway narrator clip and directly into
   Daniel Mercer's male CEO sequence. Completion analytics measure the viewed 2:54 segment.
 
+- [x] v3.2 (2026-08-10) — **Normalize the new cut's timestamps.** The player and transcript now
+  display 0:00 at Daniel's entry and 2:54 at the close, while seeking remains synchronized to the
+  underlying source timeline. All visible runtime labels now identify the film as 2:54.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full

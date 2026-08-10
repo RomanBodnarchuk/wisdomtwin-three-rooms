@@ -6,11 +6,19 @@ interface Props {
   open: boolean;
   cutId: CutId;
   timeMs: number;
+  timelineStartMs?: number;
   onClose: () => void;
   onSeek: (ms: number) => void;
 }
 
-export function LiveTranscript({ open, cutId, timeMs, onClose, onSeek }: Props) {
+export function LiveTranscript({
+  open,
+  cutId,
+  timeMs,
+  timelineStartMs = 0,
+  onClose,
+  onSeek,
+}: Props) {
   if (!open) return null;
   const lines = getTranscript(cutId);
 
@@ -35,7 +43,7 @@ export function LiveTranscript({ open, cutId, timeMs, onClose, onSeek }: Props) 
         </button>
       </div>
       <div className="drawer-scroll flex-1 space-y-3 overflow-y-auto p-4">
-        {lines.map((line) => {
+        {lines.filter((line) => line.endMs > timelineStartMs).map((line) => {
           const active = timeMs >= line.startMs && timeMs < line.endMs;
           return (
             <button
@@ -53,7 +61,7 @@ export function LiveTranscript({ open, cutId, timeMs, onClose, onSeek }: Props) 
                   {line.speakerLabel}
                 </span>
                 <span className="font-mono text-[10px] text-[var(--cream-dim)]/70">
-                  {formatTime(line.startMs)}
+                  {formatTime(Math.max(0, line.startMs - timelineStartMs))}
                 </span>
               </div>
               <p className="mt-1 text-sm leading-snug text-[var(--cream)]">{line.text}</p>

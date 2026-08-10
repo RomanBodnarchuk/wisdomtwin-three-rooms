@@ -5,6 +5,7 @@ interface Props {
   phase: DemoPhase;
   timeMs: number;
   durationMs: number;
+  timelineStartMs?: number;
   muted: boolean;
   captionsOn: boolean;
   onTogglePlay: () => void;
@@ -22,6 +23,7 @@ export function PlaybackControls({
   phase,
   timeMs,
   durationMs,
+  timelineStartMs = 0,
   muted,
   captionsOn,
   onTogglePlay,
@@ -45,6 +47,7 @@ export function PlaybackControls({
       <TimelineScrubber
         timeMs={timeMs}
         durationMs={durationMs}
+        startMs={timelineStartMs}
         onSeek={onSeek}
         disabled={!started}
       />
