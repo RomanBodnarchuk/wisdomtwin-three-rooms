@@ -45,18 +45,21 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 
 - [x] v2.7 (2026-08-06) — **Longest cut only = original 8:07 boardroom film.** Restored fullTimeline
   from v2.4 (487000ms). No cut selector. 4:34 recut remains in git history (v2.2/v2.6) if needed.
+- [x] v2.8 (2026-08-10) — **Fix 19 vs 21 days.** Start screen, buzz-close caption, and blockers data
+  model all now read "three weeks" / "twenty-one days" to match narrator audio. Items #2–#3 blocked
+  (intros baked into per-role MP3s; no ElevenLabs API key to re-render or trim).
 
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
    film is canonical. Improve it in place instead. The remaining items below all apply to the
    ORIGINAL film (same event ids in fullTimeline.ts).
-2. [ ] **Delete the five spoken twin introductions** ("Your CRO's twin." etc.) — roles already
-   on screen. Buys back ~8s. Caption/text change only if audio lines are separate files;
-   if intros are baked into the role audio files, skip audio and trim where clean.
+2. [ ] ~~Delete the five spoken twin introductions~~ → BLOCKED: intros baked into single
+   per-role MP3 files. No ELEVENLABS_API_KEY to re-render. Cannot trim without audio tooling.
+   Defer until voice re-render pass (backlog #10) or audio editing tools available.
 3. [ ] **Break the 38-second Legal block** (legal-02, 1:45–2:23) — split into two beats with a
    CEO interruption ("English. What kills it?") using existing ceo audio or a text-only caption beat.
-4. [ ] **Fix 19 vs 21 days.** Narrator audio says "three weeks" (=21), buzz-close audio says
+4. [x] **Fix 19 vs 21 days.** (v2.8, 2026-08-10) Narrator audio says "three weeks" (=21), buzz-close audio says
    "nineteen days". Re-record ONE line with ElevenLabs (buzz voice id SAz9YHcvj6GT2YYXdXww) if
    ELEVENLABS_API_KEY is available; otherwise change the on-screen completion card to match the
    narrator ("21 days") and queue the audio fix. Never ship captions that contradict the audio.
