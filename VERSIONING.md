@@ -69,6 +69,10 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   The start screen also establishes Teams/Zoom/Slack/WisdomTwin-app surfaces. Brand UI now reads
   WisdomTwin; Buzz remains only an internal code/audio id.
 
+- [x] v3.1 (2026-08-10) — **Start the investor film at 1:05.** Initial play and replay now enter
+  at 65.8 seconds, immediately after the obsolete Dana Calloway narrator clip and directly into
+  Daniel Mercer's male CEO sequence. Completion analytics measure the viewed 2:54 segment.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
