@@ -19,7 +19,7 @@ const events: DemoEvent[] = [
   { id: 'sc-open', type: 'scene', startMs: 800, scene: 'kitchen-focus', ceoPose: 'guarded', lighting: 'pressure' },
   { id: 'focus-buzz', type: 'visual-focus', startMs: 0, target: 'buzz' },
   { id: 'music-stress', type: 'music', startMs: 0, bed: 'stress' },
-  { id: 'room-stress', type: 'room-transition', startMs: 800, room: 'stress-test', label: 'STRESS-TEST' },
+  { id: 'room-stress', type: 'room-transition', startMs: 800, room: 'stress-test', label: 'STRESS-TEST', titleCard: 'Three rooms. One night. One decision.' },
   { id: 'join-cfo', type: 'participant-join', startMs: 200, participantId: 'cfo', state: 'present' },
   { id: 'join-cto', type: 'participant-join', startMs: 300, participantId: 'cto', state: 'present' },
   { id: 'join-cro', type: 'participant-join', startMs: 400, participantId: 'cro', state: 'present' },
@@ -129,8 +129,8 @@ const events: DemoEvent[] = [
   { id: 'end-1', type: 'end-card', startMs: 224600, endMs: 227600, stage: 1, lines: ['The first generation of enterprise AI helped people find information.'] },
   { id: 'end-2', type: 'end-card', startMs: 227600, endMs: 230600, stage: 2, lines: ['The first generation of enterprise AI helped people find information.', 'The second preserved individual knowledge.'] },
   { id: 'end-3', type: 'end-card', startMs: 230600, endMs: 233600, stage: 3, lines: ['The first generation of enterprise AI helped people find information.', 'The second preserved individual knowledge.', 'WisdomTwin preserves institutional judgment.'] },
-  { id: 'end-4', type: 'end-card', startMs: 233600, endMs: 236600, stage: 4, lines: ['Search finds documents.', 'Digital twins preserve people.', 'WisdomTwin preserves decisions.'], showInvestorContrast: true },
-  { id: 'end-5', type: 'end-card', startMs: 236600, stage: 5, lines: ['WISDOMTWIN.AI', 'Every employee, backed by a Wisdom Twin.', 'We sell speed. One press moves the decision forward.'], showInvestorContrast: true },
+  { id: 'end-4', type: 'end-card', startMs: 233600, endMs: 237400, stage: 4, lines: ['Search finds documents.', 'Digital twins preserve people.', 'WisdomTwin preserves decisions.'], showInvestorContrast: true, moneyCard: ['Nineteen days of a CEO and five senior officers waiting on one decision ≈ $400K of delayed execution.', 'One huddle: 8 minutes, 42 seconds. Full audit trail.', 'Thursday morning, he walks in with the board package.'] },
+  { id: 'end-5', type: 'end-card', startMs: 237400, stage: 5, lines: ['WISDOMTWIN.AI', 'WisdomTwin preserves institutional judgment.', 'We sell speed. One press moves the decision forward.'], showInvestorContrast: true },
 ];
 
 export const INVESTOR_240_TIMELINE: TimelineConfig = {

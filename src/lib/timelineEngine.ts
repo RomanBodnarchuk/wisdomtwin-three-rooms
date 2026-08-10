@@ -28,6 +28,7 @@ export function createInitialSnapshot(): DemoSnapshot {
     timeMs: 0,
     phase: 'ready',
     room: 'idle',
+    roomTitleCard: null,
     scene: 'black',
     ceoPose: 'tired',
     lighting: 'cold',
@@ -96,7 +97,10 @@ export function buildSnapshot(
 
   const rooms = events.filter((e) => e.type === 'room-transition');
   const roomEv = latestStarted(rooms, clamped);
-  if (roomEv && roomEv.type === 'room-transition') snap.room = roomEv.room as RoomMode;
+  if (roomEv && roomEv.type === 'room-transition') {
+    snap.room = roomEv.room as RoomMode;
+    snap.roomTitleCard = roomEv.titleCard ?? null;
+  }
 
   const dialogues = events.filter((e): e is DialogueEvent => e.type === 'dialogue');
   const activeDialogue = latestActive(dialogues, clamped);

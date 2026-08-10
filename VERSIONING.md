@@ -59,6 +59,17 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 - [x] v2.8 (2026-08-10) — **Fix 19 vs 21 days.** Start screen, buzz-close caption, and blockers data
   model all now read "three weeks" / "twenty-one days" to match narrator audio. Items #2–#3 blocked
   (intros baked into per-role MP3s; no ElevenLabs API key to re-render or trim).
+- [x] v3.0 (2026-08-10) — **Investor-grade pass on the locked 4:00 cut** (backlog #6–#9, #11, #12, #14):
+  kinetic captions — bigger type, pop-in per line, money phrases highlighted warm gold
+  ("declining to answer", "seven to two", "eleven million dollars", "62→91%", "94%", "nineteen days",
+  "thirty-eight minutes", "8:42"); money-math endcard at stage 4 ("Nineteen days … ≈ $400K of delayed
+  execution. One huddle: 8 minutes, 42 seconds. Full audit trail." + "Thursday morning, he walks in
+  with the board package." — covers #12 as copy); "Three rooms. One night. One decision." title card
+  under the first room-transition label, now visible on mobile too; tagline open+close (start screen
+  subhead + end-5; competing "Every employee…" closer removed; investor contrast box untouched);
+  buzz dependency line on start screen (Teams / Zoom / Slack / Buzz app). End-4 window 233.6→237.4s,
+  end-5 starts 237.4s (CTA persists post-completion — no dwell lost). Deferred: #10 buzz voice
+  re-render (no ElevenLabs key), #13 analytics (no endpoint yet), #5 decline full-stop (recut-adjacent).
 
 ## Backlog (in priority order — one per day)
 
@@ -76,23 +87,23 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
    narrator ("21 days") and queue the audio fix. Never ship captions that contradict the audio.
 5. [ ] **Decline-moment full stop.** At the safe-decline beat: drop music bed to silence 1.5s
    BEFORE the line, hold the blocker register visual, no other motion. Silence sells it.
-6. [ ] **Money-math card after huddle end.** "21 days of a CEO + five senior officers waiting
+6. [x] **Money-math card after huddle end** (v3.0, 2026-08-10) — uses canonical "nineteen days" + 8:42, stage 4. ORIGINAL TEXT:.** "21 days of a CEO + five senior officers waiting
    on a decision ≈ $400K in delayed execution. One huddle: 8 minutes." One card, endcard stage 4.
-7. [ ] **Tagline consistency.** "WisdomTwin preserves institutional judgment" — once at open
+7. [x] **Tagline consistency** (v3.0, 2026-08-10). ORIGINAL TEXT:.** "WisdomTwin preserves institutional judgment" — once at open
    (start screen subhead), once at close. Remove competing closers except in investor contrast box.
-8. [ ] **Captions: bigger, kinetic, money phrases highlighted** in warm gold (#C8A45D):
+8. [x] **Captions: bigger, kinetic** (v3.0, 2026-08-10). ORIGINAL TEXT:, money phrases highlighted** in warm gold (#C8A45D):
    "declining to answer", "seven to two", "twenty-one days", "ninety-one percent".
-9. [ ] **"Three rooms. One night. One decision."** title card during first room transition so the
+9. [x] **"Three rooms. One night. One decision."** (v3.0, 2026-08-10). ORIGINAL TEXT: title card during first room transition so the
    structure name pays off (internal mechanic may stay in code, not in copy).
 10. [ ] **Buzz voice authority pass.** Re-render the 6 buzz lines with a lower, slower, chief-of-staff
     voice (ElevenLabs). Deterministic playback beats browser TTS fallback.
-11. [ ] **Mobile simplification.** Phones: hide side panels/evidence chrome; keep headline, captions,
+11. [x] **Mobile simplification** (v3.0, 2026-08-10 — verified existing + room overlay mobile-visible). ORIGINAL TEXT:.** Phones: hide side panels/evidence chrome; keep headline, captions,
     play control, CTA. Verify at 390px width.
-12. [ ] **Thursday boardroom closing image or VO line** — the buyer buys the Monday morning after.
+12. [x] **Thursday boardroom closing** (v3.0, 2026-08-10 — as copy line in money-math card; image/VO still open). ORIGINAL TEXT: image or VO line** — the buyer buys the Monday morning after.
 13. [ ] **Analytics instrumentation.** Track start rate, 25/50/75/100% completion, CTA clicks
     (privacy-friendly, e.g. Plausible or simple endpoint). Without these four numbers every future
     change is guesswork.
-14. [ ] **Buzz dependency line.** One line establishing twins join any huddle surface
+14. [x] **Buzz dependency line** (v3.0, 2026-08-10 — on start screen). ORIGINAL TEXT:.** One line establishing twins join any huddle surface
     (Teams, Zoom, Slack), so the demo doesn't read as a feature of someone else's product.
 
 ## Repo facts

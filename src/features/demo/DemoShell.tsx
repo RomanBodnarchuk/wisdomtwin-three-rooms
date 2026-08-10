@@ -160,8 +160,8 @@ export function DemoShell() {
         <div className="absolute inset-0 md:right-[40%]">
           <CinematicKitchenScene snapshot={snapshot} live={live} />
           {showRoomOverlay && phase === 'playing' && (
-            <div className="pointer-events-none absolute inset-0 z-10 hidden md:flex">
-              <RoomMode room={snapshot.room} overlay />
+            <div className="pointer-events-none absolute inset-0 z-10 flex">
+              <RoomMode room={snapshot.room} overlay subtitle={snapshot.roomTitleCard} />
             </div>
           )}
         </div>

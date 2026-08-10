@@ -110,6 +110,8 @@ export interface RoomTransitionEvent extends BaseEvent {
   type: 'room-transition';
   room: RoomMode;
   label?: string;
+  /** One-shot title card shown under the room label (first transition only). */
+  titleCard?: string;
 }
 
 export interface EvidenceEvent extends BaseEvent {
@@ -154,6 +156,8 @@ export interface EndCardEvent extends BaseEvent {
   stage: number;
   lines: string[];
   showInvestorContrast?: boolean;
+  /** Money-math card — the cost of waiting vs. one huddle. */
+  moneyCard?: string[];
 }
 
 export interface SystemEvent extends BaseEvent {
@@ -239,6 +243,7 @@ export interface DemoSnapshot {
   timeMs: number;
   phase: DemoPhase;
   room: RoomMode;
+  roomTitleCard: string | null;
   scene: SceneId;
   ceoPose: CeoPose;
   lighting: LightingMode;

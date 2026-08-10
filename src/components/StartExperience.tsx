@@ -35,12 +35,21 @@ export function StartExperience({
         >
           Watch a CEO get board-ready in one night.
         </h1>
+        <p
+          className="mt-2 text-sm text-[var(--warm)] italic md:text-base"
+          style={{ fontFamily: 'var(--font-display)' }}
+        >
+          WisdomTwin preserves institutional judgment.
+        </p>
         <p className="mt-3 text-sm leading-relaxed text-[var(--cream-dim)]">
           Sunday, 9:40 p.m. Board packet locks tomorrow. His five senior officers take three weeks
           to convene. He has one button.
         </p>
         <p className="mt-2 text-sm leading-relaxed text-[var(--cream)]">
           One press moves the decision forward. No links. No calendar ping-pong.
+        </p>
+        <p className="mt-2 text-[11px] leading-relaxed text-[var(--cream-dim)]">
+          Wisdom Twins join any huddle surface — Teams, Zoom, Slack — or the one-press Buzz app.
         </p>
 
         <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">

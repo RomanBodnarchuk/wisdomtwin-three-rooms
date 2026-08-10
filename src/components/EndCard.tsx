@@ -42,6 +42,30 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
           </motion.p>
         ))}
 
+        {endCard.moneyCard && endCard.stage >= 4 && (
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.3 }}
+            className="mx-auto mt-6 max-w-md rounded-2xl border border-[var(--warm)]/40 bg-[var(--warm-soft)] px-5 py-4 text-left"
+            data-testid="money-math-card"
+          >
+            <p className="text-[10px] tracking-[0.22em] text-[var(--warm)] uppercase">
+              The cost of waiting
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {endCard.moneyCard.map((line, i) => (
+                <li
+                  key={i}
+                  className={`text-sm leading-snug ${i === 0 ? 'font-medium text-[var(--warm)]' : 'text-[var(--cream)]'}`}
+                >
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+
         {showInvestor && endCard.stage >= 4 && (
           <motion.div
             initial={reduced ? false : { opacity: 0 }}
