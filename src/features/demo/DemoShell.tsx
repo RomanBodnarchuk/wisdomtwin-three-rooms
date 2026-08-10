@@ -23,6 +23,8 @@ const ROOM_OVERLAY_WINDOWS = [
   { startMs: 135_200, endMs: 138_500 },
 ] as const;
 
+const FILM_ENTRY_MS = 65_800;
+
 /**
  * Top-level Three Rooms experience shell.
  * Desktop: cinematic kitchen + Buzz phone.
@@ -89,7 +91,8 @@ export function DemoShell() {
     setStarted(true);
     await dialoguePlayer.unlock();
     await start();
-  }, [start]);
+    seek(FILM_ENTRY_MS);
+  }, [seek, start]);
 
   const handleRestart = useCallback(() => {
     dialoguePlayer.stop();
@@ -102,7 +105,8 @@ export function DemoShell() {
     setStarted(true);
     await dialoguePlayer.unlock();
     await replay();
-  }, [replay]);
+    seek(FILM_ENTRY_MS);
+  }, [replay, seek]);
 
   const keyboardHandlers = useMemo(
     () => ({
@@ -129,7 +133,12 @@ export function DemoShell() {
   );
 
   useKeyboardControls(keyboardHandlers);
-  useInvestorAnalytics({ cutId, durationMs, phase, timeMs });
+  useInvestorAnalytics({
+    cutId,
+    durationMs: durationMs - FILM_ENTRY_MS,
+    phase,
+    timeMs: Math.max(0, timeMs - FILM_ENTRY_MS),
+  });
 
   if (error) {
     return <ErrorState message={error} onRetry={() => void handleStart()} />;
