@@ -2,7 +2,7 @@ export function SyntheticDataDisclosure({ compact = false }: { compact?: boolean
   if (compact) {
     return (
       <p className="text-[10px] leading-relaxed tracking-wide text-[var(--cream-dim)]/70">
-        Synthetic demo data · No real customers, patients, or board records
+        Synthetic scenario · All people, organizations, metrics, and records are fictional
       </p>
     );
   }

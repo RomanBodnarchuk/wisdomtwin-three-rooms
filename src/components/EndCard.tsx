@@ -81,7 +81,7 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
               onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'end-card' })}
               className="block w-full rounded-2xl bg-[var(--cream)] px-6 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
             >
-              Book a 20-minute investor demo
+              Book a Judgment Assessment ($0)
             </a>
             <p className="text-xs tracking-[0.08em] text-[var(--cream-dim)]">
               wisdomtwin.ai · Text anytime with questions or to book: 416 220 5314

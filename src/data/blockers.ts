@@ -56,7 +56,7 @@ export const INITIAL_BLOCKERS: BlockerItem[] = [
 export const INITIAL_ESCALATION: EscalationItem = {
   id: 'esc_vp_clinical',
   title: 'Peak-load throughput review',
-  reason: 'Confidence below governance threshold — no sufficient precedent',
+  reason: 'Confidence below governance threshold; no sufficient precedent',
   reviewer: 'Vice President of Clinical Operations',
   estimatedMinutes: 38,
   status: 'pending-human',

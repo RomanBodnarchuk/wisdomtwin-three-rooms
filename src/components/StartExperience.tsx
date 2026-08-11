@@ -8,11 +8,11 @@ interface Props {
   onStart: () => void;
 }
 
-const PROOF_METRICS = [
-  { value: '12,400', label: 'decisions reviewed' },
-  { value: '91 / 9', label: 'policy / human split' },
-  { value: '62→91%', label: 'confidence lift' },
-  { value: '$7.4M', label: 'governed phase one' },
+const DEMO_SIGNALS = [
+  { value: 'Linked', label: 'source evidence' },
+  { value: 'Checked', label: 'policy gates' },
+  { value: 'Named', label: 'human escalation' },
+  { value: 'Logged', label: 'audit trail' },
 ];
 
 const OUTCOME_LINES = [
@@ -56,14 +56,14 @@ export function StartExperience({
         </p>
         <p className="mt-3 max-w-xl text-sm leading-relaxed text-[var(--cream)] md:text-base">
           Sunday, 9:40 p.m. The board packet locks tomorrow. Watch WisdomTwin turn institutional
-          memory into a board-ready decision—without erasing evidence, dissent, or human judgment.
+          memory into a board-ready decision without erasing evidence, dissent, or human judgment.
         </p>
         <p className="mt-2 text-[11px] leading-relaxed text-[var(--cream-dim)]">
-          Wisdom Twins join any huddle surface—Teams, Zoom, Slack—or the one-press WisdomTwin app.
+          Wisdom Twins join any huddle surface, including Teams, Zoom, Slack, or the one-press WisdomTwin app.
         </p>
 
         <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-4">
-          {PROOF_METRICS.map((metric) => (
+          {DEMO_SIGNALS.map((metric) => (
             <div key={metric.label} className="bg-[var(--ink-panel)] px-3 py-3">
               <dd className="text-lg font-semibold tabular-nums text-[var(--cream)]">{metric.value}</dd>
               <dt className="mt-1 text-[9px] leading-tight tracking-[0.1em] text-[var(--cream-dim)] uppercase">

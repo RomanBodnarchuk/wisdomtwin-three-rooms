@@ -20,7 +20,7 @@ export function InvestorProofRail({ timeMs }: Props) {
         transition={{ duration: reduced ? 0 : 0.35 }}
         className="pointer-events-none absolute top-20 left-5 z-20 hidden w-[min(31vw,360px)] rounded-2xl border border-white/10 bg-black/65 p-4 shadow-2xl backdrop-blur-md lg:block"
         data-testid="investor-proof-rail"
-        aria-label={`Investor thesis: ${chapter.headline}`}
+        aria-label={`Demo narrative: ${chapter.headline}`}
       >
         <p className="text-[10px] font-semibold tracking-[0.2em] text-[var(--brand-gold)] uppercase">
           {chapter.eyebrow}

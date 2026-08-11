@@ -131,7 +131,7 @@ const events: DemoEvent[] = [
   { id: 'end-2', type: 'end-card', startMs: 227600, endMs: 230600, stage: 2, lines: ['Three weeks to convene five senior officers.', 'Eight minutes, forty-two seconds to reach a governed decision.'] },
   { id: 'end-3', type: 'end-card', startMs: 230600, endMs: 233600, stage: 3, lines: ['Evidence attached.', 'Dissent preserved.', 'Human judgment protected.'] },
   { id: 'end-4', type: 'end-card', startMs: 233600, endMs: 237400, stage: 4, lines: ['The product is speed.', 'The compounding asset is institutional judgment.'], showInvestorContrast: true },
-  { id: 'end-5', type: 'end-card', startMs: 237400, stage: 5, lines: ['WISDOMTWIN.AI', 'The judgment layer for the enterprise.', 'WisdomTwin preserves institutional judgment.'], showInvestorContrast: true },
+  { id: 'end-5', type: 'end-card', startMs: 237400, stage: 5, lines: ['WISDOMTWIN.AI', 'The Judgment Platform for regulated enterprises.', 'We sell speed at AI-native pace.'], showInvestorContrast: true },
 ];
 
 export const INVESTOR_240_TIMELINE: TimelineConfig = {

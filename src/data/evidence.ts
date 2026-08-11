@@ -63,7 +63,7 @@ export const EVIDENCE_CARDS: Record<string, EvidenceCard> = {
     title: 'Six-year board behavior',
     role: 'buzz',
     sources: ['Six years of board minutes', 'Initiatives above $11M', 'Cybersecurity approval exception'],
-    finding: 'Directors rejected every new initiative above $11M except cybersecurity — approved because regulatory exposure was quantified before financial upside.',
+    finding: 'Directors rejected every new initiative above $11M except cybersecurity. It was approved because regulatory exposure was quantified before financial upside.',
     metrics: [
       { label: 'Sequence', value: 'Risk → Gov → Human → Revenue' },
       { label: 'Confidence lift', value: '62% → 91%' },

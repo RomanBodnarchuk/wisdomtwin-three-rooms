@@ -20,7 +20,7 @@ export function DecisionEconomicsCard() {
         </div>
       </div>
       <p className="mt-3 border-t border-white/8 pt-3 text-xs leading-relaxed text-[var(--cream)]">
-        ≈$400K in delayed execution compressed into one decision cycle.
+        Illustrative executive delay compressed into one governed decision cycle.
       </p>
       <p className="mt-2 text-xs leading-relaxed text-[var(--cream)]">
         Thursday morning, the CEO walks in with the board package.

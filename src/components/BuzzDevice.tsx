@@ -72,7 +72,7 @@ export function BuzzDevice({
         className="buzz-frame relative flex h-full w-full flex-col overflow-hidden"
         data-testid="buzz-device"
         role="region"
-        aria-label="WisdomTwin executive huddle iPhone app — live"
+        aria-label="WisdomTwin executive huddle iPhone app, live"
       >
       <HuddleHeader live={live} room={snapshot.room} />
 
