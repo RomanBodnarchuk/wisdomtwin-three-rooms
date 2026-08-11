@@ -230,7 +230,7 @@ export function DemoShell() {
           <div className="absolute top-3 right-3 left-3 z-30 flex flex-wrap items-center justify-between gap-2 md:right-[42%]">
             <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur">
               <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-                WisdomTwin · Judgment platform · Investor film · 2:54
+                WisdomTwin · Judgment platform · Demo film · 2:54
               </p>
             </div>
             {investorParam && (
@@ -278,7 +278,7 @@ export function DemoShell() {
             onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'live' })}
             className="absolute right-3 bottom-3 z-30 rounded-full bg-[var(--cream)] px-4 py-2 text-[11px] font-semibold tracking-[0.12em] text-[var(--ink)] uppercase shadow-lg transition hover:bg-white md:right-[calc(40%+1rem)]"
           >
-            Book Investor Demo
+            Book a Judgment Assessment ($0)
           </a>
         )}
       </div>

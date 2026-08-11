@@ -39,7 +39,7 @@ export function StartExperience({
             WisdomTwin
           </p>
           <p className="text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">
-            Investor film · 2:54
+            Demo film · 2:54
           </p>
         </div>
         <h1
@@ -75,7 +75,7 @@ export function StartExperience({
 
         <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
           <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-            What investors should watch for
+            What to watch for
           </p>
           <ul className="mt-2 grid gap-2 text-sm leading-snug text-[var(--cream)] md:grid-cols-3">
             {OUTCOME_LINES.map((line) => (
@@ -93,7 +93,7 @@ export function StartExperience({
           data-testid="btn-start"
           className="mt-6 w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
         >
-          Watch the 2:54 investor film
+          Watch the 2:54 demo film
         </button>
 
         <p className="mt-3 text-center text-[11px] text-[var(--cream-dim)]">

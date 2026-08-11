@@ -11,9 +11,9 @@ export function InvestorModeToggle({ on, onChange }: Props) {
         checked={on}
         onChange={(e) => onChange(e.target.checked)}
         className="h-3.5 w-3.5 rounded border-white/20 bg-transparent"
-        aria-label="Investor mode"
+        aria-label="Detail mode"
       />
-      Investor mode
+      Detail mode
     </label>
   );
 }
