@@ -77,6 +77,13 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   display 0:00 at Daniel's entry and 2:54 at the close, while seeking remains synchronized to the
   underlying source timeline. All visible runtime labels now identify the film as 2:54.
 
+- [x] v3.2.2 (2026-08-14) — **Public harden.** Sticky Watch CTA in short/mobile iframes so
+  /demo embeds cannot hide the start button. 404.html recovers any missing path to the huddle
+  (PDF paths recover to the canon E4 PDF). Static `start.html` landing that cannot 404.
+  Public folder now serves the Aug 11 E4 deck (MD5 b981589af995f146462dc733fc683317) at
+  WisdomTwin-Investor-Deck.pdf plus filename aliases (E4-08-10, E4-08-11, deck.pdf,
+  wisdomtwin-deck.pdf). Replaced the older 35eb1234 PDF that had been in repo root / downloads.
+
 - [x] v3.2.1 (2026-08-10) — **Clean Daniel's opening handoff.** Suppressed the residual narrator
   caption during the sub-second transition into Daniel Mercer's opening line. The investor cut now
   opens on Daniel as CEO with no narrator voice or narrator caption.

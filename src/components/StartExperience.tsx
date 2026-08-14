@@ -29,10 +29,11 @@ export function StartExperience({
 }: Props) {
   return (
     <div
-      className="absolute inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/80 px-5 py-4 backdrop-blur-sm md:items-center"
+      className="absolute inset-0 z-40 flex flex-col bg-black/80 backdrop-blur-sm"
       data-testid="start-experience"
     >
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-[var(--ink-elevated)] p-6 shadow-2xl md:p-8">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 md:flex md:items-center md:justify-center">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-[var(--ink-elevated)] p-5 shadow-2xl md:p-8">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--brand-gold)]/70 to-transparent" />
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[11px] font-semibold tracking-[0.28em] text-[var(--brand-gold)] uppercase">
@@ -91,7 +92,7 @@ export function StartExperience({
           type="button"
           onClick={onStart}
           data-testid="btn-start"
-          className="mt-6 w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
+          className="mt-5 w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
         >
           Watch the 2:54 demo film
         </button>
@@ -109,6 +110,16 @@ export function StartExperience({
         <div className="mt-4 text-center">
           <SyntheticDataDisclosure compact />
         </div>
+      </div>
+      </div>
+      <div className="shrink-0 border-t border-white/10 bg-black/70 px-4 py-3 md:hidden">
+        <button
+          type="button"
+          onClick={onStart}
+          className="w-full rounded-2xl bg-[var(--cream)] px-4 py-3 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase"
+        >
+          Watch the 2:54 demo film
+        </button>
       </div>
     </div>
   );

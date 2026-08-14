@@ -2,10 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0; url=/wisdomtwin-three-rooms/" />
-    <title>WisdomTwin — Executive Huddle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WisdomTwin Executive Huddle</title>
+    <script>
+      (function () {
+        var path = location.pathname || '';
+        var onPages = path.indexOf('/wisdomtwin-three-rooms') === 0;
+        var base = onPages ? '/wisdomtwin-three-rooms/' : '/';
+        if (/\.pdf$/i.test(path)) {
+          location.replace(base + 'WisdomTwin-Investor-Deck.pdf');
+          return;
+        }
+        location.replace(base);
+      })();
+    </script>
   </head>
-  <body>
-    <p><a href="/wisdomtwin-three-rooms/">Open the WisdomTwin Executive Huddle</a></p>
+  <body style="margin:0;background:#0A0A0C;color:#EAF6F4;font-family:system-ui,sans-serif;padding:24px">
+    <p>Open the <a href="./" style="color:#4FD1C5">WisdomTwin Executive Huddle</a>.</p>
+    <p><a href="./start.html" style="color:#4FD1C5">Static start page</a> if the app does not load.</p>
   </body>
 </html>
