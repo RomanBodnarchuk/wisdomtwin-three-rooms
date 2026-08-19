@@ -5,10 +5,8 @@ import { sortTimeline } from '../lib/timelineEngine';
  * Full 8:07 boardroom film.
  * Dialogue windows are locked to the ElevenLabs masters in
  * public/audio/dialogue/manifest.json (450ms beat between lines).
- * All non-dialogue events are anchored to the dialogue beats they support
- * (retimed 2026-08-07, re-applied 2026-08-10 after an uncommitted wipe).
- * buzz-close caption intentionally matches the baked audio ("nineteen days")
- * until the line is re-recorded as "twenty-one days" (backlog #4).
+ * v3.3 trimmed the five spoken "Your X's twin" intros from the role MP3s;
+ * caption text matches the remaining audio. Safe-decline stays intact.
  */
 const events: DemoEvent[] = [
   { id: 'sc-black', type: 'scene', startMs: 0, endMs: 2000, scene: 'black', ceoPose: 'tired', lighting: 'cold' },
@@ -37,9 +35,9 @@ const events: DemoEvent[] = [
   { id: 'music-dream', type: 'music', startMs: 34750, bed: 'dream' },
   { id: 'dlg-ceo-open', type: 'dialogue', startMs: 34932, endMs: 63028, speaker: 'ceo', text: "Morning. And... sorry to interrupt everyone's Sunday. My board packet locks tomorrow. If I walk in with the wrong AI strategy, I am going to spend the next year defending it. So I need you to be brutal. Here is the idea. We have two decades of prior-authorization decisions. What if we cut authorization time from fourteen days to one... and sell that speed to every payer we serve?" },
   { id: 'sc-ceo-engaged', type: 'scene', startMs: 40000, scene: 'kitchen-active', ceoPose: 'engaged', lighting: 'warm' },
-  { id: 'dlg-cro-1', type: 'dialogue', startMs: 63478, endMs: 83679, speaker: 'cro', text: "Your CRO's twin. I reviewed five years of renewal calls, account plans, loss reviews, and executive escalations. Speed-to-decision is the number-one stated frustration in eight of our ten largest accounts. Priced as a premium service, the three-year revenue opportunity is nine figures." },
+  { id: 'dlg-cro-1', type: 'dialogue', startMs: 63478, endMs: 81342, speaker: 'cro', text: "I reviewed five years of renewal calls, account plans, loss reviews, and executive escalations. Speed-to-decision is the number-one stated frustration in eight of our ten largest accounts. Priced as a premium service, the three-year revenue opportunity is nine figures." },
   { id: 'ev-cro', type: 'evidence', startMs: 64800, endMs: 83000, evidenceId: 'cro_speed', action: 'show' },
-  { id: 'dlg-cmo-1', type: 'dialogue', startMs: 84129, endMs: 95600, speaker: 'cmo', text: "Your CMO's twin. And this is not a feature story. It is a category story. Nobody in our market owns judgment-speed. If we move first, we define the category." },
+  { id: 'dlg-cmo-1', type: 'dialogue', startMs: 84129, endMs: 93723, speaker: 'cmo', text: "And this is not a feature story. It is a category story. Nobody in our market owns judgment-speed. If we move first, we define the category." },
   { id: 'dlg-ceo-kill', type: 'dialogue', startMs: 96050, endMs: 98000, speaker: 'ceo', text: 'Good. Now kill it.' },
   { id: 'sfx-stress', type: 'sound', startMs: 98300, soundId: 'stress-chime' },
   { id: 'room-stress', type: 'room-transition', startMs: 98600, room: 'stress-test', label: 'STRESS-TEST' },
@@ -50,24 +48,24 @@ const events: DemoEvent[] = [
   { id: 'dlg-cfo-quick', type: 'dialogue', startMs: 101719, endMs: 102601, speaker: 'cfo', text: 'Budget.', allowOverlap: true },
   { id: 'dlg-cto-quick', type: 'dialogue', startMs: 103051, endMs: 103933, speaker: 'cto', text: 'Scale.', allowOverlap: true },
   { id: 'dlg-ceo-legal-first', type: 'dialogue', startMs: 104383, endMs: 105358, speaker: 'ceo', text: 'Legal first.' },
-  { id: 'dlg-legal-full', type: 'dialogue', startMs: 105808, endMs: 143935, speaker: 'legal', text: "Your Chief Legal Officer's twin. Three gates. One: patient data cannot touch a public cloud model. That rules out every external model evaluated last year. I have the governance memos and the rejection rationale. Two: if this becomes a material revenue program, disclosure timing becomes a securities issue. We announce it correctly or not at all. Three: four state-records regimes require named-human sign-off on any denial. Automation alone is not compliant." },
+  { id: 'dlg-legal-full', type: 'dialogue', startMs: 105808, endMs: 141270, speaker: 'legal', text: "Three gates. One: patient data cannot touch a public cloud model. That rules out every external model evaluated last year. I have the governance memos and the rejection rationale. Two: if this becomes a material revenue program, disclosure timing becomes a securities issue. We announce it correctly or not at all. Three: four state-records regimes require named-human sign-off on any denial. Automation alone is not compliant." },
   { id: 'ev-legal', type: 'evidence', startMs: 106800, endMs: 143500, evidenceId: 'legal_gates', action: 'show' },
   { id: 'blk-cloud-create', type: 'blocker', startMs: 117000, blockerId: 'blk_public_cloud', action: 'create', status: 'open' },
   { id: 'blk-securities-create', type: 'blocker', startMs: 127000, blockerId: 'blk_securities', action: 'create', status: 'open' },
   { id: 'blk-denial-create', type: 'blocker', startMs: 134000, blockerId: 'blk_human_denial', action: 'create', status: 'open' },
-  { id: 'dlg-cfo-full', type: 'dialogue', startMs: 144385, endMs: 163100, speaker: 'cfo', text: "Your CFO's twin. The board capped new-program spending at eleven million dollars this fiscal year. That motion passed seven to two in March. I preserved the dissent notes. Anything above the cap requires board approval Thursday, not after." },
+  { id: 'dlg-cfo-full', type: 'dialogue', startMs: 144385, endMs: 161029, speaker: 'cfo', text: "The board capped new-program spending at eleven million dollars this fiscal year. That motion passed seven to two in March. I preserved the dissent notes. Anything above the cap requires board approval Thursday, not after." },
   { id: 'ev-cfo', type: 'evidence', startMs: 145400, endMs: 162600, evidenceId: 'cfo_cap', action: 'show' },
   { id: 'blk-budget-create', type: 'blocker', startMs: 146500, blockerId: 'blk_budget_cap', action: 'create', status: 'open' },
-  { id: 'dlg-cto-full', type: 'dialogue', startMs: 163550, endMs: 198241, speaker: 'cto', text: "Your CTO's twin. I reviewed 12,400 historical authorization decisions. Ninety-one percent follow six documented policy gates and can be processed inside our private environment. The remaining nine percent are exactly where clinical judgment changed the outcome." },
-  { id: 'ev-cto', type: 'evidence', startMs: 164600, endMs: 181500, evidenceId: 'cto_history', action: 'show' },
-  { id: 'music-silence', type: 'music', startMs: 182300, bed: 'silence' },
-  { id: 'sfx-decline', type: 'sound', startMs: 182500, soundId: 'safe-decline' },
-  { id: 'safe-decline-on', type: 'safe-decline', startMs: 182630, endMs: 204900, active: true },
-  { id: 'focus-escalation', type: 'visual-focus', startMs: 182700, target: 'escalation' },
-  { id: 'dlg-cto-decline', type: 'dialogue', startMs: 182630, endMs: 198241, speaker: 'cto', text: 'One warning. I found no reliable precedent for peak-load throughput at the proposed volume. Confidence is below governance threshold. I am declining to answer. Recommended human reviewer: Vice President of Clinical Operations. Estimated review time: thirty-eight minutes.' },
-  { id: 'ev-decline', type: 'evidence', startMs: 183600, endMs: 204800, evidenceId: 'safe_decline', action: 'show' },
-  { id: 'esc-vp', type: 'escalation', startMs: 193000, escalationId: 'esc_vp_clinical', action: 'create' },
-  { id: 'blk-scale-create', type: 'blocker', startMs: 193500, blockerId: 'blk_scale_precedent', action: 'escalate', status: 'escalated' },
+  { id: 'dlg-cto-full', type: 'dialogue', startMs: 163550, endMs: 195911, speaker: 'cto', text: "I reviewed 12,400 historical authorization decisions. Ninety-one percent follow six documented policy gates and can be processed inside our private environment. The remaining nine percent are exactly where clinical judgment changed the outcome." },
+  { id: 'ev-cto', type: 'evidence', startMs: 164600, endMs: 180200, evidenceId: 'cto_history', action: 'show' },
+  { id: 'music-silence', type: 'music', startMs: 179970, bed: 'silence' },
+  { id: 'sfx-decline', type: 'sound', startMs: 180170, soundId: 'safe-decline' },
+  { id: 'safe-decline-on', type: 'safe-decline', startMs: 180300, endMs: 204900, active: true },
+  { id: 'focus-escalation', type: 'visual-focus', startMs: 180370, target: 'escalation' },
+  { id: 'dlg-cto-decline', type: 'dialogue', startMs: 180300, endMs: 195911, speaker: 'cto', text: 'One warning. I found no reliable precedent for peak-load throughput at the proposed volume. Confidence is below governance threshold. I am declining to answer. Recommended human reviewer: Vice President of Clinical Operations. Estimated review time: thirty-eight minutes.' },
+  { id: 'ev-decline', type: 'evidence', startMs: 181270, endMs: 204800, evidenceId: 'safe_decline', action: 'show' },
+  { id: 'esc-vp', type: 'escalation', startMs: 190670, escalationId: 'esc_vp_clinical', action: 'create' },
+  { id: 'blk-scale-create', type: 'blocker', startMs: 191170, blockerId: 'blk_scale_precedent', action: 'escalate', status: 'escalated' },
   { id: 'dlg-ceo-stop', type: 'dialogue', startMs: 198691, endMs: 200084, speaker: 'ceo', text: 'So that could stop us.' },
   { id: 'dlg-cto-not-kill', type: 'dialogue', startMs: 200534, endMs: 204992, speaker: 'cto', text: 'It could. But it does not kill the strategy. It changes the architecture.' },
   { id: 'safe-decline-off', type: 'safe-decline', startMs: 205300, active: false },
