@@ -88,14 +88,18 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   caption during the sub-second transition into Daniel Mercer's opening line. The investor cut now
   opens on Daniel as CEO with no narrator voice or narrator caption.
 
+- [x] v3.3 (2026-08-18) — **Delete the five spoken twin introductions.** Trimmed
+  "Your X's twin" from cro-01, cmo-01, legal-02, cfo-02, and cto-02 at the first
+  post-intro silence. Captions now match the remaining audio. Safe-decline beat preserved.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
    film is canonical. Improve it in place instead. The remaining items below all apply to the
    ORIGINAL film (same event ids in fullTimeline.ts).
-2. [ ] ~~Delete the five spoken twin introductions~~ → BLOCKED: intros baked into single
-   per-role MP3 files. No ELEVENLABS_API_KEY to re-render. Cannot trim without audio tooling.
-   Defer until voice re-render pass (backlog #10) or audio editing tools available.
+2. [x] **Delete the five spoken twin introductions.** (v3.3, 2026-08-18) Trimmed the baked
+   intro phrases from the five role MP3s and matched captions. Safe-decline timing shifted
+   with the CTO file so captions never contradict audio.
 3. [x] **Break the 38-second Legal block.** The investor cut now uses the CEO's "Legal first"
   interruption and a 12-second gate-one window; the long audio remains available to the archival cut.
 4. [x] **Fix 19 vs 21 days.** (v2.8, 2026-08-10) Narrator audio says "three weeks" (=21), buzz-close audio says
