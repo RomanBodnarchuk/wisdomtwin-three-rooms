@@ -23,7 +23,7 @@ const HIGHLIGHT_PHRASES = [
   'dissent preserved',
   'dissent notes',
   'seven to two',
-  'nineteen days',
+  'twenty-one days',
   'three weeks',
   'one button',
   '12,400',

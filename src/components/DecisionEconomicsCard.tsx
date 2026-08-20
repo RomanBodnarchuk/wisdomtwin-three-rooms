@@ -10,7 +10,7 @@ export function DecisionEconomicsCard() {
       </p>
       <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
         <div>
-          <p className="text-xl font-semibold text-[var(--cream)]">19 days</p>
+          <p className="text-xl font-semibold text-[var(--cream)]">21 days</p>
           <p className="text-[10px] text-[var(--cream-dim)]">executive waiting</p>
         </div>
         <span className="text-lg text-[var(--brand-gold)]" aria-hidden>→</span>
