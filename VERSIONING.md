@@ -100,6 +100,9 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   GitHub Pages host. Start, 25/50/75/100, and CTA events leave the browser.
   dataLayer is initialized. No identity or transcript data.
 
+- [x] v3.6 (2026-08-20) — **Re-recorded Buzz close as twenty-one days.** Captions
+  and money-math card now match narrator "three weeks". Close audio on Adam.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
@@ -110,13 +113,12 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
    with the CTO file so captions never contradict audio.
 3. [x] **Break the 38-second Legal block.** The investor cut now uses the CEO's "Legal first"
   interruption and a 12-second gate-one window; the long audio remains available to the archival cut.
-4. [x] **Fix 19 vs 21 days.** (v2.8, 2026-08-10) Narrator audio says "three weeks" (=21), buzz-close audio says
-   "nineteen days". Re-record ONE line with ElevenLabs (buzz voice id SAz9YHcvj6GT2YYXdXww) if
-   ELEVENLABS_API_KEY is available; otherwise change the on-screen completion card to match the
-   narrator ("21 days") and queue the audio fix. Never ship captions that contradict the audio.
+4. [x] **Fix 19 vs 21 days.** Caption/data aligned in v2.8. Audio completed in v3.6
+   (2026-08-20): Buzz close re-recorded as twenty-one days on Adam. Captions and
+   money-math card match narrator "three weeks". Never ship captions that contradict audio.
 5. [x] **Decline-moment full stop.** At the safe-decline beat: drop music bed to silence 1.5s
    BEFORE the line, hold the blocker register visual, no other motion. Silence sells it.
-6. [x] **Money-math card after huddle end.** Uses the canonical nineteen-day completion audio,
+6. [x] **Money-math card after huddle end.** Uses the canonical twenty-one-day completion audio,
    8:42 huddle duration, and an explicitly illustrative ≈$400K delayed-execution estimate.
 7. [x] **Tagline consistency.** "WisdomTwin preserves institutional judgment" appears at open and close.
 8. [x] **Captions: bigger, kinetic, money phrases highlighted** in warm gold (#C8A45D).
