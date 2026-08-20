@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-06T15:23:54.618Z",
+  "generatedAt": "2026-08-20T21:50:00.000Z",
   "model": "eleven_multilingual_v2",
-  "format": "mp3_44100_192",
+  "format": "mp3_44100_128",
   "provider": "elevenlabs",
   "voices": {
     "narrator": {
@@ -61,12 +61,12 @@
       "speed": 0.97
     },
     "buzz": {
-      "id": "SAz9YHcvj6GT2YYXdXww",
-      "name": "River — Relaxed Neutral Informative",
-      "stability": 0.72,
-      "similarity": 0.78,
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam — Chief-of-Staff Authority",
+      "stability": 0.78,
+      "similarity": 0.8,
       "style": 0,
-      "speed": 0.95
+      "speed": 0.93
     }
   },
   "lines": [
@@ -81,7 +81,7 @@
       "id": "buzz-activation",
       "speaker": "buzz",
       "path": "dialogue/buzz-activation.mp3",
-      "durationSec": 11.331,
+      "durationSec": 11.338,
       "chars": 141
     },
     {
@@ -186,7 +186,7 @@
       "id": "buzz-blockers",
       "speaker": "buzz",
       "path": "dialogue/buzz-blockers.mp3",
-      "durationSec": 7.152,
+      "durationSec": 7.159,
       "chars": 111
     },
     {
@@ -242,7 +242,7 @@
       "id": "buzz-pattern",
       "speaker": "buzz",
       "path": "dialogue/buzz-pattern.mp3",
-      "durationSec": 10.17,
+      "durationSec": 10.174,
       "chars": 156
     },
     {
@@ -256,7 +256,7 @@
       "id": "buzz-sequence",
       "speaker": "buzz",
       "path": "dialogue/buzz-sequence.mp3",
-      "durationSec": 17.276,
+      "durationSec": 17.281,
       "chars": 259
     },
     {
@@ -270,7 +270,7 @@
       "id": "buzz-output",
       "speaker": "buzz",
       "path": "dialogue/buzz-output.mp3",
-      "durationSec": 18.901,
+      "durationSec": 18.894,
       "chars": 272
     },
     {
@@ -284,7 +284,7 @@
       "id": "buzz-close",
       "speaker": "buzz",
       "path": "dialogue/buzz-close.mp3",
-      "durationSec": 8.034,
+      "durationSec": 8.042,
       "chars": 119
     }
   ]

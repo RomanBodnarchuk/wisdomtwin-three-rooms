@@ -8,7 +8,7 @@ const RATE: Partial<Record<SpeakerId, number>> = {
   cro: 1.0,
   cmo: 1.02,
   legal: 0.94,
-  buzz: 0.9,
+  buzz: 0.82,
   system: 0.9,
 };
 
@@ -20,7 +20,7 @@ const PITCH: Partial<Record<SpeakerId, number>> = {
   cro: 0.95,
   cmo: 1.1,
   legal: 0.82,
-  buzz: 0.75,
+  buzz: 0.68,
   system: 0.7,
 };
 
