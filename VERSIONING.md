@@ -96,6 +96,10 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   lines on ElevenLabs Adam (chief-of-staff), slower source then fitted to the
   locked windows. Captions unchanged, including the baked "nineteen days" close.
 
+- [x] v3.5 (2026-08-20) — **Analytics provider hookup.** Plausible loads on the
+  GitHub Pages host. Start, 25/50/75/100, and CTA events leave the browser.
+  dataLayer is initialized. No identity or transcript data.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
@@ -124,9 +128,9 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
     captions, play control, CTA, and the room structure card.
 12. [x] **Thursday boardroom closing.** Stage-four economics card now lands the board-package outcome;
     a future re-render may promote it into VO.
-13. [ ] **Analytics provider hookup.** The privacy-friendly event layer tracks start,
-    25/50/75/100% completion, and CTA clicks to Plausible/dataLayer when present. Connect the chosen
-    provider so the events leave the browser; no identity or transcript data is included.
+13. [x] **Analytics provider hookup.** (v3.5, 2026-08-20) Plausible script + queue
+    stub on romanbodnarchuk.github.io. Funnel events leave the browser. dataLayer
+    initialized for a later tag manager. No identity or transcript data.
 14. [x] **WisdomTwin dependency line.** One line establishes that twins join any huddle surface
     (Teams, Zoom, Slack), so the demo doesn't read as a feature of someone else's product.
 
