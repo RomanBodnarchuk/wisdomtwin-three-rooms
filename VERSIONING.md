@@ -92,6 +92,10 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   "Your X's twin" from cro-01, cmo-01, legal-02, cfo-02, and cto-02 at the first
   post-intro silence. Captions now match the remaining audio. Safe-decline beat preserved.
 
+- [x] v3.4 (2026-08-20) — **Buzz voice authority pass.** Re-rendered the six Buzz
+  lines on ElevenLabs Adam (chief-of-staff), slower source then fitted to the
+  locked windows. Captions unchanged, including the baked "nineteen days" close.
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
@@ -113,8 +117,9 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 7. [x] **Tagline consistency.** "WisdomTwin preserves institutional judgment" appears at open and close.
 8. [x] **Captions: bigger, kinetic, money phrases highlighted** in warm gold (#C8A45D).
 9. [x] **"Three rooms. One night. One decision."** title card appears on the first room transition.
-10. [ ] **Buzz voice authority pass.** Re-render the 6 buzz lines with a lower, slower, chief-of-staff
-    voice (ElevenLabs). Deterministic playback beats browser TTS fallback.
+10. [x] **Buzz voice authority pass.** (v3.4, 2026-08-20) Re-rendered the 6 buzz
+    lines with ElevenLabs Adam, lower and slower, fitted to existing windows so
+    captions still match. Deterministic MP3 playback, no browser TTS.
 11. [x] **Mobile simplification.** Phones hide side panels/evidence chrome and retain headline,
     captions, play control, CTA, and the room structure card.
 12. [x] **Thursday boardroom closing.** Stage-four economics card now lands the board-package outcome;
