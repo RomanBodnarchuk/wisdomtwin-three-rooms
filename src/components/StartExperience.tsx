@@ -16,9 +16,9 @@ const DEMO_SIGNALS = [
 ];
 
 const OUTCOME_LINES = [
-  'Five executive perspectives convened with policy and precedent attached',
-  'Low-confidence judgment withheld and routed to a named human',
-  'Board package, citations, dissent, objections, and audit record completed',
+  'Relevant role perspectives assembled without waiting for another calendar cycle',
+  'Evidence, policy context, dissent, and uncertainty remain visible',
+  'The workflow resolves to accountable action, escalation, or safe decline',
 ];
 
 export function StartExperience({
@@ -40,27 +40,30 @@ export function StartExperience({
             WisdomTwin
           </p>
           <p className="text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">
-            Demo film · 2:54
+            Synthetic demo film · 2:54
           </p>
         </div>
         <h1
           className="mt-4 text-3xl leading-[1.05] text-[var(--cream)] md:text-5xl"
           style={{ fontFamily: 'var(--font-display)' }}
         >
-          Three weeks of executive coordination. One governed decision in 8:42.
+          Stop waiting for judgment. Start moving at AI-native speed.
         </h1>
         <p
           className="mt-2 text-sm text-[var(--warm)] italic md:text-base"
           style={{ fontFamily: 'var(--font-display)' }}
         >
-          WisdomTwin preserves institutional judgment.
+          From meeting-speed coordination to a governed decision workflow while the question is still live.
         </p>
         <p className="mt-3 max-w-xl text-sm leading-relaxed text-[var(--cream)] md:text-base">
-          Sunday, 9:40 p.m. The board packet locks tomorrow. Watch WisdomTwin turn institutional
-          memory into a board-ready decision without erasing evidence, dissent, or human judgment.
+          Sunday, 9:40 p.m. The board packet locks tomorrow. The evidence is scattered, the relevant
+          executives are not all available, and the decision cannot wait for another meeting. Watch the
+          workflow assemble role-specific judgment, precedent, policy context, dissent, escalation, and
+          accountable human authority so the decision can move forward without hiding uncertainty.
         </p>
         <p className="mt-2 text-[11px] leading-relaxed text-[var(--cream-dim)]">
-          Wisdom Twins join any huddle surface, including Teams, Zoom, Slack, or the one-press WisdomTwin app.
+          WisdomTwin is the mechanism behind the change: role-specific Wisdom Twins, governed huddles,
+          evidence-linked reasoning, and explicit human escalation.
         </p>
 
         <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-4">
@@ -76,7 +79,7 @@ export function StartExperience({
 
         <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
           <p className="text-[10px] tracking-[0.18em] text-[var(--cream-dim)] uppercase">
-            What to watch for
+            What changes
           </p>
           <ul className="mt-2 grid gap-2 text-sm leading-snug text-[var(--cream)] md:grid-cols-3">
             {OUTCOME_LINES.map((line) => (
@@ -94,7 +97,7 @@ export function StartExperience({
           data-testid="btn-start"
           className="mt-5 w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
         >
-          Watch the 2:54 demo film
+          Watch the 2:54 synthetic demo
         </button>
 
         <p className="mt-3 text-center text-[11px] text-[var(--cream-dim)]">
@@ -118,7 +121,7 @@ export function StartExperience({
           onClick={onStart}
           className="w-full rounded-2xl bg-[var(--cream)] px-4 py-3 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase"
         >
-          Watch the 2:54 demo film
+          Watch the 2:54 synthetic demo
         </button>
       </div>
     </div>
