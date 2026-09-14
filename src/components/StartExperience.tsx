@@ -1,5 +1,8 @@
 import { SyntheticDataDisclosure } from './SyntheticDataDisclosure';
 import { InvestorModeToggle } from './InvestorModeToggle';
+import { trackInvestorEvent } from '../lib/investorAnalytics';
+
+const JUDGMENT_ASSESSMENT_URL = 'https://calendly.com/romanbodnarchuk/20min';
 
 interface Props {
   investorMode: boolean;
@@ -47,7 +50,7 @@ export function StartExperience({
           className="mt-4 text-3xl leading-[1.05] text-[var(--cream)] md:text-5xl"
           style={{ fontFamily: 'var(--font-display)' }}
         >
-          Three weeks of executive coordination. One governed decision in 8:42.
+          Before: waiting to convene. After: a governed judgment.
         </h1>
         <p
           className="mt-2 text-sm text-[var(--warm)] italic md:text-base"
@@ -88,14 +91,26 @@ export function StartExperience({
           </ul>
         </div>
 
-        <button
-          type="button"
-          onClick={onStart}
-          data-testid="btn-start"
-          className="mt-5 w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
-        >
-          Watch the 2:54 demo film
-        </button>
+        <div className="mt-5 space-y-3">
+          <a
+            href={JUDGMENT_ASSESSMENT_URL}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="start-cta-assessment"
+            onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'start' })}
+            className="block w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-center text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
+          >
+            Book Judgment Assessment
+          </a>
+          <button
+            type="button"
+            onClick={onStart}
+            data-testid="btn-start"
+            className="w-full rounded-2xl border border-white/15 bg-transparent px-4 py-3 text-sm font-semibold tracking-[0.12em] text-[var(--cream)] uppercase transition hover:bg-white/5"
+          >
+            Replay
+          </button>
+        </div>
 
         <p className="mt-3 text-center text-[11px] text-[var(--cream-dim)]">
           Captions on · Space to pause · M mute · C captions
@@ -112,13 +127,22 @@ export function StartExperience({
         </div>
       </div>
       </div>
-      <div className="shrink-0 border-t border-white/10 bg-black/70 px-4 py-3 md:hidden">
+      <div className="shrink-0 space-y-2 border-t border-white/10 bg-black/70 px-4 py-3 md:hidden">
+        <a
+          href={JUDGMENT_ASSESSMENT_URL}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'start' })}
+          className="block w-full rounded-2xl bg-[var(--cream)] px-4 py-3 text-center text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase"
+        >
+          Book Judgment Assessment
+        </a>
         <button
           type="button"
           onClick={onStart}
-          className="w-full rounded-2xl bg-[var(--cream)] px-4 py-3 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase"
+          className="w-full rounded-2xl border border-white/15 bg-transparent px-4 py-2.5 text-sm font-semibold tracking-[0.12em] text-[var(--cream)] uppercase"
         >
-          Watch the 2:54 demo film
+          Replay
         </button>
       </div>
     </div>
