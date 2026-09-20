@@ -7,7 +7,7 @@ export type InvestorEventName =
 export interface InvestorEventProps {
   cut?: string;
   milestone?: number;
-  placement?: 'live' | 'end-card';
+  placement?: 'live' | 'end-card' | 'start';
 }
 
 type PlausibleFn = ((event: string, options?: { props?: InvestorEventProps }) => void) & {

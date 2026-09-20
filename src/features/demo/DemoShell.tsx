@@ -278,7 +278,7 @@ export function DemoShell() {
             onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'live' })}
             className="absolute right-3 bottom-3 z-30 rounded-full bg-[var(--cream)] px-4 py-2 text-[11px] font-semibold tracking-[0.12em] text-[var(--ink)] uppercase shadow-lg transition hover:bg-white md:right-[calc(40%+1rem)]"
           >
-            Book a Judgment Assessment ($0)
+            Book Judgment Assessment
           </a>
         )}
       </div>
