@@ -1,0 +1,32 @@
+{
+  "tests": [
+    {
+      "config": "test_configs/01-canon-valuation.json",
+      "id": "test_8801m38jrkyxfpk819btr3gjfkwq"
+    },
+    {
+      "config": "test_configs/02-canon-customer-count.json",
+      "id": "test_3401m38jrma0fxgtxwsnx2b9e4g0"
+    },
+    {
+      "config": "test_configs/03-canon-zoom.json",
+      "id": "test_1001m38jrn4hfptamtkesyrstkwa"
+    },
+    {
+      "config": "test_configs/04-identity.json",
+      "id": "test_3801m38jw15weghs3ygwar8pjmz2"
+    },
+    {
+      "config": "test_configs/05-opt-out-mid-call.json",
+      "id": "test_5101m38jrnqpe4srcjyd30f5srs0"
+    },
+    {
+      "config": "test_configs/06-bad-time.json",
+      "id": "test_6601m38jrpbcepbvz1jv2az8zzcv"
+    },
+    {
+      "config": "test_configs/07-voicemail-silent-hangup.json",
+      "id": "test_9701m38jrpp5fkgbqjj6j1e21em6"
+    }
+  ]
+}

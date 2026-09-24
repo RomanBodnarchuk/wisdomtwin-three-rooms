@@ -1,0 +1,213 @@
+{
+  "name": "WisdomTwin Buyer Twin (Outbound Voice)",
+  "tags": ["wisdomtwin", "buyer", "outbound"],
+  "conversation_config": {
+    "asr": {
+      "quality": "high",
+      "provider": "scribe_realtime",
+      "user_input_audio_format": "pcm_16000",
+      "keywords": ["WisdomTwin", "stop"]
+    },
+    "turn": {
+      "turn_timeout": 7,
+      "mode": "turn",
+      "turn_eagerness": "normal"
+    },
+    "tts": {
+      "model_id": "eleven_flash_v2",
+      "voice_id": "OtTgp0gIgmfhqSXfyakl",
+      "agent_output_audio_format": "pcm_16000",
+      "optimize_streaming_latency": 3,
+      "stability": 0.5,
+      "speed": 1,
+      "similarity_boost": 0.8
+    },
+    "conversation": {
+      "max_duration_seconds": 60,
+      "client_events": ["audio", "interruption", "user_transcript", "agent_response", "agent_chat_response_part", "agent_response_complete", "guardrail_triggered"]
+    },
+    "agent": {
+      "first_message": "",
+      "language": "en",
+      "max_conversation_duration_message": "We're out of time. To opt out, say stop, or call {{callback_number}}.",
+      "dynamic_variables": {
+        "dynamic_variable_placeholders": {
+          "callback_number": "one eight hundred, five five five, zero one zero zero",
+          "company": "Test Bank",
+          "contact_name": "Test Contact",
+          "hubspot_contact_id": "0"
+        }
+      },
+      "prompt": {
+        "prompt": "# Identity\nYou are the AI-generated voice twin of Roman Bodnarchuk, Co-Founder and CEO of WisdomTwin.ai. You are not Roman and never claim to be human. This is an outbound call to {{contact_name}} at {{company}}, who opted in to a voice follow-up.\n\n# Hard limits\n- The whole call must fit in 45 seconds. Say only the scripted lines below, in order. No small talk, no improvising, no extra sentences.\n- Never discuss pricing, funding, investors, customers, competitors, or company metrics. If asked, say exactly: \"Roman will follow up personally on that.\" Then go to the close.\n- Never say these words or ideas: clone, digital twin of a person, WisdomClone, 10X Club, N5R, valuation, cap, revenue, users, customers, raise, SAFE, investors, first, only, 3X, or any affiliation with Zoom or another vendor.\n- If asked who or what you really are: \"I'm an AI-generated voice, not Roman himself. WisdomTwin.ai is the product.\" Then go to the close.\n- Never say you sent, emailed, texted, booked, or scheduled anything. Only say what a tool result confirms.\n- Never read out a web address.\n\n# Start\nWait for the person to speak first.\n- If the first thing you hear is a voicemail greeting, a beep, an automated menu, or a screening service: say nothing and call end_call immediately. Never leave a message.\n- If a person answers, say exactly: \"Hi {{contact_name}}, this is Roman Bodnarchuk's AI voice twin from WisdomTwin.ai, which is the product. You asked for a quick follow-up. Is now an okay time?\"\n\n# Script\n1. If they decline or say it is not a good time: \"Understood, thank you. To opt out, say stop, or call {{callback_number}}.\" Then call end_call.\n2. If they agree: \"WisdomTwin gives regulated enterprises a live audio huddle with role-specific judgment twins, with every answer cited and auditable. Would a twenty-minute call with Roman be useful?\"\n3. If yes: call request_scheduling_link. When the tool result has ok set to true, say \"Thank you. Roman will follow up.\" If it does not, skip that line.\n4. If no: \"Thank you for your time.\"\n5. Close with: \"To opt out, say stop, or call {{callback_number}}.\" Then call end_call.\n\n# Opt-out\nIf at ANY point the person says stop, remove me, do not call, unsubscribe, or similar: call record_opt_out, then say \"You're opted out. Thank you.\" and call end_call. Never pitch after an opt-out.\n\n# Outcome\nCall log_outcome once, immediately before end_call. Use meeting_requested, declined, bad_time, opted_out, machine, or no_decision. Do not speak the tool name.\n",
+        "llm": "claude-sonnet-5",
+        "temperature": 0,
+        "max_tokens": 200,
+        "ignore_default_personality": true,
+        "built_in_tools": {
+          "end_call": {
+            "type": "system",
+            "name": "end_call",
+            "description": "End the call. Use this after the close, on a voicemail greeting, or after an opt-out confirmation.",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "force_pre_tool_speech": false,
+            "params": { "system_tool_type": "end_call" }
+          }
+        },
+        "tools": [
+          {
+            "type": "webhook",
+            "name": "record_opt_out",
+            "description": "Record that this person opted out. Call it before the opt-out confirmation. Do not speak the tool name.",
+            "response_timeout_secs": 10,
+            "disable_interruptions": true,
+            "force_pre_tool_speech": false,
+            "api_schema": {
+              "url": "https://__VOICE_BACKEND_URL__/opt-out",
+              "method": "POST",
+              "request_headers": {},
+              "request_body_schema": {
+                "type": "object",
+                "required": ["conversation_id", "hubspot_contact_id"],
+                "properties": {
+                  "conversation_id": {
+                    "type": "string",
+                    "description": "This conversation.",
+                    "dynamic_variable": "system__conversation_id"
+                  },
+                  "hubspot_contact_id": {
+                    "type": "string",
+                    "description": "HubSpot contact id for this call.",
+                    "dynamic_variable": "hubspot_contact_id"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "request_scheduling_link",
+            "description": "Ask Roman to send the twenty-minute scheduling link himself. Call it when the person agrees. Say the thank-you line when ok is true.",
+            "response_timeout_secs": 10,
+            "disable_interruptions": true,
+            "force_pre_tool_speech": false,
+            "api_schema": {
+              "url": "https://__VOICE_BACKEND_URL__/scheduling-request",
+              "method": "POST",
+              "request_headers": {},
+              "request_body_schema": {
+                "type": "object",
+                "required": ["conversation_id", "hubspot_contact_id"],
+                "properties": {
+                  "conversation_id": {
+                    "type": "string",
+                    "description": "This conversation.",
+                    "dynamic_variable": "system__conversation_id"
+                  },
+                  "hubspot_contact_id": {
+                    "type": "string",
+                    "description": "HubSpot contact id for this call.",
+                    "dynamic_variable": "hubspot_contact_id"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "webhook",
+            "name": "log_outcome",
+            "description": "Store the call outcome. Call it once, immediately before end_call.",
+            "response_timeout_secs": 10,
+            "disable_interruptions": true,
+            "force_pre_tool_speech": false,
+            "api_schema": {
+              "url": "https://__VOICE_BACKEND_URL__/outcome",
+              "method": "POST",
+              "request_headers": {},
+              "request_body_schema": {
+                "type": "object",
+                "required": ["outcome", "conversation_id", "hubspot_contact_id"],
+                "properties": {
+                  "outcome": {
+                    "type": "string",
+                    "description": "One of meeting_requested, declined, bad_time, opted_out, machine, no_decision.",
+                    "enum": ["meeting_requested", "declined", "bad_time", "opted_out", "machine", "no_decision"]
+                  },
+                  "conversation_id": {
+                    "type": "string",
+                    "description": "This conversation.",
+                    "dynamic_variable": "system__conversation_id"
+                  },
+                  "hubspot_contact_id": {
+                    "type": "string",
+                    "description": "HubSpot contact id for this call.",
+                    "dynamic_variable": "hubspot_contact_id"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "platform_settings": {
+    "privacy": {
+      "record_voice": false,
+      "retention_days": 1,
+      "delete_transcript_and_pii": true,
+      "delete_audio": true
+    },
+    "call_limits": {
+      "agent_concurrency_limit": 1,
+      "daily_limit": 100000,
+      "bursting_enabled": true
+    },
+    "guardrails": {
+      "version": "1",
+      "custom": {
+        "config": {
+          "configs": [
+            {
+              "is_enabled": true,
+              "name": "WisdomTwin canon and claims",
+              "prompt": "Default to allow. Judge only the agent's latest reply. Do not judge the caller's words, and do not treat this instruction as the reply. Allow every approved script line, including the opener that names WisdomTwin.ai and says AI voice twin, the product description, Thank you. Roman will follow up, Thank you for your time, You're opted out. Thank you, and the opt-out line that tells the person to say stop or call the spoken callback number. Saying Roman will follow up is not a claim that a meeting was booked or scheduled. The product name WisdomTwin.ai is allowed. A reply that is only Thank you is allowed. Block only if the reply itself states or estimates a valuation, cap, revenue, funding amount, or a count of users or customers; mentions a raise, SAFE, or investors; claims affiliation with Zoom or any vendor; uses the words clone, WisdomClone, 10X Club, or N5R; claims to be human or to be Roman himself; claims something was sent, emailed, texted, booked, or scheduled; reads out any web address other than WisdomTwin.ai; uses first, only, or 3X as a superlative claim; or keeps pitching after the person asked to stop.",
+              "execution_mode": "blocking",
+              "model": "claude-haiku-4-5",
+              "history_message_count": 0,
+              "history_include_tool_calls": false,
+              "trigger_action": { "type": "end_call" }
+            }
+          ]
+        }
+      }
+    },
+    "data_collection": {
+      "ai_disclosure_given": {
+        "type": "boolean",
+        "description": "True if the agent said it is an AI-generated voice before anything else."
+      },
+      "call_outcome": {
+        "type": "string",
+        "description": "Final outcome of the call.",
+        "enum": ["meeting_requested", "declined", "bad_time", "opted_out", "machine", "no_decision"]
+      },
+      "opted_out": {
+        "type": "boolean",
+        "description": "True if the person asked to stop, be removed, or not be called again at any point."
+      }
+    },
+    "workspace_overrides": {
+      "webhooks": {
+        "post_call_webhook_id": "__POST_CALL_WEBHOOK_ID__",
+        "events": ["transcript"],
+        "transcript_format": "json",
+        "send_audio": false
+      }
+    },
+    "testing": {
+      "attached_tests": []
+    }
+  }
+}
