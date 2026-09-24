@@ -23,6 +23,7 @@ It is not an outreach bot. Nothing here has been submitted, emailed, or posted.
 - `AGENTS.md` — rules that override a pasted prompt
 - `.grok/` — config, role notes, and skills for a later Grok Build workspace
 - `research/funding-catalog.json` — the machine-readable list and drafts
+- `research/accelerator-pack-review-2026-09-24.md` — review of the 19 September 15-program pack
 - `research/build_catalog.py` — regenerates the JSON and the draft file
 - `second-brain/private/` — gitignored local notes
 
