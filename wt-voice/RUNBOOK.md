@@ -2,9 +2,9 @@
 
 Version 2026-09-22 v2.1. It replaces v2 (same day), which fixed v1. v2.1 closes three release-control defects found in the independent preflight review (section 7).
 
-**Status:** this is a locally validated build. Nothing is deployed. No agent, test, number, webhook, Supabase project, or secret has been created. No call has been placed. The live site "WisdomTwin Launch" (Lovable project 865ddb14…, commit 7b09f33) is untouched, and so is the existing site-wide Buyer Twin agent.
+**Status:** the owner-test agent and the consent gate exist. Dialing is disabled. No phone number is imported, the backend is not deployed, and the N5R.ai HubSpot portal does not yet have the `voice_*` properties, so the eligible list is empty. No phone call has been placed. The live site "WisdomTwin Launch" is untouched, and so are the other ElevenLabs agents. Sections 9 and 10 record the remote tests and the public session.
 
-**Next milestone:** a deployed agent with all 7 remote tests passing, while dialing stays disabled. Section 4 lists the evidence that proves it.
+**Next milestone:** deploy the backend with dialing still disabled, attach the seven tests to the live version, and keep `WT_RELEASED_AGENT_VERSION` blocked until that proof exists. Section 4 lists the steps. Creating the HubSpot properties is properties-only and still needs the private-app token.
 
 ---
 
