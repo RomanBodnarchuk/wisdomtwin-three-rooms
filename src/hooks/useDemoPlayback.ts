@@ -41,7 +41,7 @@ export interface DemoPlaybackApi {
   error: string | null;
 }
 
-export function useDemoPlayback(initialCut: CutId = 'full'): DemoPlaybackApi {
+export function useDemoPlayback(initialCut: CutId = 'full', entryMs = 0): DemoPlaybackApi {
   const [cutId, setCutId] = useState<CutId>(initialCut);
   const config = CUTS[cutId];
   const [phase, setPhase] = useState<DemoPhase>('ready');
@@ -174,15 +174,18 @@ export function useDemoPlayback(initialCut: CutId = 'full'): DemoPlaybackApi {
       setError(null);
       await audioEngine.unlock();
       audioEngine.resetSession();
-      lastTickRef.current = 0;
-      clockRef.current?.seek(0);
+      const origin = Math.max(0, Math.min(entryMs, config.durationMs));
+      // Include one-shot events that start on the entry frame (strictly after last tick).
+      lastTickRef.current = origin > 0 ? origin - 1 : 0;
+      clockRef.current?.seek(origin);
+      setTimeMs(origin);
       setPhase('playing');
       clockRef.current?.play();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to start experience');
       setPhase('error');
     }
-  }, []);
+  }, [config.durationMs, entryMs]);
 
   const pause = useCallback(() => {
     clockRef.current?.pause();
@@ -211,13 +214,15 @@ export function useDemoPlayback(initialCut: CutId = 'full'): DemoPlaybackApi {
   }, []);
 
   const replay = useCallback(async () => {
-    restart();
+    audioEngine.resetSession();
+    audioEngine.setMusicBed('none');
     await start();
-  }, [restart, start]);
+  }, [start]);
 
   const seek = useCallback(
     (ms: number) => {
-      const clamped = Math.max(0, Math.min(ms, config.durationMs));
+      const floor = Math.max(0, Math.min(entryMs, config.durationMs));
+      const clamped = Math.max(floor, Math.min(ms, config.durationMs));
       if (clamped < lastTickRef.current) audioEngine.resetSession();
       lastTickRef.current = clamped;
       clockRef.current?.seek(clamped);
@@ -225,7 +230,7 @@ export function useDemoPlayback(initialCut: CutId = 'full'): DemoPlaybackApi {
       if (clamped >= config.durationMs - 30) setPhase('complete');
       else if (phaseRef.current === 'complete') setPhase('paused');
     },
-    [config.durationMs],
+    [config.durationMs, entryMs],
   );
 
   const setMuted = useCallback((m: boolean) => {

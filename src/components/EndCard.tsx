@@ -84,7 +84,15 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
               Book Judgment Assessment
             </a>
             <p className="text-xs tracking-[0.08em] text-[var(--cream-dim)]">
-              wisdomtwin.ai · Text anytime with questions or to book: 416 220 5314
+              wisdomtwin.ai · Text anytime with questions or to book:{' '}
+              <a
+                href="sms:+14162205314"
+                data-testid="end-sms"
+                onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'end-sms' })}
+                className="text-[var(--cream)] underline decoration-white/30 underline-offset-2"
+              >
+                416 220 5314
+              </a>
             </p>
             <div className="flex flex-wrap justify-center gap-2 pt-2">
               <button

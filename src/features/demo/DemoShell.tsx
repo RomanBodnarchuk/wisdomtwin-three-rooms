@@ -34,7 +34,7 @@ const FILM_ENTRY_MS = 65_800;
  * in code (useDemoPlayback('full')) but short cuts are not offered in UI.
  */
 export function DemoShell() {
-  const playback = useDemoPlayback('investor240');
+  const playback = useDemoPlayback('investor240', FILM_ENTRY_MS);
   // Investor mode is for investors only — enable with ?investor in the URL
   const investorParam =
     typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('investor');
@@ -91,8 +91,7 @@ export function DemoShell() {
     setStarted(true);
     await dialoguePlayer.unlock();
     await start();
-    seek(FILM_ENTRY_MS);
-  }, [seek, start]);
+  }, [start]);
 
   const handleRestart = useCallback(() => {
     dialoguePlayer.stop();
@@ -105,8 +104,7 @@ export function DemoShell() {
     setStarted(true);
     await dialoguePlayer.unlock();
     await replay();
-    seek(FILM_ENTRY_MS);
-  }, [replay, seek]);
+  }, [replay]);
 
   const keyboardHandlers = useMemo(
     () => ({

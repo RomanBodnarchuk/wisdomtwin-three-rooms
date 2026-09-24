@@ -7,7 +7,7 @@ export type InvestorEventName =
 export interface InvestorEventProps {
   cut?: string;
   milestone?: number;
-  placement?: 'live' | 'end-card' | 'start' | 'raise';
+  placement?: 'live' | 'end-card' | 'start' | 'raise' | 'end-sms';
   raisePlacement?: string;
 }
 
