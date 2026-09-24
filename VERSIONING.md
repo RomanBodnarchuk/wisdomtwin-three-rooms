@@ -103,6 +103,16 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 - [x] v3.6 (2026-08-20) — **Re-recorded Buzz close as twenty-one days.** Captions
   and money-math card now match narrator "three weeks". Close audio on Adam.
 
+- [x] v3.7 (2026-09-20) — **Investor deck: Khosla pass (one message per slide).** Rebuilt the
+  E4 deck 20 → 18 slides so each slide survives the five-second test: one headline that IS the
+  message, one supporting number or visual, everything else cut. Merged Product + How-it-works,
+  folded Why-regulated into the Trust Layer, merged Market + TAM, dropped duplicate client-outcome
+  and keyman-insurance asides, cut the competition table to the three sharpest rows. Numbers
+  unchanged ($1M SAFE, 20 × $50k, $8-12B SAM, $50B+ by 2030, $0 revenue stated plainly, $5.5M
+  client outcome labeled as client revenue). Deck source now lives in the repo:
+  `deck/WisdomTwin-Investor-Deck.html`; `npm run deck:pdf` prints it with headless Chrome and
+  refreshes every served alias (MD5 88d663ce30edc95c2fb8d89a2e56aed9).
+
 ## Backlog (in priority order — one per day)
 
 1. [ ] ~~Full film honest recut~~ → SUPERSEDED by Roman's v2.4 decision: the original full
@@ -145,5 +155,8 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   `public/audio/dialogue/manifest.json`).
 - Cuts: `outreach45` (default, 45s), `investor60` (60s), `full` (7:37 — mislabeled, see backlog #1).
 - Build: `npm ci && npm run build` → `dist/` (workflow deploys `dist/`).
+- Investor deck: source `deck/WisdomTwin-Investor-Deck.html` (one `<section class="slide">` per
+  slide, 1440×810). `npm run deck:pdf` prints it via headless Chrome to
+  `public/WisdomTwin-Investor-Deck.pdf` and copies to every alias 404.html recovers to.
 - gh CLI is authenticated as RomanBodnarchuk; commit with
   user.email RomanBodnarchuk@users.noreply.github.com (email privacy blocks other addresses).
