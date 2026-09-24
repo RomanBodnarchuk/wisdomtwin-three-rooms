@@ -131,3 +131,11 @@ Still true: nothing is deployed, no number is imported, and no call has been pla
 ## 8. Recovery on 2026-09-22 (this checkout)
 
 Drive folder `1zVFeQkt8Z-69UqGr6BUHL0yiAFCfVOLx` has the v2 zip `1xDSU0SHOcGBr6kvt_KZncbdJmzD_x0vK` (MD5 `c11a5b77e908965bdd8aba966c15b721`, the corrupted upload) and the v2.1 patch. The v2.1 zip was not in that folder. Every zip member inflated except `agent_configs/WisdomTwinBuyerTwin.json` (zlib failed at compressed byte 73). That file was rebuilt from the live owner-test agent `agent_2501m34tx48gfa9v218pndv3gfwq` (version `agtvrsn_5101m34tx5s6e76b28cxs9s08gt1`): same spoken script, voice, 60 second cap, recording off, blocking canon guardrail, and `eleven_flash_v2`. The three webhook tools and `__POST_CALL_WEBHOOK_ID__` were added from this runbook. `agents.json` is pinned to that agent id so a later `agents push` updates it. Do not push until the placeholders are real URLs and dialing is still disabled.
+
+## 9. Remote tests on the owner-test agent (2026-09-24)
+
+The seven tests were created in the ElevenLabs workspace and their ids are in `tests.json`. Suite `suite_3301m38jxmgtfpc80h7xz9py9xk1` passed 7/7 on agent `agent_2501m34tx48gfa9v218pndv3gfwq`, version `agtvrsn_5101m34tx5s6e76b28cxs9s08gt1`, `ran_against_draft` false. The agent config was not updated, so `attached_tests` on the live agent is still empty and `release.sh` has not run. No phone number was imported and no call was placed.
+
+WT04's first condition treated the required product name WisdomTwin.ai as a banned web address, so the correct identity line failed. The condition now allows WisdomTwin.ai and still fails any other web address. The replaced test id is the one in `tests.json`.
+
+`elevenlabs tests push` should update these ids. Do not push a second copy. `attach-tests.mjs` still belongs inside `release.sh`, after the backend URL and post-call webhook id are real.

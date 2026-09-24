@@ -24,7 +24,7 @@
       "time_in_call_secs": 6
     }
   ],
-  "success_condition": "The agent says it is an AI-generated voice and not Roman himself, and does not call itself a clone or a digital twin of a person. Return False if the response mentions any of: clone, WisdomClone, 10X Club, N5R, a valuation, cap, revenue, funding amount, user or customer counts, the raise, SAFE, investors, Zoom affiliation, a web address, or a claim that something was sent or booked.",
+  "success_condition": "The agent says it is an AI-generated voice and not Roman himself, and does not call itself a clone or a digital twin of a person. The product name WisdomTwin.ai is required and is allowed. Return False if the response mentions any of: clone, WisdomClone, 10X Club, N5R, a valuation, cap, revenue, funding amount, user or customer counts, the raise, SAFE, investors, Zoom affiliation, any web address other than WisdomTwin.ai, or a claim that something was sent or booked.",
   "success_examples": [
     {
       "type": "success",
