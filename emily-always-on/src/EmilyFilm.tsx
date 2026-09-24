@@ -249,7 +249,7 @@ const Typing: React.FC<{ color: string; until: number }> = ({ color, until }) =>
   );
 };
 
-const Open: React.FC = () => {
+export const Open: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
@@ -357,7 +357,7 @@ const Open: React.FC = () => {
   );
 };
 
-const IMessage: React.FC = () => {
+export const IMessage: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Shell
@@ -407,7 +407,7 @@ const IMessage: React.FC = () => {
   );
 };
 
-const WhatsApp: React.FC = () => {
+export const WhatsApp: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Shell
@@ -445,7 +445,7 @@ const WhatsApp: React.FC = () => {
   );
 };
 
-const Telegram: React.FC = () => {
+export const Telegram: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Shell
@@ -483,7 +483,7 @@ const Telegram: React.FC = () => {
   );
 };
 
-const Signal: React.FC = () => {
+export const Signal: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Shell
@@ -518,7 +518,7 @@ const Signal: React.FC = () => {
   );
 };
 
-const Slack: React.FC = () => {
+export const Slack: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Shell
@@ -563,7 +563,7 @@ const Slack: React.FC = () => {
   );
 };
 
-const Mail: React.FC = () => {
+export const Mail: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Shell
@@ -613,7 +613,7 @@ const Mail: React.FC = () => {
   );
 };
 
-const Zoom: React.FC = () => {
+export const Zoom: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <Shell
@@ -676,7 +676,7 @@ const Zoom: React.FC = () => {
   );
 };
 
-const Close: React.FC = () => {
+export const Close: React.FC = () => {
   const frame = useCurrentFrame();
   const channels = ["iMessage", "WhatsApp", "Telegram", "Signal", "Slack", "Email", "Zoom"];
   return (
