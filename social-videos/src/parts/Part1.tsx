@@ -8,6 +8,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { COLORS, CALENDLY_URL } from "../theme";
+import { VO1, MUSIC } from "../audio";
 import { body, display } from "../lib/fonts";
 import {
   Backdrop,
@@ -17,10 +18,12 @@ import {
   FadeUp,
   Headline,
   Kicker,
+  MusicBed,
   PartBadge,
   ProgressBar,
   SceneWrap,
   Stage,
+  Vo,
 } from "../lib/ui";
 
 const FPS = 30;
@@ -262,20 +265,22 @@ export const Part1: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.bg }}>
       <Series>
-        <Series.Sequence durationInFrames={s(D.hook)}><Hook /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.problem)}><Problem /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.cost)}><Cost /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.reframe)}><Reframe /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.brand)}><Brand /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.stat)}><Stat /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.tease)}><Tease /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.hook)}><Hook /><Vo src={VO1.hook} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.problem)}><Problem /><Vo src={VO1.problem} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.cost)}><Cost /><Vo src={VO1.cost} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.reframe)}><Reframe /><Vo src={VO1.reframe} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.brand)}><Brand /><Vo src={VO1.brand} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.stat)}><Stat /><Vo src={VO1.stat} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.tease)}><Tease /><Vo src={VO1.tease} /></Series.Sequence>
         <Series.Sequence durationInFrames={s(D.cta)}>
           <SceneWrap durationInFrames={s(D.cta)}>
             <Backdrop tint="teal" />
             <CTA calendly={CALENDLY_URL} sub="Part 1 of 2 · Bring one decision that always waits." />
           </SceneWrap>
+          <Vo src={VO1.cta} />
         </Series.Sequence>
       </Series>
+      <MusicBed src={MUSIC} />
       <ProgressBar />
     </AbsoluteFill>
   );

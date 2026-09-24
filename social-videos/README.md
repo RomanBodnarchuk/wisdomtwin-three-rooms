@@ -7,7 +7,12 @@ Vertical (9:16, 1080×1920, 30fps) kinetic-typography promo built with [Remotion
 | `Part1` | The problem — regulated decisions wait weeks; judgment walks out the door. Brand reveal + "21 days → 8:42". Teases Part 2. | 80s |
 | `Part2` | The solution in action — one-press huddle, evidence, governance (Linked/Checked/Named/Logged), three outcomes, named human, "3 weeks → 8 minutes". | 87s |
 
-Both parts are muted-first: the on-screen kinetic captions carry the full message for silent autoplay feeds.
+Both parts have **sound**: an energetic voiceover (one clip per scene) mixed over a driving music bed, and they still read clearly muted thanks to the on-screen kinetic captions.
+
+## Audio
+- Voiceover: one narration clip per scene (HeyGen TTS, "Leopold" voice), in `public/vo/p1/` and `public/vo/p2/`.
+- Music: an energetic instrumental bed at `public/music/bed.mp3`, looped under the whole video and ducked ~15 dB below the voice.
+- Mix is wired in `src/lib/ui.tsx` (`Vo` and `MusicBed`) and mapped in `src/audio.ts`. Voiceover plays at 0.92, music at 0.16 with fade in/out — peaks land near −1 dB (no clipping).
 
 ## Develop
 

@@ -4,11 +4,37 @@ import {
   Easing,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import { Audio } from "@remotion/media";
 import { COLORS, SAFE_X } from "../theme";
 import { body, display } from "./fonts";
+
+// Per-scene voiceover clip, placed inside a Series.Sequence (starts near scene start).
+export const Vo: React.FC<{ src: string; from?: number }> = ({ src, from = 8 }) => (
+  <Audio src={staticFile(src)} from={from} volume={0.92} />
+);
+
+// Looped energetic music bed for a whole composition, with fade in/out.
+export const MusicBed: React.FC<{ src: string; base?: number }> = ({ src, base = 0.16 }) => {
+  const { durationInFrames } = useVideoConfig();
+  return (
+    <Audio
+      src={staticFile(src)}
+      loop
+      volume={(f) =>
+        interpolate(
+          f,
+          [0, 18, durationInFrames - 45, durationInFrames - 1],
+          [0, base, base, 0],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+        )
+      }
+    />
+  );
+};
 
 const EASE = Easing.bezier(0.16, 1, 0.3, 1);
 

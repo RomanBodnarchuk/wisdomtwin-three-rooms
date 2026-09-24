@@ -8,6 +8,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { COLORS, CALENDLY_URL } from "../theme";
+import { VO2, MUSIC } from "../audio";
 import { body, display } from "../lib/fonts";
 import {
   Backdrop,
@@ -17,10 +18,12 @@ import {
   Headline,
   Kicker,
   Meter,
+  MusicBed,
   PartBadge,
   ProgressBar,
   SceneWrap,
   Stage,
+  Vo,
 } from "../lib/ui";
 
 const FPS = 30;
@@ -342,21 +345,23 @@ export const Part2: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.bg }}>
       <Series>
-        <Series.Sequence durationInFrames={s(D.recap)}><Recap /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.press)}><OnePress /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.evidence)}><Evidence /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.limits)}><Limits /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.gov)}><Governance /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.outcomes)}><Outcomes /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.named)}><Named /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.payoff)}><Payoff /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.recap)}><Recap /><Vo src={VO2.recap} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.press)}><OnePress /><Vo src={VO2.press} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.evidence)}><Evidence /><Vo src={VO2.evidence} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.limits)}><Limits /><Vo src={VO2.limits} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.gov)}><Governance /><Vo src={VO2.gov} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.outcomes)}><Outcomes /><Vo src={VO2.outcomes} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.named)}><Named /><Vo src={VO2.named} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.payoff)}><Payoff /><Vo src={VO2.payoff} /></Series.Sequence>
         <Series.Sequence durationInFrames={s(D.cta)}>
           <SceneWrap durationInFrames={s(D.cta)}>
             <Backdrop tint="teal" />
             <CTA calendly={CALENDLY_URL} sub="Part 2 of 2 · See it run on your workflow." />
           </SceneWrap>
+          <Vo src={VO2.cta} />
         </Series.Sequence>
       </Series>
+      <MusicBed src={MUSIC} />
       <ProgressBar />
     </AbsoluteFill>
   );
