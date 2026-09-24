@@ -139,3 +139,15 @@ The seven tests were created in the ElevenLabs workspace and their ids are in `t
 WT04's first condition treated the required product name WisdomTwin.ai as a banned web address, so the correct identity line failed. The condition now allows WisdomTwin.ai and still fails any other web address. The replaced test id is the one in `tests.json`.
 
 `elevenlabs tests push` should update these ids. Do not push a second copy. `attach-tests.mjs` still belongs inside `release.sh`, after the backend URL and post-call webhook id are real.
+
+## 10. Public session, no phone call (2026-09-24)
+
+The owner-test agent can run without a phone number because auth is off. The public page is `https://elevenlabs.io/app/talk-to?agent_id=agent_2501m34tx48gfa9v218pndv3gfwq`. Speak or type first. The agent waits for a person.
+
+A public text session, `conv_6401m38kj2cxfdk89q4fdjefcxq7`, ran on version `agtvrsn_7201m38khnysfxsv1ykb1wnbt97g` and ended because `end_call` succeeded. The spoken lines were the opener, the product description, and "Thank you. Roman will follow up. To opt out, say stop, or call one eight hundred, five five five, zero one zero zero." AI disclosure was recorded as true. No phone number was imported and no call was placed. This is not the owner PSTN test.
+
+The first live session, `conv_7301m38k72svfq59qbc44gfng7pn`, died before any reply: the canon guardrail treated the required WisdomTwin.ai opener as a banned web address. A later session, `conv_0601m38kg7h0ev3sm1ctkgnfbezy`, got through the opener and the product line, then the guardrail stopped the approved close after the words "Thank you." The live guardrail now defaults to allow, allows WisdomTwin.ai and the scripted close, and judges only the latest reply. `evaluate_full_response_only` cannot be set on this voice agent. The same guardrail text is in `agent_configs/WisdomTwinBuyerTwin.json`. The spoken prompt on the live agent was not replaced, webhook tools were not added, and `attached_tests` is still empty.
+
+The 7/7 suite in section 9 ran on version `agtvrsn_5101m34tx5s6e76b28cxs9s08gt1`. The live version is now `agtvrsn_7201m38khnysfxsv1ykb1wnbt97g`. The spoken script is the same. `release.sh` has not run.
+
+A raw voice socket did not deliver audio in this environment. Use the talk-to page to hear the voice.

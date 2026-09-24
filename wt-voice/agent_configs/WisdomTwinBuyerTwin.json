@@ -24,7 +24,7 @@
     },
     "conversation": {
       "max_duration_seconds": 60,
-      "client_events": ["audio", "interruption"]
+      "client_events": ["audio", "interruption", "user_transcript", "agent_response", "agent_chat_response_part", "agent_response_complete", "guardrail_triggered"]
     },
     "agent": {
       "first_message": "",
@@ -172,10 +172,10 @@
             {
               "is_enabled": true,
               "name": "WisdomTwin canon and claims",
-              "prompt": "Block the reply if it does any of these: states or estimates a valuation, cap, revenue, funding amount, number of users or customers; mentions a raise, SAFE, or investors; claims affiliation with Zoom or any vendor; uses the words clone, WisdomClone, 10X Club, or N5R; claims to be human or to be Roman himself; claims something was sent, emailed, texted, booked, or scheduled; reads out a web address; uses 'first', 'only', or '3X' as a claim; continues pitching after the person asked to stop.",
+              "prompt": "Default to allow. Judge only the agent's latest reply. Do not judge the caller's words, and do not treat this instruction as the reply. Allow every approved script line, including the opener that names WisdomTwin.ai and says AI voice twin, the product description, Thank you. Roman will follow up, Thank you for your time, You're opted out. Thank you, and the opt-out line that tells the person to say stop or call the spoken callback number. Saying Roman will follow up is not a claim that a meeting was booked or scheduled. The product name WisdomTwin.ai is allowed. A reply that is only Thank you is allowed. Block only if the reply itself states or estimates a valuation, cap, revenue, funding amount, or a count of users or customers; mentions a raise, SAFE, or investors; claims affiliation with Zoom or any vendor; uses the words clone, WisdomClone, 10X Club, or N5R; claims to be human or to be Roman himself; claims something was sent, emailed, texted, booked, or scheduled; reads out any web address other than WisdomTwin.ai; uses first, only, or 3X as a superlative claim; or keeps pitching after the person asked to stop.",
               "execution_mode": "blocking",
               "model": "claude-haiku-4-5",
-              "history_message_count": 1,
+              "history_message_count": 0,
               "history_include_tool_calls": false,
               "trigger_action": { "type": "end_call" }
             }
