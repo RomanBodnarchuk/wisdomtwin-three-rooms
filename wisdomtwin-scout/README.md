@@ -26,6 +26,7 @@ It is not an outreach bot. Nothing here has been submitted, emailed, or posted.
 - `research/accelerator-pack-review-2026-09-24.md` — review of the 19 September 15-program pack
 - `research/september-deadline-status-2026-09-24.md` — correction of the 22 September submit-today list
 - `research/inbox-audit-next-10-2026-09-24.md` — what roman@n5r.com actually contains, and the 14 September list rewritten as holds
+- `research/ready-to-file-2026-09-24.md` — paste-ready answers for the portals that are still open. Nothing in that file was submitted.
 - `research/build_catalog.py` — regenerates the JSON and the draft file
 - `second-brain/private/` — gitignored local notes
 
