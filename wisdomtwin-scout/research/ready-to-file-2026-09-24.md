@@ -30,7 +30,13 @@ Leave blank until the PDF is in hand: incorporation date, certificate file numbe
 
 ## 1. YC Winter 2027
 
-File at https://www.ycombinator.com/apply before 2 Nov 2026, 8pm Pacific. Fall 2026 on-time filing closed in July. Record a 60-second screen recording with no slides: open the demo, name the role and the decision, show one synthetic case and say it is synthetic, show the accountable person and the record, state 0 users and $0 revenue, state the $1M SAFE with terms unset, stop.
+File at https://www.ycombinator.com/apply before 2 Nov 2026, 8pm Pacific. Fall 2026 on-time filing closed in July. The founder video to upload into that form is https://youtu.be/EHt4ni4gm60, titled "WisdomTwin.ai YC Pitch", dated 27 Jul 2026. That date is the old Fall deadline. The same cut can be reused for W27 only if it is about one minute and the spoken track matches the facts below. A YouTube link in email to apply@ycombinator.com is not the application. YC tells founders to submit online, and that address is for questions.
+
+What the 24 Sep screenshots show: Roman on camera, then Roman with Stella Cabrera. On-screen line: "GOVERNED AI FOR INSTITUTIONAL JUDGMENT". Lower third: "STELLA CABRERA · CO-FOUNDER / 20+ YEARS IN DATA GOVERNANCE & RISK". The description begins: "WisdomTwin is the Institutional Judgment Layer for the Enterprise. It turns authorized evidence and prior decision episodes into a governed Wisdom Twin for one critical organizational role." The counters on that screen read 0 likes and 0 views.
+
+Before upload, one spoken correction belongs in the video or in the form beside it: the five demos are synthetic, there are 0 production users, and there is no archive of a customer's prior decisions. "Prior decision episodes" in the description reads as production history. "Governed" on the lower third is the product aim, not a certification. The form still states $0 revenue and the $1M post-money SAFE with cap and discount unset.
+
+If the July cut is longer than one minute or never says the zero-user line, record a new 60-second screen with no slides: open the demo, name the role and the decision, show one synthetic case and say it is synthetic, show the accountable person and the record, state 0 users and $0 revenue, state the SAFE terms, stop.
 
 Company one-liner:
 
