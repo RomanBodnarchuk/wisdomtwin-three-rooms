@@ -3,6 +3,11 @@
 
 export const MUSIC = "music/bed.mp3";
 
+export const SFX = {
+  whoosh: "sfx/whoosh.mp3",
+  impact: "sfx/impact.mp3",
+} as const;
+
 export const VO1 = {
   hook: "vo/p1/hook.mp3",
   problem: "vo/p1/problem.mp3",

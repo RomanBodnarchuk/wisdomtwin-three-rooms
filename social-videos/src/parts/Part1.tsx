@@ -8,7 +8,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { COLORS, CALENDLY_URL } from "../theme";
-import { VO1, MUSIC } from "../audio";
+import { VO1, MUSIC, SFX } from "../audio";
 import { body, display } from "../lib/fonts";
 import {
   Backdrop,
@@ -22,6 +22,7 @@ import {
   PartBadge,
   ProgressBar,
   SceneWrap,
+  Sfx,
   Stage,
   Vo,
 } from "../lib/ui";
@@ -265,22 +266,23 @@ export const Part1: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.bg }}>
       <Series>
-        <Series.Sequence durationInFrames={s(D.hook)}><Hook /><Vo src={VO1.hook} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.problem)}><Problem /><Vo src={VO1.problem} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.cost)}><Cost /><Vo src={VO1.cost} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.reframe)}><Reframe /><Vo src={VO1.reframe} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.brand)}><Brand /><Vo src={VO1.brand} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.stat)}><Stat /><Vo src={VO1.stat} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.tease)}><Tease /><Vo src={VO1.tease} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.hook)}><Hook /><Vo src={VO1.hook} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.problem)}><Problem /><Vo src={VO1.problem} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.cost)}><Cost /><Vo src={VO1.cost} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.reframe)}><Reframe /><Vo src={VO1.reframe} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.brand)}><Brand /><Vo src={VO1.brand} /><Sfx src={SFX.impact} from={2} volume={0.5} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.stat)}><Stat /><Vo src={VO1.stat} /><Sfx src={SFX.whoosh} volume={0.32} /><Sfx src={SFX.impact} from={168} volume={0.42} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.tease)}><Tease /><Vo src={VO1.tease} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
         <Series.Sequence durationInFrames={s(D.cta)}>
           <SceneWrap durationInFrames={s(D.cta)}>
             <Backdrop tint="teal" />
             <CTA calendly={CALENDLY_URL} sub="Part 1 of 2 · Bring one decision that always waits." />
           </SceneWrap>
           <Vo src={VO1.cta} />
+          <Sfx src={SFX.impact} from={4} volume={0.5} />
         </Series.Sequence>
       </Series>
-      <MusicBed src={MUSIC} />
+      <MusicBed src={MUSIC} base={0.2} />
       <ProgressBar />
     </AbsoluteFill>
   );

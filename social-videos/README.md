@@ -11,8 +11,9 @@ Both parts have **sound**: an energetic voiceover (one clip per scene) mixed ove
 
 ## Audio
 - Voiceover: one narration clip per scene (HeyGen TTS, "Leopold" voice), in `public/vo/p1/` and `public/vo/p2/`.
-- Music: an energetic instrumental bed at `public/music/bed.mp3`, looped under the whole video and ducked ~15 dB below the voice.
-- Mix is wired in `src/lib/ui.tsx` (`Vo` and `MusicBed`) and mapped in `src/audio.ts`. Voiceover plays at 0.92, music at 0.16 with fade in/out — peaks land near −1 dB (no clipping).
+- Music: an energetic instrumental bed at `public/music/bed.mp3`, looped under the whole video and mixed below the voice.
+- SFX: whoosh transitions between scenes and cinematic impacts on the big reveals (`public/sfx/`).
+- Mix is wired in `src/lib/ui.tsx` (`Vo`, `MusicBed`, `Sfx`) and mapped in `src/audio.ts`. Voiceover plays at 0.92, music at 0.20, whooshes ~0.32, impacts ~0.5 — integrated loudness ≈ −16 LUFS with peaks near −0.8 dB (no clipping).
 
 ## Develop
 

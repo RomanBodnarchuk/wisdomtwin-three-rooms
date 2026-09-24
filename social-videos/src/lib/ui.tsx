@@ -17,6 +17,13 @@ export const Vo: React.FC<{ src: string; from?: number }> = ({ src, from = 8 }) 
   <Audio src={staticFile(src)} from={from} volume={0.92} />
 );
 
+// One-shot sound effect (whoosh / impact) placed at a point in the timeline.
+export const Sfx: React.FC<{ src: string; from?: number; volume?: number }> = ({
+  src,
+  from = 0,
+  volume = 0.3,
+}) => <Audio src={staticFile(src)} from={from} volume={volume} />;
+
 // Looped energetic music bed for a whole composition, with fade in/out.
 export const MusicBed: React.FC<{ src: string; base?: number }> = ({ src, base = 0.16 }) => {
   const { durationInFrames } = useVideoConfig();

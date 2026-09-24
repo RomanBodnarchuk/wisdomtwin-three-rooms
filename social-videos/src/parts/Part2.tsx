@@ -8,7 +8,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { COLORS, CALENDLY_URL } from "../theme";
-import { VO2, MUSIC } from "../audio";
+import { VO2, MUSIC, SFX } from "../audio";
 import { body, display } from "../lib/fonts";
 import {
   Backdrop,
@@ -22,6 +22,7 @@ import {
   PartBadge,
   ProgressBar,
   SceneWrap,
+  Sfx,
   Stage,
   Vo,
 } from "../lib/ui";
@@ -345,23 +346,24 @@ export const Part2: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.bg }}>
       <Series>
-        <Series.Sequence durationInFrames={s(D.recap)}><Recap /><Vo src={VO2.recap} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.press)}><OnePress /><Vo src={VO2.press} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.evidence)}><Evidence /><Vo src={VO2.evidence} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.limits)}><Limits /><Vo src={VO2.limits} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.gov)}><Governance /><Vo src={VO2.gov} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.outcomes)}><Outcomes /><Vo src={VO2.outcomes} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.named)}><Named /><Vo src={VO2.named} /></Series.Sequence>
-        <Series.Sequence durationInFrames={s(D.payoff)}><Payoff /><Vo src={VO2.payoff} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.recap)}><Recap /><Vo src={VO2.recap} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.press)}><OnePress /><Vo src={VO2.press} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.evidence)}><Evidence /><Vo src={VO2.evidence} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.limits)}><Limits /><Vo src={VO2.limits} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.gov)}><Governance /><Vo src={VO2.gov} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.outcomes)}><Outcomes /><Vo src={VO2.outcomes} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.named)}><Named /><Vo src={VO2.named} /><Sfx src={SFX.whoosh} volume={0.32} /></Series.Sequence>
+        <Series.Sequence durationInFrames={s(D.payoff)}><Payoff /><Vo src={VO2.payoff} /><Sfx src={SFX.impact} from={6} volume={0.5} /></Series.Sequence>
         <Series.Sequence durationInFrames={s(D.cta)}>
           <SceneWrap durationInFrames={s(D.cta)}>
             <Backdrop tint="teal" />
             <CTA calendly={CALENDLY_URL} sub="Part 2 of 2 · See it run on your workflow." />
           </SceneWrap>
           <Vo src={VO2.cta} />
+          <Sfx src={SFX.impact} from={4} volume={0.5} />
         </Series.Sequence>
       </Series>
-      <MusicBed src={MUSIC} />
+      <MusicBed src={MUSIC} base={0.2} />
       <ProgressBar />
     </AbsoluteFill>
   );
