@@ -1,0 +1,63 @@
+1
+00:00:00,200 --> 00:00:03,100
+Daniel messages Emily at 2:14 a.m. She is already answering.
+
+2
+00:00:03,300 --> 00:00:04,800
+What's our cash position right now?
+
+3
+00:00:05,000 --> 00:00:08,100
+Cash is $186,400. Runway is 7.4 months. Receivables are $64,800, and 91% is current.
+
+4
+00:00:08,400 --> 00:00:09,700
+Did the Meridian invoice clear?
+
+5
+00:00:09,900 --> 00:00:12,700
+Yes. $18,750 landed at 6:11 a.m. September collections are $82,400, 9% ahead of plan.
+
+6
+00:00:13,000 --> 00:00:14,400
+Gross margin on the Q3 contracts?
+
+7
+00:00:14,600 --> 00:00:17,400
+Blended gross margin is 68.4%. The three new retainers are at 74%.
+
+8
+00:00:17,700 --> 00:00:19,200
+Anything I should worry about before the board note?
+
+9
+00:00:19,400 --> 00:00:22,100
+Software is $4,180, $640 over budget. Everything else is inside plan.
+
+10
+00:00:22,400 --> 00:00:24,200
+Priya Shah: Can we approve the $12k contractor for Atlas?
+
+11
+00:00:24,400 --> 00:00:27,400
+Yes. It sits inside the Q4 envelope. Remaining after this approval: $21,600.
+
+12
+00:00:27,700 --> 00:00:29,100
+Need the P&L before my 8 a.m.
+
+13
+00:00:29,300 --> 00:00:33,100
+August revenue $84,200. Gross profit $57,600. Net income $11,900. On pace for $1.02M.
+
+14
+00:00:33,400 --> 00:00:38,400
+On Zoom at 11:07 p.m. Cash stays above $150k through January if the Meridian retainers renew.
+
+15
+00:00:38,700 --> 00:00:41,800
+She never clocks out. 24 hours. 7 days. Every channel.
+
+16
+00:00:42,000 --> 00:00:43,400
+Synthetic demonstration. Book a demo: calendly.com/romanbodnarchuk/20min
