@@ -126,19 +126,26 @@ The packet Roman needs is in `google-verification/`. Verification has not been s
 
 Set the Railway service root to `plugin-scaffold` if the service is created from the repository root. The Postgres service must provide pgvector. The server applies `schema.sql` when `DATABASE_URL` is set. Apply that file yourself as well if you want the tables in place before the first boot.
 
-Replace `https://REPLACE_WITH_RAILWAY_PUBLIC_URL/mcp` in `mcp.json` with the real `/mcp` URL before you upload the plugin package.
+`mcp.json` keeps a placeholder host until a public origin exists. Build the upload from that origin:
+
+```bash
+./package.sh --check
+MCP_SERVER_URL=https://YOUR_HOST/mcp ./package.sh
+```
+
+The ZIP is `dist/wisdomtwin-plugin.zip`. Its root is `plugin.json`, `mcp.json`, and `assets/logo.svg`. Leave the server, tests, and `.env` out of that archive.
 
 ## Submission checklist
 
 Confirm each item in the dashboards. This repository cannot see them.
 
 - Verified organization in the OpenAI dashboard. `manifest.json` and `plugin.json` use WisdomTwin Inc. Change `developer_organization` and `developerName` if the verified name differs. That confirmation is Roman's.
-- Privacy policy URL https://wisdomtwin.ai/privacy is public. The page is `public/privacy/index.html`. It is live only after the site deploy that includes it.
-- HTTPS MCP endpoint from Railway, then the portal's domain check. Put the portal's challenge token in `OPENAI_APPS_CHALLENGE` and redeploy. Do not commit the token.
-- Five screenshots: connect with a role title, domain rejection, Slack ingest progress, a cited answer, and the status panel.
-- A demo recording URL, reviewer credentials for a sample Slack workspace, and PNG icons if the uploader rejects the SVG placeholder at `assets/logo.svg`.
+- Privacy policy URL https://wisdomtwin.ai/privacy. That URL is the live company page. The plugin-specific text is `privacy-policy.md` and `public/privacy/index.html`.
+- Terms URL in `plugin.json`. The same text is `terms-of-service.md`, and the MCP server serves `terms.html` at `/terms`.
+- HTTPS MCP endpoint from Railway, then `MCP_SERVER_URL=https://YOUR_HOST/mcp ./package.sh`. Put the portal's challenge token in `OPENAI_APPS_CHALLENGE` and redeploy. Do not commit the token.
+- A demo recording URL and reviewer credentials for a sample Slack workspace, entered in Review details. The plugin has no custom UI, so the package includes no screenshots.
 
-Package the plugin from this directory so `plugin.json` is at the archive root. Leave `.env` out.
+Upload `dist/wisdomtwin-plugin.zip`. Leave `.env` out.
 
 ## Limitations
 

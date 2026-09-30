@@ -7,6 +7,7 @@ import logging
 import os
 import urllib.parse
 import urllib.request
+from pathlib import Path
 from typing import Literal
 
 from pydantic import AnyHttpUrl
@@ -71,6 +72,12 @@ def _exchange_code(token_url: str, body: dict) -> dict:
 @mcp.custom_route("/health", methods=["GET"])
 async def health(_: Request) -> JSONResponse:
     return JSONResponse({"status": "ok", "service": "wisdomtwin"})
+
+
+@mcp.custom_route("/terms", methods=["GET"])
+async def terms(_: Request) -> HTMLResponse:
+    page = (Path(__file__).resolve().parent / "terms.html").read_text(encoding="utf-8")
+    return HTMLResponse(page)
 
 
 @mcp.custom_route("/.well-known/openai-apps-challenge", methods=["GET"])
@@ -181,11 +188,12 @@ async def google_callback(request: Request) -> PlainTextResponse:
         "role_title is free text. Suggested titles: "
         f"{PICKLIST}."
     ),
+    title="Connect a business account",
     annotations=ToolAnnotations(
         read_only_hint=False,
         destructive_hint=False,
         idempotent_hint=True,
-        open_world_hint=True,
+        open_world_hint=False,
     ),
     meta={"access": "readWrite"},
 )
@@ -203,11 +211,12 @@ def connect_business_account(
         "Slack is the live connector. Gmail and Google Drive return an availability message while gated. "
         "This tool reads source systems and writes the role index."
     ),
+    title="Ingest into the role",
     annotations=ToolAnnotations(
         read_only_hint=False,
         destructive_hint=False,
         idempotent_hint=False,
-        open_world_hint=True,
+        open_world_hint=False,
     ),
     meta={"access": "readWrite"},
 )
@@ -224,6 +233,7 @@ def ingest_data(
         "Answer a business question from the active role namespace and attach a citation to every claim. "
         "Reads the index only."
     ),
+    title="Ask the role twin",
     annotations=ToolAnnotations(
         read_only_hint=True,
         destructive_hint=False,
@@ -255,6 +265,7 @@ def query_twin(question: str, max_results: int = 10, max_tokens: int = 512) -> C
 
 @mcp.tool(
     description="List connected role twins with ingested chunk counts, last update, and business domain.",
+    title="List role twin status",
     annotations=ToolAnnotations(
         read_only_hint=True,
         destructive_hint=False,

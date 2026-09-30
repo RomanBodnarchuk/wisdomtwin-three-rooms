@@ -11,12 +11,11 @@
   "homepage": "https://wisdomtwin.ai",
   "repository": "https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms",
   "keywords": ["role", "twin", "slack", "citations", "business"],
-  "mcpServers": "./mcp.json",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "WisdomTwin",
-        "shortDescription": "Role twins with citations. Slack is live.",
+        "shortDescription": "Cited answers for one role",
         "longDescription": "WisdomTwin builds a private business twin for one role, such as CRO or VP of Sales. Connect Slack with read-only access, ingest business communications into that role, and ask questions that come back with a citation on every claim. Gmail and Google Drive are coming soon while Google verification is in progress. WisdomTwin does not train on user data.",
         "developerName": "WisdomTwin Inc",
         "category": "Productivity",
@@ -29,6 +28,7 @@
         "websiteURL": "https://wisdomtwin.ai",
         "supportURL": "https://wisdomtwin.ai",
         "privacyPolicyURL": "https://wisdomtwin.ai/privacy",
+        "termsOfServiceURL": "https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms/blob/cursor/wisdomtwin-mcp-plugin-8d09/plugin-scaffold/terms-of-service.md",
         "defaultPrompt": [
           "Connect Slack for example-corp.com as CRO.",
           "Ingest recent Slack messages about the pipeline.",
@@ -78,15 +78,18 @@
           "negative": [
             {
               "description": "Reject a consumer email domain",
-              "prompt": "Connect Slack for gmail.com as CRO."
+              "prompt": "Connect Slack for gmail.com as CRO.",
+              "expected_behavior": "Refuse with DOMAIN_REJECTED and do not create an organization."
             },
             {
               "description": "Empty index",
-              "prompt": "What did the board decide about pricing before anything is ingested?"
+              "prompt": "What did the board decide about pricing before anything is ingested?",
+              "expected_behavior": "Reply with exactly: I have nothing ingested on that."
             },
             {
               "description": "Gmail while the connector is gated",
-              "prompt": "Ingest my Gmail about the budget."
+              "prompt": "Ingest my Gmail about the budget.",
+              "expected_behavior": "Refuse with OAUTH_PENDING and say Gmail is coming soon."
             }
           ]
         },
