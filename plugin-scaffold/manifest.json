@@ -1,0 +1,58 @@
+{
+  "name": "WisdomTwin",
+  "description": "A private business twin for one role on the org chart. Slack is live. Gmail and Google Drive are coming soon. Every answer carries a citation from that role's index.",
+  "logo": "./assets/logo.svg",
+  "privacy_policy_url": "https://wisdomtwin.ai/privacy",
+  "contact": "privacy@wisdomtwin.ai",
+  "developer_organization": "WisdomTwin Inc",
+  "connectors": {
+    "slack": {
+      "status": "live",
+      "scopes": "read-only"
+    },
+    "gmail": {
+      "status": "coming_soon",
+      "scopes": "gmail.readonly",
+      "availability": "Off until Google verification clears. Flip GMAIL_CONNECTOR_ENABLED without a code change."
+    },
+    "drive": {
+      "status": "coming_soon",
+      "scopes": "drive.readonly",
+      "availability": "Off until Google verification clears. Flip DRIVE_CONNECTOR_ENABLED without a code change."
+    }
+  },
+  "tools": [
+    {
+      "name": "connect_business_account",
+      "access": "readWrite",
+      "description": "Validate a business domain, open the current tenure for a role title, and return a read-only OAuth URL."
+    },
+    {
+      "name": "ingest_data",
+      "access": "readWrite",
+      "description": "Fetch, chunk, and embed business communications into the role namespace."
+    },
+    {
+      "name": "query_twin",
+      "access": "readOnly",
+      "description": "Answer from the role index and attach a citation to every claim."
+    },
+    {
+      "name": "list_twins_status",
+      "access": "readOnly",
+      "description": "List connected role twins with chunk counts, last update, and domain."
+    }
+  ],
+  "auth": {
+    "mcp": "OAuth authorization-server endpoints from the Python MCP SDK, with PKCE for the public client.",
+    "connectors": {
+      "slack": "Authorization code with PKCE and read-only user scopes.",
+      "gmail": "Authorization code with PKCE and gmail.readonly, testing mode.",
+      "drive": "Authorization code with PKCE and drive.readonly, testing mode."
+    }
+  },
+  "pricing": {
+    "free": "1000 chunks per month",
+    "wisdomtwin_pro": "USD 20 per month, billed by WisdomTwin Inc through WisdomTwin checkout"
+  }
+}

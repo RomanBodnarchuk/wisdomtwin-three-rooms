@@ -1,0 +1,102 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "wisdomtwin",
+  "version": "1.0.0",
+  "description": "A private business twin for one role on the org chart. Slack is live. Gmail and Google Drive are coming soon. Every answer carries a citation from that role's index.",
+  "author": {
+    "name": "WisdomTwin Inc",
+    "email": "privacy@wisdomtwin.ai",
+    "url": "https://wisdomtwin.ai"
+  },
+  "homepage": "https://wisdomtwin.ai",
+  "repository": "https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms",
+  "keywords": ["role", "twin", "slack", "citations", "business"],
+  "mcpServers": "./mcp.json",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "WisdomTwin",
+        "shortDescription": "Role twins with citations. Slack is live.",
+        "longDescription": "WisdomTwin builds a private business twin for one role, such as CRO or VP of Sales. Connect Slack with read-only access, ingest business communications into that role, and ask questions that come back with a citation on every claim. Gmail and Google Drive are coming soon while Google verification is in progress. WisdomTwin does not train on user data.",
+        "developerName": "WisdomTwin Inc",
+        "category": "Productivity",
+        "capabilities": [
+          "Connect a business Slack workspace",
+          "Ingest a role's business communications",
+          "Answer with citations",
+          "Show role and domain status"
+        ],
+        "websiteURL": "https://wisdomtwin.ai",
+        "supportURL": "https://wisdomtwin.ai",
+        "privacyPolicyURL": "https://wisdomtwin.ai/privacy",
+        "defaultPrompt": [
+          "Connect Slack for example-corp.com as CRO.",
+          "Ingest recent Slack messages about the pipeline.",
+          "What did the role record say about Acme, and cite it?"
+        ],
+        "brandColor": "#1F3A5F",
+        "brandColorDark": "#8CB4FF",
+        "composerIcon": "./assets/logo.svg",
+        "composerIconDark": "./assets/logo.svg",
+        "logo": "./assets/logo.svg",
+        "logoDark": "./assets/logo.svg"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Connect a business domain with a role title",
+              "prompt": "Connect Slack for example-corp.com with the role title CRO.",
+              "tools_triggered": "connect_business_account",
+              "expected_behavior": "Create the organization, role, and open tenure, and return a Slack authorization URL."
+            },
+            {
+              "description": "Reuse the same role title",
+              "prompt": "Connect Slack for example-corp.com as CRO again.",
+              "tools_triggered": "connect_business_account",
+              "expected_behavior": "Return the same role id and keep a single open tenure."
+            },
+            {
+              "description": "Ingest Slack into the role",
+              "prompt": "Ingest Slack messages about the pipeline for this role.",
+              "tools_triggered": "ingest_data",
+              "expected_behavior": "Return a job id and chunk count. Each stored chunk carries the current tenure."
+            },
+            {
+              "description": "Answer with a citation",
+              "prompt": "What is the Acme pipeline stage?",
+              "tools_triggered": "query_twin",
+              "expected_behavior": "Answer from the role index and include at least one citation with a uri and a snippet."
+            },
+            {
+              "description": "Show status",
+              "prompt": "What role twins are connected?",
+              "tools_triggered": "list_twins_status",
+              "expected_behavior": "List Slack, the role title, the business domain, and the ingested chunk count."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Reject a consumer email domain",
+              "prompt": "Connect Slack for gmail.com as CRO."
+            },
+            {
+              "description": "Empty index",
+              "prompt": "What did the board decide about pricing before anything is ingested?"
+            },
+            {
+              "description": "Gmail while the connector is gated",
+              "prompt": "Ingest my Gmail about the budget."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "The plugin does not take payment. WisdomTwin Pro is USD 20 per month, billed by WisdomTwin Inc through WisdomTwin checkout, outside this plugin."
+      },
+      "publication": {
+        "countries": ["US"],
+        "release_notes": "Initial package. Slack role twins with citations. Gmail and Google Drive are coming soon."
+      }
+    }
+  }
+}
