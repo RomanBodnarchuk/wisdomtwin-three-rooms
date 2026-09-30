@@ -17,7 +17,13 @@ uv pip install -r requirements.txt
 uv run pytest
 ```
 
-The ten tests use an in-memory store and Slack fixtures. Production uses `DATABASE_URL` (Postgres with pgvector, `schema.sql`) and `REDIS_URL` (Celery).
+The ten tests use Slack fixtures. With no database URL they use the in-memory store. Set `WISDOMTWIN_TEST_DATABASE_URL` to a Postgres database with pgvector to run the same ten cases against `schema.sql`:
+
+```bash
+WISDOMTWIN_TEST_DATABASE_URL=postgresql:///wisdomtwin_test uv run pytest
+```
+
+Production uses `DATABASE_URL` (Postgres with pgvector) and `REDIS_URL` (Celery). On startup the server applies `schema.sql` one statement at a time, including `CREATE EXTENSION vector` and the cosine index on chunk embeddings.
 
 Start the server for local tool calls. `WISDOMTWIN_AUTH_DISABLED` is ignored when `PUBLIC_BASE_URL` is HTTPS, so a public deployment still requires the OAuth bearer token.
 
@@ -118,7 +124,7 @@ The packet Roman needs is in `google-verification/`. Verification has not been s
 
 `deploy.sh` expects the Railway CLI, a logged-in session, and `RAILWAY_PUBLIC_URL`. It uploads this directory, sets variables whose names are listed in the script, and requests `/health`. It does not print variable values. Run it without shell tracing.
 
-Set the Railway service root to `plugin-scaffold` if the service is created from the repository root. Apply `schema.sql` on the Postgres plugin that provides pgvector before the first ingest.
+Set the Railway service root to `plugin-scaffold` if the service is created from the repository root. The Postgres service must provide pgvector. The server applies `schema.sql` when `DATABASE_URL` is set. Apply that file yourself as well if you want the tables in place before the first boot.
 
 Replace `https://REPLACE_WITH_RAILWAY_PUBLIC_URL/mcp` in `mcp.json` with the real `/mcp` URL before you upload the plugin package.
 

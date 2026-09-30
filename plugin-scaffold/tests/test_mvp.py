@@ -1,6 +1,7 @@
 """Ten MVP cases for the role twin tools."""
 
 import json
+from datetime import date
 
 import anyio
 import pytest
@@ -96,18 +97,24 @@ def test_query_returns_an_answer_with_a_citation():
         )
     )
     call("ingest_data", {"service": "slack", "query": "pipeline", "max_items": 10})
+    store = current_store()
+    other_org = store.upsert_organization("other-corp.example")
+    person = store.ensure_officeholder(other_org.id)
+    other_role = store.create_role(other_org.id, "CFO")
+    other_tenure = store.open_tenure(other_role.id, person.id, date.today())
+    store.set_active_role(connected["role_id"])
     other = ChunkRecord(
         id="00000000-0000-0000-0000-000000000099",
-        role_id="00000000-0000-0000-0000-000000000088",
-        tenure_id="00000000-0000-0000-0000-000000000077",
-        author_person_id="00000000-0000-0000-0000-000000000066",
+        role_id=other_role.id,
+        tenure_id=other_tenure.id,
+        author_person_id=person.id,
         service="slack",
         uri="https://example-corp.example/slack/other-role",
         excerpt="A different role namespace mentions a secret project name Zephyr.",
         embedding=[0.0] * 1536,
-        created_at=current_store().chunks_for_role(connected["role_id"])[0].created_at,
+        created_at=store.chunks_for_role(connected["role_id"])[0].created_at,
     )
-    current_store().upsert_chunks([other])
+    store.upsert_chunks([other])
     result = call("query_twin", {"question": "What is the Acme pipeline stage?"})
     assert result.content[0].text
     assert "nothing ingested" not in result.content[0].text.lower()

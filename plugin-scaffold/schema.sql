@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS chunks (
 
 CREATE INDEX IF NOT EXISTS chunks_role_id_idx ON chunks (role_id);
 
+CREATE INDEX IF NOT EXISTS chunks_embedding_idx ON chunks USING hnsw (embedding vector_cosine_ops);
+
 CREATE TABLE IF NOT EXISTS audit_log (
     id UUID PRIMARY KEY,
     tool_name TEXT NOT NULL,

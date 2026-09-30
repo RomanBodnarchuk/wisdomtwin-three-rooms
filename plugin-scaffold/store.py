@@ -141,6 +141,31 @@ class Store(Protocol):
     def open_tenure_count(self, role_id: str) -> int: ...
 
 
+def _sql_statements(script: str) -> list[str]:
+    """Split a schema script into single statements psycopg can execute."""
+    kept: list[str] = []
+    for line in script.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("--"):
+            continue
+        kept.append(line)
+    return [part.strip() for part in "\n".join(kept).split(";") if part.strip()]
+
+
+def _vector_param(embedding: list[float]):
+    from pgvector import Vector
+
+    return Vector(embedding)
+
+
+def _vector_list(value) -> list[float]:
+    if value is None:
+        return []
+    if hasattr(value, "to_list"):
+        return [float(item) for item in value.to_list()]
+    return [float(item) for item in value]
+
+
 def _cosine(left: list[float], right: list[float]) -> float:
     if len(left) != len(right) or not left:
         return 0.0
@@ -413,9 +438,35 @@ class PostgresStore:
 
     def _ensure_schema(self) -> None:
         schema = (Path(__file__).resolve().parent / "schema.sql").read_text(encoding="utf-8")
+        connection = self._psycopg.connect(self._database_url)
+        try:
+            connection.autocommit = True
+            for statement in _sql_statements(schema):
+                connection.execute(statement)
+        finally:
+            connection.close()
+
+    def truncate_all(self) -> None:
+        self._active_role_id = None
         with self._connect() as connection:
-            connection.execute(schema)
-            connection.commit()
+            connection.execute(
+                """
+                TRUNCATE TABLE
+                    connector_credentials,
+                    oauth_transactions,
+                    active_role,
+                    connections,
+                    ingestion_jobs,
+                    audit_log,
+                    chunks,
+                    judgment_seeds,
+                    tenures,
+                    roles,
+                    persons,
+                    organizations
+                RESTART IDENTITY CASCADE
+                """
+            )
 
     def upsert_organization(self, domain: str) -> Organization:
         with self._connect() as connection:
@@ -627,7 +678,7 @@ class PostgresStore:
                         chunk.service,
                         chunk.uri,
                         chunk.excerpt,
-                        chunk.embedding,
+                        _vector_param(chunk.embedding),
                     ),
                 )
             connection.commit()
@@ -653,7 +704,7 @@ class PostgresStore:
             ).fetchall()
         loaded: list[ChunkRecord] = []
         for row in rows:
-            embedding = list(row[7]) if row[7] is not None else []
+            embedding = _vector_list(row[7])
             loaded.append(
                 ChunkRecord(
                     id=str(row[0]),
@@ -679,7 +730,7 @@ class PostgresStore:
                 ORDER BY embedding <=> %s
                 LIMIT %s
                 """,
-                (role_id, embedding, limit),
+                (role_id, _vector_param(embedding), limit),
             ).fetchall()
         return [
             ChunkRecord(
@@ -690,7 +741,7 @@ class PostgresStore:
                 service=row[4],
                 uri=row[5],
                 excerpt=row[6],
-                embedding=list(row[7]) if row[7] is not None else [],
+                embedding=_vector_list(row[7]),
                 created_at=row[8],
             )
             for row in rows
@@ -720,7 +771,7 @@ class PostgresStore:
                 service=row[4],
                 uri=row[5],
                 excerpt=row[6],
-                embedding=list(row[7]) if row[7] is not None else [],
+                embedding=_vector_list(row[7]),
                 created_at=row[8],
             )
             for row in rows
@@ -931,7 +982,16 @@ def current_store() -> Store:
 
 def reset_store(store: Store | None = None) -> Store:
     global _store
-    _store = store or MemoryStore()
+    if store is not None:
+        _store = store
+        return _store
+    test_url = os.environ.get("WISDOMTWIN_TEST_DATABASE_URL", "").strip()
+    if test_url:
+        postgres = PostgresStore(test_url)
+        postgres.truncate_all()
+        _store = postgres
+        return _store
+    _store = MemoryStore()
     return _store
 
 
