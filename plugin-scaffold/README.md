@@ -1,170 +1,99 @@
-# WisdomTwin
+# WisdomTwin plugin candidate
 
-WisdomTwin is a ChatGPT plugin that keeps a private business twin for one role on the org chart. The twin belongs to the role, and to the current officeholder. Slack is the live connector. Gmail and Google Drive are implemented and stay off until Google verification clears. Answers come from that role's index, and every claim carries a citation.
+This is the existing private role-twin prototype in `plugin-scaffold/` on PR [15](https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms/pull/15). It has four MCP tools and two packaged skills. Local synthetic checks establish prototype behavior; they do not establish a working public Slack connection or directory readiness. The Railway project has no verified public service origin, so `mcp.json` retains its placeholder.
 
-The Python MCP SDK (`mcp` 2.2.0 or newer) serves `/mcp`. This repository did not contain `plugin-scaffold/` or `_backup/`, so this tree is the MVP described in the build prompt rather than an extension of an older server.
+The indexed MVP writes vectors, source URIs, chunk hashes, hashed keywords, role/tenure and source-author metadata to a protected role namespace. Real source text is transient during ingestion and querying. Before a citation is returned, the server re-fetches the source with the caller's current grant and checks its content hash and authorship. Changed or inaccessible sources are withheld. Synthetic fixture text remains local for tests. Vectors, hashes and source metadata are still protected business data.
 
-WisdomTwin does not train on user data. The free tier is 1,000 chunks per month. WisdomTwin Pro is USD 20 per month, billed by WisdomTwin Inc through WisdomTwin checkout.
+Corporate OIDC sign-in verifies signed issuer, subject and email. An operator must provision the business domain, allowed roles and exact Slack workspace/user or Google subject. Typing a domain and title does not confer access. Production OAuth state and source credentials use encrypted durable Postgres storage; SQLite and memory adapters are for explicit local tests.
 
-## Local setup
+Slack adapter code exists, but real activation requires operator setup and the necessary Slack/Salesforce authorization for the intended commercial use. Gmail and Drive remain disabled. Google code reads Gmail snippets/metadata and Drive file names/descriptions; full email bodies and document ingestion are incomplete. Verification and flags alone do not complete those adapters.
 
-Install [uv](https://docs.astral.sh/uv/), then:
+## Local verification
+
+Install the exact hashed dependency lock, then run:
 
 ```bash
 cd plugin-scaffold
-uv venv
-uv pip install -r requirements.txt
-uv run pytest
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --require-hashes -r requirements.lock
+python3 -m pytest -q
+./package.sh --check
 ```
 
-The twelve tests use Slack fixtures. With no database URL they use the in-memory store. Set `WISDOMTWIN_TEST_DATABASE_URL` to a Postgres database with pgvector to run the same twelve cases against `schema.sql`:
+Tests configure loopback fixture mode and temporary encrypted SQLite authorization state. The original twelve MVP cases exercise four tools and ten synthetic Slack chunks. The current full suite adds security, source access, quota, deletion and worker checks; report the exact current count from its output. Historical PR comments about memory or local Postgres runs are evidence of those runs, not proof of a deployed production database. No paid model API calls were performed for this candidate.
+
+To start the local synthetic server, use a fresh state directory and an ephemeral encryption key:
 
 ```bash
-WISDOMTWIN_TEST_DATABASE_URL=postgresql:///wisdomtwin_test uv run pytest
+export WISDOMTWIN_ENV=local HOST=127.0.0.1 PORT=8000
+export PUBLIC_BASE_URL=http://127.0.0.1:8000
+export WISDOMTWIN_AUTH_DISABLED=1 WISDOMTWIN_USE_FIXTURES=1
+export SLACK_CONNECTOR_ENABLED=true SLACK_CLIENT_ID=local-test-client
+export GMAIL_CONNECTOR_ENABLED=false DRIVE_CONNECTOR_ENABLED=false
+export WISDOMTWIN_ALLOW_PAID_MODEL_APIS=false
+fixture_state_dir="$(mktemp -d)"
+export WISDOMTWIN_AUTH_DB="$fixture_state_dir/auth.sqlite3"
+export CONNECTOR_TOKEN_KEY="$(python3 -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')"
+python3 server.py
 ```
 
-Production uses `DATABASE_URL` (Postgres with pgvector) and `REDIS_URL` (Celery). On startup the server applies `schema.sql` one statement at a time, including `CREATE EXTENSION vector` and the cosine index on chunk embeddings.
-
-Start the server for local tool calls. `WISDOMTWIN_AUTH_DISABLED` is ignored when `PUBLIC_BASE_URL` is HTTPS, so a public deployment still requires the OAuth bearer token.
+Fixture and auth-disabled settings are rejected outside explicit loopback local/test mode. The local `/health` endpoint is `http://127.0.0.1:8000/health`. Use this request to list the four tools:
 
 ```bash
-WISDOMTWIN_AUTH_DISABLED=1 \
-WISDOMTWIN_USE_FIXTURES=1 \
-SLACK_CLIENT_ID=local-test-client \
-PORT=8000 \
-uv run python server.py
-```
-
-Health check:
-
-```bash
-curl --fail --silent http://127.0.0.1:8000/health
-```
-
-In another terminal, open a tunnel when you need a public HTTPS origin for a connector callback:
-
-```bash
-ngrok http 8000
-```
-
-Set `PUBLIC_BASE_URL` to that HTTPS origin before starting the server if Slack or Google must redirect back to you.
-
-## Curl examples
-
-These calls match the local server above. On a public HTTPS deployment, complete the MCP authorization-code flow first and send the bearer token. The server will not list tools anonymously there.
-
-List tools:
-
-```bash
-curl --silent --show-error \
+curl --fail --silent --show-error \
   -X POST http://127.0.0.1:8000/mcp \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
 ```
 
-Connect Slack for a role:
+A local fixture flow calls `connect_business_account` with `service=slack`, `domain=example-corp.com`, `role_title=CRO`; `ingest_data` with `service=slack`, `query=pipeline`, `max_items=10`; then `query_twin` with `question=What is the Acme pipeline stage?`. This is synthetic behavior, not a real Slack grant.
 
-```bash
-curl --silent --show-error \
-  -X POST http://127.0.0.1:8000/mcp \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"connect_business_account","arguments":{"service":"slack","domain":"example-corp.com","role_title":"CRO"}}}'
-```
+## Runtime and operations
 
-The response includes `oauth_url`, `status`, and `role_id`. The Slack URL uses read-only user scopes and PKCE.
-
-Ingest:
-
-```bash
-curl --silent --show-error \
-  -X POST http://127.0.0.1:8000/mcp \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"ingest_data","arguments":{"service":"slack","query":"pipeline","max_items":10}}}'
-```
-
-With fixtures enabled and Redis unset, the job finishes in the request and returns a chunk count. With `REDIS_URL` set, a Celery worker runs `wisdomtwin.ingest`.
-
-## Environment
-
-Copy `.env.example`. Secrets stay in the environment. The sample file has empty values.
-
-| Variable | Purpose |
+| Configuration | Purpose |
 | --- | --- |
-| `OPENAI_API_KEY` | Embeddings and generation. Absent in tests; a local grounded answer is used instead. |
-| `OPENAI_GENERATION_MODEL` | Default `gpt-6.1-sol`. Any compatible model can be set here. Temperature is 0.3. |
-| `OPENAI_EMBEDDING_MODEL` | Default `text-embedding-3-small`, 1536 dimensions. |
-| `DATABASE_URL` | Postgres with pgvector. Unset uses memory, which is for local runs and tests. |
-| `REDIS_URL` | Celery broker. Unset runs ingestion inline. |
-| `SLACK_CLIENT_ID` / `SLACK_CLIENT_SECRET` | Slack app. Read-only user scopes only. |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Used only after the Gmail or Drive flag is on. |
-| `SLACK_CONNECTOR_ENABLED` | Default true. |
-| `GMAIL_CONNECTOR_ENABLED` | Default false. |
-| `DRIVE_CONNECTOR_ENABLED` | Default false. |
-| `CONNECTOR_TOKEN_KEY` | Encrypts connector tokens at rest. Required before a real grant is stored. |
-| `OAUTH_CLIENT_ID` / `OAUTH_REDIRECT_URIS` | Public MCP client. Add the redirect URI shown in the OpenAI dashboard. |
-| `PUBLIC_BASE_URL` | HTTPS origin of this server. |
-| `OPENAI_APPS_CHALLENGE` | Exact domain-verification token from the plugin portal, served as plain text at `/.well-known/openai-apps-challenge`. |
+| `PUBLIC_BASE_URL`, `OAUTH_CLIENT_ID`, `OAUTH_REDIRECT_URIS` | Real HTTPS origin and exact registered public MCP client callbacks. |
+| `OIDC_ISSUER`, `OIDC_CLIENT_ID`, optional `OIDC_CLIENT_SECRET` | Corporate identity provider, plus separately provisioned business-role entitlements. |
+| `DATABASE_URL`, `CONNECTOR_TOKEN_KEY` | Durable Postgres/pgvector and encryption of authorization/source credentials. |
+| `REDIS_URL` | Production ingestion queue; run a Celery worker and a beat scheduler. |
+| `SLACK_CONNECTOR_ENABLED`, `SLACK_POLICY_APPROVED` | Slack remains gated until operator setup and provider authorization are established. |
+| `GMAIL_CONNECTOR_ENABLED`, `DRIVE_CONNECTOR_ENABLED`, `GOOGLE_REVIEW_APPROVED` | Default off; Google scope review and unfinished connector work remain prerequisites. |
+| `OPENAI_API_KEY`, `WISDOMTWIN_ALLOW_PAID_MODEL_APIS` | Actual API use needs a key and explicit spend opt-in. Fixture embeddings stay local. |
+| `OPENAI_EMBEDDING_MODEL` | Intended production embedding model: `text-embedding-3-small`; indexed real ingestion requires authorized API use. |
+| `WISDOMTWIN_GENERATION_MODE`, `OPENAI_GENERATION_MODEL`, `OPENAI_REASONING_EFFORT` | Default extractive evidence for ChatGPT to synthesize. Optional `responses` mode uses configured `gpt-6.1-sol` reasoning and omits temperature. |
+| `OPENAI_APPS_CHALLENGE` | Exact portal challenge value, held outside Git; not a generated host or approval token. |
 
-Role titles are free text. The connect tool suggests this picklist: Chairman, Chief Executive Officer, President, Chief Operating Officer, Chief Financial Officer, Chief Strategy Officer, Chief of Staff, Corporate Secretary, Chief Technology Officer, Chief Information Officer, Chief AI Officer, Chief Information Security Officer, VP of Engineering, VP of Data and Analytics, Chief Revenue Officer, Chief Commercial Officer, Chief Marketing Officer, VP of Sales, VP of Marketing, VP of Customer Success, General Counsel, Chief Compliance Officer, Controller, Treasurer, VP of Human Resources, Head of Talent, VP of Operations, Head of Procurement, VP of Program Management, Head of Business Operations.
+Run `celery -A ingest.celery_app worker --loglevel=info` for queued ingestion and `celery -A ingest.celery_app beat --loglevel=info` for the daily retention task. The 30-day inactivity cutoff makes indexes eligible for cleanup; actual execution depends on a healthy scheduler and worker. Verify deployment logs and deletion behavior before promising a deadline. User-requested deletion uses authenticated `DELETE /roles/{role_id}`; queued-job status uses authenticated `GET /jobs/{job_id}`. Neither route adds an MCP tool. Deletion clears role data and source credentials, jobs and pending connection state, and revokes MCP grants. Operator-provisioned membership is managed separately; minimal audit events have a separate 30-day retention limit. The trusted operator CLI in `admin.py` supports private membership provisioning/removal, role deletion and retention. Its verified membership input stays outside Git and the ZIP.
 
-## Google testing mode
+The current provider adapters fetch one page, up to 100 items; `max_items` is an upper bound rather than a completeness promise. Slack uses a PKCE code exchange without a client secret and needs an already PKCE-enabled app. Enabling that irreversible app setting requires separate approval; no live settings were changed. Multiple open tenures in a legacy database cause the new uniqueness check to fail until an operator reconciles them; the migration does not silently change officeholder history.
 
-Gmail and Drive use restricted scopes. Until Google grants verification:
+The isolated database and queue checks run without source grants or model API calls:
 
-- The consent screen shows a warning that the app is not verified.
-- At most 100 test users can grant access, and only if they are listed on the consent screen.
-- WisdomTwin still returns an availability message for those tools because the connectors default to off.
+```bash
+WISDOMTWIN_TEST_DATABASE_URL=postgresql://postgres@127.0.0.1:55432/wisdomtwin_test \
+  python3 -m pytest -q tests/test_mvp.py tests/test_worker_concurrency.py tests/test_database.py
+WISDOMTWIN_TEST_DATABASE_URL=postgresql://postgres@127.0.0.1:55432/wisdomtwin_test \
+WISDOMTWIN_TEST_REDIS_URL=redis://127.0.0.1:56379/9 \
+  python3 scripts/verify_local_worker.py
+```
 
-The packet Roman needs is in `google-verification/`. Verification has not been submitted from this repository.
+These commands reset the explicitly isolated test database. The worker smoke script also requires loopback service URLs and a database name ending in `_test`. CI uses its own disposable Postgres and Redis services. `deploy.sh --check` validates names/configuration without publishing; `--deploy` is for a separately authorized, linked Railway service.
 
-## Deploy
-
-`deploy.sh` expects the Railway CLI, a logged-in session, and `RAILWAY_PUBLIC_URL`. It uploads this directory, sets variables whose names are listed in the script, and requests `/health`. It does not print variable values. Run it without shell tracing.
-
-Set the Railway service root to `plugin-scaffold` if the service is created from the repository root. `Dockerfile` starts the web process. A second service can use the same image with the Procfile worker command. The Postgres service must provide pgvector. The server applies `schema.sql` when `DATABASE_URL` is set. Apply that file yourself as well if you want the tables in place before the first boot.
-
-`mcp.json` keeps a placeholder host until a public origin exists. Build the upload from that origin:
+## Build the review candidate
 
 ```bash
 ./package.sh --check
-MCP_SERVER_URL=https://YOUR_HOST/mcp ./package.sh
+./package.sh --candidate
 ```
 
-The ZIP is `dist/wisdomtwin-plugin.zip`. Its root is `plugin.json`, `mcp.json`, and `assets/logo.svg`. Leave the server, tests, and `.env` out of that archive.
+The deterministic artifact is `dist/wisdomtwin-candidate-NOT-FOR-SUBMISSION.zip`, with SHA-256 and member inventory sidecars. Its root contains only `plugin.json`, `mcp.json`, `assets/logo.svg`, and the two `skills/*/SKILL.md` files. ZIP entry timestamps, order and modes are fixed. Candidate mode performs no network calls and preserves placeholder URLs. It excludes server code, fixtures, legal drafts, credentials and reviewer material. `manifest.json` is an internal compatibility summary, not the portable entry point. [Schema provenance](schemas/PROVENANCE.md) records the complete official offline snapshots.
 
-## Submission checklist
+A production build (`./package.sh` or `--release`) refuses placeholders and requires real HTTPS MCP/OAuth/legal checks, an authenticated read-only tool scan, and operator records supplied through `PACKAGE_RELEASE_EVIDENCE`. `MCP_SERVER_URL` can set the staged endpoint after a real origin exists; all listing URLs and publisher fields must already be reconciled. `PACKAGE_MCP_ACCESS_TOKEN` stays in the environment. Building a ZIP never submits or publishes it. See [submission readiness](SUBMISSION_READINESS.md) for the evidence contract and dashboard actions.
 
-Confirm each item in the dashboards. This repository cannot see them.
+## Internal product decisions
 
-- Verified organization in the OpenAI dashboard. `manifest.json` and `plugin.json` use WisdomTwin Inc. Change `developer_organization` and `developerName` if the verified name differs. That confirmation is Roman's.
-- Privacy policy URL https://wisdomtwin.ai/privacy. That URL is the live company page. The plugin-specific text is `privacy-policy.md` and `public/privacy/index.html`.
-- Terms URL in `plugin.json`. The same text is `terms-of-service.md`, and the MCP server serves `terms.html` at `/terms`.
-- HTTPS MCP endpoint from Railway, then `MCP_SERVER_URL=https://YOUR_HOST/mcp ./package.sh`. Put the portal's challenge token in `OPENAI_APPS_CHALLENGE` and redeploy. Do not commit the token.
-- A demo recording URL and reviewer credentials for a sample Slack workspace, entered in Review details. The plugin has no custom UI, so the package includes no screenshots.
+The MVP quota is 1,000 indexed chunks per organization per month. WisdomTwin Pro at USD 20/month is an internal product design decision, not a plugin offer. The package and skills contain no subscription listing, upgrade pitch, checkout, or payment tool. Access to existing entitlements may be explained without advertising new subscriptions. [OpenAI's plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines) govern the directory experience.
 
-Upload `dist/wisdomtwin-plugin.zip`. Leave `.env` out.
-
-## Limitations
-
-Not implemented:
-
-- The role interview
-- The huddle
-- Predecessor ingestion
-- Microsoft 365 and Notion
-- Gmail and Google Drive, pending Google verification
-
-Also out of this build: write scopes, actions on behalf of the user, and a ChatGPT UI surface.
-
-MCP authorization codes and access tokens are kept in process memory. A restart asks the ChatGPT client to authorize again. Connector credentials for Slack stay in the database, encrypted.
-
-## Tests
-
-```bash
-uv run pytest
-```
-
-The cases cover role creation and reuse, Slack fixture ingestion with tenure metadata, a cited answer, status, namespace deletion, consumer-domain rejection, an empty index, quota, a missing ingestion job, gated Gmail, and a second caller. Each OAuth subject has its own organization, active role, and connection list. A second caller does not see the first caller's domain or chunks.
+Role interviews, huddles, predecessor ingestion, Microsoft 365, Notion, source-write actions and a custom ChatGPT UI are outside this build. The hosted-plugin [privacy](privacy-policy.md) and [terms](terms-of-service.md) are unadopted drafts. They do not replace the existing website's policy or govern other customer engagements. Entity/contact verification, legal adoption, public hosting, provider permission, reviewer access and actual submission remain open.

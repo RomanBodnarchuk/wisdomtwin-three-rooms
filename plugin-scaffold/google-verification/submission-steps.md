@@ -1,16 +1,14 @@
-# Verification steps for Roman
+# Google review actions for Roman
 
-Stop when the form is ready to send. This repository does not submit it and does not record a Google decision.
+No Google verification has been submitted or approved by this work. Keep both connectors disabled.
 
-1. Open the Google Cloud Console for the WisdomTwin project.
-2. Open APIs & Services, then the OAuth consent screen.
-3. If the console asks for a user type, choose External and keep the app in testing.
-4. Set the app name to WisdomTwin.
-5. Set the user support email and the developer contact email. Use privacy@wisdomtwin.ai if that mailbox is on the account, otherwise use the mailbox the console will accept and that Roman reads.
-6. Set the privacy policy URL to https://wisdomtwin.ai/privacy. Confirm the page loads before you continue. The page source is `public/privacy/index.html` in this repository and is public only after that site deploy.
-7. Add the two scopes listed in `oauth-consent-screen.md`. Do not add write scopes.
-8. Add test users from `test-users.md`. Stay within the 100-user testing limit.
-9. Open the verification request for the two restricted scopes when you are ready. Paste the matching paragraphs from `scope-justifications.md`.
-10. Review the consent-screen warning testers will see, then stop. Submit the verification request yourself in the console. Come back to the connectors only after Google grants the scopes, and then set `GMAIL_CONNECTOR_ENABLED` and `DRIVE_CONNECTOR_ENABLED`.
+1. Select the actual Google Cloud project and confirm the operator, controlled mailbox and verified domain. Reconcile its identity with the public hosted-plugin policy and directory publisher; do not infer company verification from Roman's individual OpenAI identity.
+2. Review current [Google restricted-scope verification requirements](https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification), including any required assessment or use restrictions.
+3. Complete full-content connector and provenance work if that is the requested product. Current Gmail snippets and Drive names/descriptions cannot substantiate full email/document claims. Evaluate least-privilege scopes against the actual completed behavior.
+4. Adopt and publish the hosted-plugin privacy policy and terms, and configure the consent-screen links to those real pages. The old on-premises privacy page and placeholder URLs are not sufficient.
+5. Configure the exact identity/source scopes and the real `{PUBLIC_BASE_URL}/oauth/callback/google`. Keep the app in testing. Add only permitted managed business test users privately in the console; do not put their credentials or addresses into the ZIP or Git.
+6. Prepare an accurate walkthrough of consent, limited user-confirmed ingestion, current-access citations and deletion/retention. Use the limitations in `scope-justifications.md` to avoid unsupported assertions.
+7. Roman submits the actual request in the console and retains the decision/assessment evidence securely. Any additional commercial or data-use conditions still apply after a scope decision.
+8. Only after requirements, account bindings, scope checks and completed ingestion/provenance have been demonstrated, record the real decision and consider the connector activation flags. Flags do not establish approval.
 
-If a label in the console has moved, follow the consent-screen wizard for an external app that is still in testing. The values above are what to enter. The click path can differ by console revision.
+Console labels and test-user restrictions may change; use the current console and primary guidance. Do not claim this packet was sent or accepted.

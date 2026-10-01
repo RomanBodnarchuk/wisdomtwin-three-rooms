@@ -1,58 +1,59 @@
 {
   "name": "WisdomTwin",
-  "description": "A private business twin for one role on the org chart. Slack is live. Gmail and Google Drive are coming soon. Every answer carries a citation from that role's index.",
+  "description": "A private prototype for role-scoped business questions and cited source evidence. Slack adapter code is available; production connection is unverified. Gmail and Google Drive remain gated.",
   "logo": "./assets/logo.svg",
-  "privacy_policy_url": "https://wisdomtwin.ai/privacy",
+  "privacy_policy_url": "https://REPLACE_WITH_RAILWAY_PUBLIC_URL/privacy",
   "contact": "privacy@wisdomtwin.ai",
-  "developer_organization": "WisdomTwin Inc",
+  "developer_organization": "ROMAN GREGORY BODNARCHUK",
+  "package_status": "private_candidate_not_for_submission",
   "connectors": {
     "slack": {
-      "status": "live",
-      "scopes": "read-only"
+      "status": "adapter_implemented_production_unverified",
+      "scopes": "read-only user scopes",
+      "availability": "Real use requires provisioned corporate identity, matched workspace/user grant and operator-confirmed provider authorization."
     },
     "gmail": {
-      "status": "coming_soon",
-      "scopes": "gmail.readonly",
-      "availability": "Off until Google verification clears. Flip GMAIL_CONNECTOR_ENABLED without a code change."
+      "status": "gated",
+      "scopes": "openid email gmail.readonly",
+      "verification_confirmed": false,
+      "availability": "Disabled. Current adapter reads snippets or metadata only; full message ingestion is incomplete."
     },
     "drive": {
-      "status": "coming_soon",
-      "scopes": "drive.readonly",
-      "availability": "Off until Google verification clears. Flip DRIVE_CONNECTOR_ENABLED without a code change."
+      "status": "gated",
+      "scopes": "openid email drive.readonly",
+      "verification_confirmed": false,
+      "availability": "Disabled. Current adapter reads file names and descriptions only; document body ingestion is incomplete."
     }
   },
   "tools": [
     {
       "name": "connect_business_account",
       "access": "readWrite",
-      "description": "Validate a business domain, open the current tenure for a role title, and return a read-only OAuth URL."
+      "description": "Bind an authorized business account to an operator-assigned role and return a read-only source authorization URL."
     },
     {
       "name": "ingest_data",
       "access": "readWrite",
-      "description": "Fetch, chunk, and embed business communications into the role namespace."
+      "description": "On user instruction, fetch and embed accessible business evidence into the protected role index."
     },
     {
       "name": "query_twin",
       "access": "readOnly",
-      "description": "Answer from the role index and attach a citation to every claim."
+      "description": "Retrieve role evidence, re-check current source access and return supported citations."
     },
     {
       "name": "list_twins_status",
       "access": "readOnly",
-      "description": "List connected role twins with chunk counts, last update, and domain."
+      "description": "List only the caller's visible role connection status."
     }
   ],
   "auth": {
-    "mcp": "OAuth authorization-server endpoints from the Python MCP SDK, with PKCE for the public client.",
+    "mcp": "Corporate OIDC sign-in and operator-provisioned role entitlements, followed by MCP authorization-code flow with PKCE S256 and resource validation.",
+    "storage": "Durable encrypted Postgres OAuth and source credentials in production. SQLite and fixtures are local test adapters.",
     "connectors": {
-      "slack": "Authorization code with PKCE and read-only user scopes.",
-      "gmail": "Authorization code with PKCE and gmail.readonly, testing mode.",
-      "drive": "Authorization code with PKCE and drive.readonly, testing mode."
+      "slack": "Read-only authorization grant bound to verified corporate identity and provisioned Slack workspace/user.",
+      "gmail": "Disabled; Google subject binding and verification gates remain required.",
+      "drive": "Disabled; Google subject binding and verification gates remain required."
     }
-  },
-  "pricing": {
-    "free": "1000 chunks per month",
-    "wisdomtwin_pro": "USD 20 per month, billed by WisdomTwin Inc through WisdomTwin checkout"
   }
 }

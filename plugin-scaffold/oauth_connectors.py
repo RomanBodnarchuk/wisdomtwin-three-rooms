@@ -3,19 +3,16 @@
 from __future__ import annotations
 
 import os
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
 from mcp.client.auth.oauth2 import PKCEParameters
 
 SLACK_USER_SCOPES = (
     "channels:history",
-    "channels:read",
     "groups:history",
-    "groups:read",
     "search:read",
     "users:read",
     "users:read.email",
-    "files:read",
 )
 
 GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
@@ -25,8 +22,13 @@ DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.readonly"
 def public_base_url() -> str:
     for name in ("PUBLIC_BASE_URL", "RAILWAY_PUBLIC_URL"):
         raw = os.environ.get(name, "").strip().rstrip("/")
-        if raw.startswith("https://") or raw.startswith("http://127.0.0.1") or raw.startswith("http://localhost"):
+        url = urlsplit(raw)
+        if url.username or url.password or url.query or url.fragment or url.path not in {"", "/"}:
+            raise ValueError(f"{name} must be an origin without credentials, query, or path")
+        if url.hostname and (url.scheme == "https" or (url.scheme == "http" and url.hostname in {"localhost", "127.0.0.1", "::1"})):
             return raw
+        if raw:
+            raise ValueError(f"{name} must be HTTPS or an explicit local loopback origin")
     port = os.environ.get("PORT", "8000")
     return f"http://127.0.0.1:{port}"
 
@@ -57,7 +59,7 @@ def google_authorize_url(*, service: str, state: str, code_challenge: str) -> st
             "client_id": os.environ.get("GOOGLE_CLIENT_ID", ""),
             "redirect_uri": f"{public_base_url()}/oauth/callback/google",
             "response_type": "code",
-            "scope": scope,
+            "scope": f"openid email {scope}",
             "state": state,
             "code_challenge": code_challenge,
             "code_challenge_method": "S256",

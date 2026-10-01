@@ -1,31 +1,65 @@
-# Submission readiness
+# Submission readiness: private candidate only
 
-OpenAI reviews the package. Google reviews the restricted scopes. This file records what is in the repository and which steps still happen in a dashboard.
+The current deliverable is an offline, deterministic **candidate NOT FOR SUBMISSION**. It preserves `https://REPLACE_WITH_RAILWAY_PUBLIC_URL/mcp`. No public service origin, real reviewer access, adopted hosted policy, completed provider approval or directory submission is established by this repository.
 
-`RAILWAY_PUBLIC_URL` was not supplied, so `mcp.json` still contains a placeholder. Run `MCP_SERVER_URL=https://YOUR_HOST/mcp ./package.sh` after that host exists. `DEVELOPER_DASHBOARD_ORG` was not supplied. The manifests use WisdomTwin Inc, which is the controller named in the privacy policy, and Roman must confirm that string matches the verified organization. The privacy policy URL is the live page https://wisdomtwin.ai/privacy. The terms URL is the rendered `terms-of-service.md` on this branch.
+## Completed locally
 
-| Requirement | Status | Next action |
+| Item | Evidence and boundary |
+| --- | --- |
+| Existing prototype, four-tool contract | Original MVP fixture tests and the current test suite. Exact arguments/defaults are also checked without importing the server. |
+| Portable package and two skills | Root `plugin.json`, `mcp.json`, `skills/query-twin/SKILL.md`, `skills/update-twin/SKILL.md`. No new scaffold or custom UI. |
+| Offline full schema validation | `package_validator.py` uses complete vendored official schemas and pinned snapshot hashes; separate checks cover OpenAI metadata, safe paths, icon dimensions, skill frontmatter and the four-tool boundary. |
+| Deterministic candidate build | `./package.sh --candidate` emits a fixed-order/timestamp/mode ZIP, `.sha256` and `.contents.json`. Parent integration records the final artifact hash and source commit. |
+| Safer auth/index implementation | Corporate signed OIDC, assigned role/source identity, durable encrypted authorization state, current-access source revalidation and metadata-only real indexing are code/test results. Deployment behavior remains to be demonstrated. |
+| Honest publisher/commerce metadata | Observed verified individual publisher `ROMAN GREGORY BODNARCHUK`; no invented verified company, subscription pitch, checkout or pricing in the listing/skills. |
+| Hosted legal preparation | `privacy-policy.md`, `terms-of-service.md`, `terms.html` are unadopted drafts scoped only to this hosted plugin. Existing website/customer policies are not replaced. |
+
+The original PR review used synthetic Slack fixtures: twelve MVP tests, four tools and ten chunks. It does not prove live Slack or production Postgres. Run the full current suite and record its actual output; no paid embedding or Responses requests were made for this candidate.
+
+## Blocked until Roman completes these actions
+
+| Requirement | Current status | Concrete next action |
 | --- | --- | --- |
-| MCP server on the official Python SDK, streamable HTTP at `/mcp` | done | Keep `mcp` at 2.2.0 or newer. |
-| `/health` | done | `deploy.sh` calls it after Railway is up. |
-| Four tools, role title, tenure metadata, citations, audit row | done | Covered by `tests/test_mvp.py`. |
-| Stable errors DOMAIN_REJECTED, QUOTA_EXCEEDED, OAUTH_PENDING, JOB_NOT_FOUND on the SDK tool error | done | Raised as `ToolError`. JOB_NOT_FOUND is used when an ingestion job id is missing. |
-| Domain gate and read-only scopes | done | Slack scopes are read-only. Gmail and Drive scopes are the two readonly scopes. |
-| Slack connector | done in code | Create the Slack app, set `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`, and use the redirect `{PUBLIC_BASE_URL}/oauth/callback/slack`. |
-| Gmail and Drive connectors, testing mode, off by default | done in code | Follow `google-verification/submission-steps.md`. Do not flip the flags until Google grants the scopes. |
-| Postgres role schema and pgvector index | done locally | The twelve cases pass on memory and on local Postgres when `WISDOMTWIN_TEST_DATABASE_URL` is set. On Railway, use a Postgres service with pgvector. The server applies `schema.sql` at startup. |
-| Celery ingestion | done in code | Set `REDIS_URL` and run the Procfile worker. |
-| Privacy policy, controller WisdomTwin Inc, no certification claim, no training | done | https://wisdomtwin.ai/privacy is live. The plugin-specific text is also in `privacy-policy.md`. |
-| Terms of service | done | `terms-of-service.md` is linked from `plugin.json`. The server also serves `terms.html` at `/terms`. |
-| `manifest.json` and directory `plugin.json` / `mcp.json` | done, URL blocked | `./package.sh --check` passes. Build the ZIP with `MCP_SERVER_URL` after Railway assigns the origin. Confirm developer name WisdomTwin Inc against the verified organization. |
-| No secrets in the tree | done | Keep keys in the shell. `deploy.sh` does not echo them. |
-| Caller isolation | done | Organizations, the active role, and connection rows are scoped to the OAuth subject. A second caller does not see the first caller's domain or chunks. |
-| Pytest, twelve cases | done | `cd plugin-scaffold && uv run pytest` uses memory. The same file passes with `WISDOMTWIN_TEST_DATABASE_URL` pointed at Postgres with pgvector. Extra cases cover a second caller and a missing ingestion job. |
-| Verified developer organization | needs Roman | OpenAI dashboard: organization settings, complete verification, then Plugins, and choose that identity when uploading. If the displayed name is not WisdomTwin Inc, edit the manifests before the ZIP. |
-| Public HTTPS MCP endpoint | needs Roman | Create the Railway service with root `plugin-scaffold`, set the variables named in `deploy.sh`, run `./deploy.sh`, and confirm `{RAILWAY_PUBLIC_URL}/health`. |
-| Domain verification for the MCP host | needs Roman | In the plugin portal, open MCPs, Connect, and copy the challenge token. Set `OPENAI_APPS_CHALLENGE` to that exact value and redeploy. Fetch `https://<host>/.well-known/openai-apps-challenge` and confirm the body is only the token. |
-| Plugin ZIP upload | needs Roman | From `plugin-scaffold/`, zip the package so `plugin.json` is at the root. Open the OpenAI dashboard, Plugins, Upload plugin, and select the ZIP. Fix whatever the portal reports. Do not upload `.env`. |
-| Screenshots | omitted | The plugin has no custom UI. The directory rejects screenshots unless a tool scan reports a UI template. |
-| Demo recording and reviewer credentials | needs Roman | Record the five positive cases. In the plugin's review details, enter a sample Slack workspace and test account. Keep that account out of the ZIP. |
-| Google restricted-scope verification | needs Roman | Use `google-verification/`. Submit the consent screen yourself. This repository does not claim the request was sent or accepted. |
-| Directory submission and publication | needs Roman | After the portal checks are clear, submit the draft for review from the Plugins page. Publishing, if review accepts the package, is a separate click. This build stops before both. |
+| Verified publisher identity | Individual observed; company verification not established | In the OpenAI developer dashboard, choose the exact verified identity. Match `author.name`, `interface.developerName` and internal `developer_organization` to it. Do not treat WisdomTwin, Inc. as verified. |
+| Legal operator and contact | Proposed WisdomTwin, Inc.; mailbox/authority unverified | Verify entity status, authority, operator/publisher relationship and ownership of `privacy@wisdomtwin.ai`; adopt the hosted drafts and set their effective dates. |
+| Hosted privacy, terms and support | Placeholder links; drafts not published/adopted | Publish the reviewed plugin-specific pages and replace the three placeholder listing URLs. The old `wisdomtwin.ai/privacy` on-premises policy is unsuitable for this hosted flow. Website/support must identify the same publisher. |
+| Public HTTPS MCP deployment | Railway private project exists; no verified service/host | Create the service rooted at `plugin-scaffold`, Postgres with pgvector, Redis, web/worker/beat; configure secrets outside Git and verify `/health` and `/mcp`. |
+| Corporate and MCP authorization | Code/tests only | Configure corporate OIDC, operator-assigned role/provider identities and exact OAuth callbacks. Test signed login, PKCE/resource validation, current entitlement, restart persistence and revocation against real HTTPS. |
+| Slack real/commercial use | Adapter/fixtures only | Obtain applicable Slack/Salesforce commercial authorization; configure the app and matching workspace/user grant; demonstrate real current-access retrieval before setting activation gates. This PKCE adapter requires a PKCE-enabled Slack app; enabling that setting is one-way without Slack support and needs Roman's explicit approval. A blanket `search.messages` prohibition has not been established. |
+| Model API operation | Spend opt-in remains off | Only with explicit authorization, configure key/embedding model and exercise the real indexed path. Optional Responses mode omits temperature for reasoning. Fixture results do not prove real API availability or cost. |
+| Cleanup and deletion | Code and local behavior; operator execution unverified | Run authenticated role deletion and daily retention on deployed Postgres/worker/beat; verify data/state removal and MCP grant revocation. Distinguish 30-day inactivity eligibility from observed task execution. |
+| MCP domain verification | Challenge unconfigured | In the MCP connection flow, use the portal's actual challenge, configure `OPENAI_APPS_CHALLENGE`, and verify its exact public response. Do not commit it. |
+| Demo/reviewer access | No recording URL or reviewer credentials established | Record the five positive scenarios in a permitted sample workspace. Set `review.demo_recording_url`; enter reviewer access securely in the portal, outside the ZIP. |
+| Google completeness and scope review | Both connectors disabled/unverified | Finish full-content ingestion and provenance, confirm identity/read-only scopes and required Google review. `google-verification/` is preparation, not a request or approval record. |
+| Portal scans/upload/submission | Not performed | Upload the production ZIP only after prerequisites, inspect Metadata & Skills/MCP tool findings and required scans, then explicitly submit. Publication is a separate later dashboard action. |
+
+## Package commands and release evidence
+
+```bash
+./package.sh --check
+./package.sh --candidate --output-dir /workspace/wisdomtwin-plugin-artifacts
+```
+
+These modes are offline. The ZIP has exactly five files: `plugin.json`, `mcp.json`, `assets/logo.svg`, and the two skill documents. No fixture data, server code, reviewer credentials, schema snapshots or legal drafts are uploaded in it.
+
+`./package.sh --release` (also the default command) refuses placeholder hosts. Once the real URLs and publisher are reconciled, supply `MCP_SERVER_URL` if staging an endpoint, `PACKAGE_RELEASE_EVIDENCE` as the path to a private JSON evidence record, and `PACKAGE_MCP_ACCESS_TOKEN` in the environment for read-only `tools/list`. Do not place tokens in the evidence file or Git.
+
+The evidence object must contain `mcp_url`, `publisher`, `privacy_url`, `terms_url` matching the staged package; `package_files_sha256` for every staged ZIP member; and `published_pages_sha256` keyed by `websiteURL`, `supportURL`, `privacyPolicyURL`, `termsOfServiceURL`. Its `checks` object must contain these factual operator records:
+
+- `verified_publisher`
+- `hosted_legal_adoption`
+- `oauth_end_to_end`
+- `source_revalidation`
+- `deletion_and_retention`
+- `third_party_authorization`
+- `reviewer_access`
+
+Each check has `result: "passed"`, `path` to its nonempty supporting record (relative to the evidence file is supported), and that file's `sha256`. These records document completed work; changing a flag or writing "passed" does not establish it. The validator binds their hashes and exact metadata, checks live page hashes, rejects draft legal pages, verifies health/OAuth discovery and an anonymous 401 challenge, and scans the authenticated four-tool contract. It cannot independently certify corporate authority, contract permission, legal adoption or recorded cleanup outcomes. Those facts require Roman's review of the records. It never submits or publishes a package.
+
+## Primary requirements checked October 1, 2026
+
+Portable `plugin.json`, root MCP configuration and automatic skill discovery follow [OpenAI packaging guidance](https://developers.openai.com/plugins/build/plugins); full schema snapshots and normalized hashes are documented in [schema provenance](schemas/PROVENANCE.md). Inline OpenAI extension metadata is canonical when present; compatibility fallback remains supported.
+
+OAuth discovery, resource binding, PKCE and per-tool authentication follow [OpenAI authentication guidance](https://developers.openai.com/plugins/build/auth). Required listing links, skill scans, review scenarios, demo and dashboard actions follow the [submission field reference](https://developers.openai.com/plugins/deploy/submission). Source permissions, accurate metadata, published privacy disclosure and restrictions on subscription promotion follow [plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines). Passing local checks is not a promise of acceptance or review timing.
+
+[Slack's current PKCE guidance](https://docs.slack.dev/authentication/using-pkce/) requires enabling PKCE on the app and omitting `client_secret` from its PKCE code exchange. No Slack app settings or real grants were changed here. History/replies rate limits and search pagination still need authorized live validation; the current ingestion adapters fetch at most one provider page (up to 100 items), even when `max_items` is larger.

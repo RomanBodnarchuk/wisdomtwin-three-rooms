@@ -1,60 +1,51 @@
-"""OAuth authorization server for the MCP endpoint, built on the SDK provider protocol.
-
-Client registration stays disabled. A single public client is configured from
-the environment and proves possession with PKCE, which the SDK token handler
-checks before this provider exchanges the code.
-"""
+"""PKCE MCP authorization backed by durable, revocable grants and verified login."""
 
 from __future__ import annotations
 
 import os
 import secrets
 import time
-from urllib.parse import urlencode
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from pydantic import AnyUrl
-
 from mcp.server.auth.provider import (
-    AccessToken,
-    AuthorizationCode,
-    AuthorizationParams,
-    AuthorizeError,
-    RefreshToken,
-    RegistrationError,
+    AccessToken, AuthorizationCode, AuthorizationParams, AuthorizeError,
+    RefreshToken, RegistrationError, TokenError,
 )
 from mcp.shared.auth import OAuthClientInformationFull, OAuthToken
 
 from oauth_connectors import public_base_url
+from runtime import flag, local_test_mode
+from security_store import SecurityStore, security_store
 
 MCP_SCOPE = "twin:read"
 CODE_TTL_SECONDS = 300
 ACCESS_TTL_SECONDS = 3600
+REFRESH_TTL_SECONDS = 86400
 
 
 class WisdomTwinAuthProvider:
-    def __init__(self) -> None:
+    def __init__(self, repository: SecurityStore | None = None) -> None:
+        self.repository = repository
+        client_id = os.environ.get("OAUTH_CLIENT_ID", "").strip()
+        redirects = os.environ.get("OAUTH_REDIRECT_URIS", "").strip()
+        if local_test_mode():
+            client_id = client_id or "wisdomtwin-local"
+            redirects = redirects or "http://127.0.0.1:8000/oauth/done"
         self._clients: dict[str, OAuthClientInformationFull] = {}
-        self._codes: dict[str, AuthorizationCode] = {}
-        self._refresh: dict[str, RefreshToken] = {}
-        self._access: dict[str, AccessToken] = {}
-        self._pending: dict[str, dict] = {}
-        self._install_default_client()
+        if client_id and redirects:
+            urls = [AnyUrl(item.strip()) for item in redirects.split(",") if item.strip()]
+            if not local_test_mode() and any(url.scheme != "https" for url in urls):
+                raise RuntimeError("Production MCP callback URIs must be HTTPS")
+            self._clients[client_id] = OAuthClientInformationFull(
+                client_id=client_id, redirect_uris=urls,
+                grant_types=["authorization_code", "refresh_token"],
+                response_types=["code"], token_endpoint_auth_method="none", scope=MCP_SCOPE,
+            )
 
-    def _install_default_client(self) -> None:
-        client_id = os.environ.get("OAUTH_CLIENT_ID", "wisdomtwin-local").strip() or "wisdomtwin-local"
-        redirects = [
-            item.strip()
-            for item in os.environ.get("OAUTH_REDIRECT_URIS", "http://127.0.0.1:8000/oauth/done").split(",")
-            if item.strip()
-        ]
-        self._clients[client_id] = OAuthClientInformationFull(
-            client_id=client_id,
-            redirect_uris=[AnyUrl(item) for item in redirects],
-            grant_types=["authorization_code", "refresh_token"],
-            response_types=["code"],
-            token_endpoint_auth_method="none",
-            scope=MCP_SCOPE,
-        )
+    @property
+    def db(self) -> SecurityStore:
+        return self.repository or security_store()
 
     async def get_client(self, client_id: str) -> OAuthClientInformationFull | None:
         return self._clients.get(client_id)
@@ -63,136 +54,99 @@ class WisdomTwinAuthProvider:
         raise RegistrationError(error="invalid_client_metadata", error_description="Client registration is not enabled")
 
     async def authorize(self, client: OAuthClientInformationFull, params: AuthorizationParams) -> str:
-        transaction = secrets.token_urlsafe(24)
-        self._pending[transaction] = {
-            "client_id": client.client_id,
-            "redirect_uri": str(params.redirect_uri),
+        resource = f"{public_base_url()}/mcp"
+        if params.resource != resource or set(params.scopes or [MCP_SCOPE]) != {MCP_SCOPE}:
+            raise AuthorizeError(error="invalid_request", error_description="Invalid resource or scopes")
+        if str(params.redirect_uri) not in {str(uri) for uri in client.redirect_uris}:
+            raise AuthorizeError(error="invalid_request", error_description="Invalid callback")
+        transaction = secrets.token_urlsafe(32)
+        self.db.put("pending", transaction, {
+            "client_id": client.client_id, "redirect_uri": str(params.redirect_uri),
             "redirect_uri_provided_explicitly": params.redirect_uri_provided_explicitly,
-            "code_challenge": params.code_challenge,
-            "scopes": params.scopes or [MCP_SCOPE],
-            "state": params.state,
-            "resource": params.resource,
-        }
+            "code_challenge": params.code_challenge, "scopes": params.scopes or [MCP_SCOPE],
+            "state": params.state, "resource": resource,
+        }, CODE_TTL_SECONDS)
         return f"{public_base_url()}/oauth/consent?txn={transaction}"
 
-    def approve(self, transaction: str) -> str:
-        pending = self._pending.pop(transaction, None)
-        if pending is None:
+    def approve(self, transaction: str, *, session_key: str, csrf: str) -> str:
+        session = self.db.get("session", session_key, consume=True)
+        if not session or session["transaction"] != transaction or not secrets.compare_digest(session["csrf"], csrf):
+            raise AuthorizeError(error="access_denied", error_description="Verified login and consent are required")
+        member = self.db.membership(session["subject"])
+        if not member or member["email"] != session["email"]:
+            raise AuthorizeError(error="access_denied", error_description="Corporate membership was revoked")
+        pending = self.db.get("pending", transaction, consume=True)
+        if not pending:
             raise AuthorizeError(error="invalid_request", error_description="Authorization request expired")
         code = secrets.token_urlsafe(32)
-        self._codes[code] = AuthorizationCode(
-            code=code,
-            scopes=list(pending["scopes"]),
-            expires_at=time.time() + CODE_TTL_SECONDS,
-            client_id=pending["client_id"],
-            code_challenge=pending["code_challenge"],
+        authorization = AuthorizationCode(
+            code=code, scopes=pending["scopes"], expires_at=time.time() + CODE_TTL_SECONDS,
+            client_id=pending["client_id"], code_challenge=pending["code_challenge"],
             redirect_uri=AnyUrl(pending["redirect_uri"]),
             redirect_uri_provided_explicitly=pending["redirect_uri_provided_explicitly"],
-            resource=pending["resource"],
-            subject=secrets.token_urlsafe(18),
+            resource=pending["resource"], subject=session["subject"],
         )
-        query = {"code": code}
+        self.db.put("code", code, authorization.model_dump(mode="json"), CODE_TTL_SECONDS, subject=session["subject"])
+        url = urlsplit(pending["redirect_uri"])
+        query = list(parse_qsl(url.query)) + [("code", code)]
         if pending["state"]:
-            query["state"] = pending["state"]
-        return f"{pending['redirect_uri']}?{urlencode(query)}"
+            query.append(("state", pending["state"]))
+        return urlunsplit((url.scheme, url.netloc, url.path, urlencode(query), ""))
 
-    async def load_authorization_code(
-        self, client: OAuthClientInformationFull, authorization_code: str
-    ) -> AuthorizationCode | None:
-        return self._codes.get(authorization_code)
+    async def load_authorization_code(self, client: OAuthClientInformationFull, authorization_code: str) -> AuthorizationCode | None:
+        payload = self.db.get("code", authorization_code)
+        if not payload or payload["client_id"] != client.client_id or not self.db.membership(payload["subject"]):
+            return None
+        return AuthorizationCode.model_validate(payload)
 
-    async def exchange_authorization_code(
-        self, client: OAuthClientInformationFull, authorization_code: AuthorizationCode
-    ) -> OAuthToken:
-        self._codes.pop(authorization_code.code, None)
-        access = secrets.token_urlsafe(32)
-        refresh = secrets.token_urlsafe(32)
-        scopes = list(authorization_code.scopes)
-        self._access[access] = AccessToken(
-            token=access,
-            client_id=client.client_id,
-            scopes=scopes,
-            expires_at=int(time.time()) + ACCESS_TTL_SECONDS,
-            resource=authorization_code.resource or f"{public_base_url()}/mcp",
-            subject=authorization_code.subject,
-        )
-        self._refresh[refresh] = RefreshToken(
-            token=refresh,
-            client_id=client.client_id,
-            scopes=scopes,
-            resource=authorization_code.resource,
-            subject=authorization_code.subject,
-        )
-        return OAuthToken(
-            access_token=access,
-            token_type="Bearer",
-            expires_in=ACCESS_TTL_SECONDS,
-            scope=" ".join(scopes),
-            refresh_token=refresh,
-        )
+    async def exchange_authorization_code(self, client: OAuthClientInformationFull, authorization_code: AuthorizationCode) -> OAuthToken:
+        if authorization_code.client_id != client.client_id:
+            raise TokenError(error="invalid_grant", error_description="Invalid authorization code")
+        payload = self.db.get("code", authorization_code.code, consume=True)
+        if not payload or payload != authorization_code.model_dump(mode="json") or not self.db.membership(payload["subject"]):
+            raise TokenError(error="invalid_grant", error_description="Authorization code expired or used")
+        return self._issue(client.client_id, payload["subject"], payload["scopes"], payload["resource"], secrets.token_urlsafe(32))
 
-    async def load_refresh_token(
-        self, client: OAuthClientInformationFull, refresh_token: str
-    ) -> RefreshToken | None:
-        token = self._refresh.get(refresh_token)
-        if token and token.client_id == client.client_id:
-            return token
-        return None
+    def _issue(self, client_id: str, subject: str, scopes: list[str], resource: str, family: str) -> OAuthToken:
+        access, refresh = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
+        now = int(time.time())
+        at = AccessToken(token=access, client_id=client_id, scopes=scopes,
+                         expires_at=now + ACCESS_TTL_SECONDS, resource=resource, subject=subject)
+        rt = RefreshToken(token=refresh, client_id=client_id, scopes=scopes,
+                          expires_at=now + REFRESH_TTL_SECONDS, resource=resource, subject=subject)
+        for kind, key, token, ttl in (("access", access, at, ACCESS_TTL_SECONDS), ("refresh", refresh, rt, REFRESH_TTL_SECONDS)):
+            self.db.put(kind, key, {"token": token.model_dump(mode="json"), "family": family}, ttl, subject=subject, family=family)
+            self.db.put("family", key, {"family": family}, REFRESH_TTL_SECONDS, subject=subject, family=family)
+        return OAuthToken(access_token=access, token_type="Bearer", expires_in=ACCESS_TTL_SECONDS,
+                          scope=" ".join(scopes), refresh_token=refresh)
 
-    async def exchange_refresh_token(
-        self,
-        client: OAuthClientInformationFull,
-        refresh_token: RefreshToken,
-        scopes: list[str],
-    ) -> OAuthToken:
-        self._refresh.pop(refresh_token.token, None)
-        granted = scopes or list(refresh_token.scopes)
-        access = secrets.token_urlsafe(32)
-        rotated = secrets.token_urlsafe(32)
-        self._access[access] = AccessToken(
-            token=access,
-            client_id=client.client_id,
-            scopes=granted,
-            expires_at=int(time.time()) + ACCESS_TTL_SECONDS,
-            resource=refresh_token.resource or f"{public_base_url()}/mcp",
-            subject=refresh_token.subject,
-        )
-        self._refresh[rotated] = RefreshToken(
-            token=rotated,
-            client_id=client.client_id,
-            scopes=granted,
-            resource=refresh_token.resource,
-            subject=refresh_token.subject,
-        )
-        return OAuthToken(
-            access_token=access,
-            token_type="Bearer",
-            expires_in=ACCESS_TTL_SECONDS,
-            scope=" ".join(granted),
-            refresh_token=rotated,
-        )
+    async def load_refresh_token(self, client: OAuthClientInformationFull, refresh_token: str) -> RefreshToken | None:
+        payload = self.db.get("refresh", refresh_token)
+        if not payload or payload["token"]["client_id"] != client.client_id or not self.db.membership(payload["token"]["subject"]):
+            return None
+        return RefreshToken.model_validate(payload["token"])
+
+    async def exchange_refresh_token(self, client: OAuthClientInformationFull, refresh_token: RefreshToken, scopes: list[str]) -> OAuthToken:
+        if refresh_token.client_id != client.client_id or not set(scopes or refresh_token.scopes) <= set(refresh_token.scopes):
+            raise TokenError(error="invalid_grant", error_description="Invalid client or scope")
+        payload = self.db.get("refresh", refresh_token.token, consume=True)
+        if not payload or payload["token"] != refresh_token.model_dump(mode="json") or not self.db.membership(refresh_token.subject):
+            raise TokenError(error="invalid_grant", error_description="Refresh token expired or used")
+        return self._issue(client.client_id, refresh_token.subject, scopes or refresh_token.scopes,
+                           refresh_token.resource, payload["family"])
 
     async def load_access_token(self, token: str) -> AccessToken | None:
-        loaded = self._access.get(token)
-        if loaded is None:
+        payload = self.db.get("access", token)
+        if not payload or not self.db.membership(payload["token"]["subject"]):
             return None
-        if loaded.expires_at is not None and loaded.expires_at < int(time.time()):
-            self._access.pop(token, None)
-            return None
-        return loaded
+        return AccessToken.model_validate(payload["token"])
 
     async def revoke_token(self, token: AccessToken | RefreshToken) -> None:
-        if isinstance(token, AccessToken):
-            self._access.pop(token.token, None)
-        else:
-            self._refresh.pop(token.token, None)
+        kind = "access" if isinstance(token, AccessToken) else "refresh"
+        payload = self.db.get("family", token.token)
+        if payload:
+            self.db.revoke_family(payload["family"])
 
 
 def auth_is_required() -> bool:
-    flag = os.environ.get("WISDOMTWIN_AUTH_DISABLED", "").strip().lower()
-    if flag not in {"1", "true", "yes", "on"}:
-        return True
-    base = os.environ.get("PUBLIC_BASE_URL", "")
-    if base.startswith("https://"):
-        return True
-    return False
+    return not (flag("WISDOMTWIN_AUTH_DISABLED") and flag("WISDOMTWIN_USE_FIXTURES") and local_test_mode())

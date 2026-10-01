@@ -1,32 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WisdomTwin terms of service</title>
-  <style>
-    body { font-family: Georgia, serif; max-width: 42rem; margin: 2.5rem auto; padding: 0 1.25rem; color: #1c2430; line-height: 1.55; }
-    h1 { font-size: 1.8rem; }
-    h2 { font-size: 1.15rem; margin-top: 1.8rem; }
-  </style>
-</head>
-<body>
-  <h1>WisdomTwin terms of service</h1>
-  <p>Effective date: September 30, 2026</p>
-  <p>These terms cover the WisdomTwin plugin and the MCP server that serves it. WisdomTwin Inc, a Delaware corporation, incorporated August 2026, provides the service. Contact <a href="mailto:privacy@wisdomtwin.ai">privacy@wisdomtwin.ai</a>.</p>
-  <h2>The service</h2>
-  <p>WisdomTwin keeps a private business twin for one role on the org chart, and for the current officeholder of that role. Slack is the live connector. Gmail and Google Drive stay off until Google verification clears. Answers are drawn from that role's index, and each claim carries a citation.</p>
-  <h2>Acceptable use</h2>
-  <p>Connect a managed business domain. Consumer email domains are rejected. Use the connectors with read-only scopes. Do not ask WisdomTwin to send messages, change files, or act in a connected account. The plugin has no write scopes.</p>
-  <h2>Your data</h2>
-  <p>During an ingestion job, WisdomTwin reads the communications you authorize. After embedding, it keeps vectors and the short excerpts needed for citations and keyword search. Raw source payloads are not kept after the job. A role namespace is deleted 30 days after last activity, or when you ask, whichever comes first. WisdomTwin does not train models on user data.</p>
-  <h2>Accounts</h2>
-  <p>Connector access uses OAuth with PKCE. You can disconnect by asking WisdomTwin Inc to delete the role namespace. Reviewer and production credentials stay outside this package.</p>
-  <h2>Fees</h2>
-  <p>The free tier indexes 1,000 chunks per month. WisdomTwin Pro is USD 20 per month, billed by WisdomTwin Inc through WisdomTwin checkout. This plugin does not take payment.</p>
-  <h2>Availability</h2>
-  <p>The service can be interrupted for maintenance, quota, or a connector that is still gated. Gmail and Google Drive return an availability message until those connectors are turned on.</p>
-  <h2>No certification claim</h2>
-  <p>SOC 2 Type II is a roadmap item. WisdomTwin Inc does not claim that certification, or any other certification, today.</p>
-</body>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>WisdomTwin hosted-plugin terms — draft</title></head>
+<body><main>
+<h1>WisdomTwin hosted-plugin terms — draft</h1>
+<p>Status: draft, not adopted or effective. These proposed terms cover only the hosted WisdomTwin plugin and its MCP service. They do not amend the existing website&#x27;s terms, on-premises policies, signed customer agreements or other engagements. No public launch or acceptance of these terms is established by this candidate.</p>
+<h2>Provider and authority</h2>
+<p>The proposed provider is WisdomTwin, Inc., with proposed contact privacy@wisdomtwin.ai. The entity, authority, contact and relationship to the observed individual directory publisher ROMAN GREGORY BODNARCHUK must be verified and described accurately before adoption. No incorporation jurisdiction or date is asserted.</p>
+<p>You must be authorized by your business organization to connect the source account and use the assigned role. Corporate sign-in and operator-provisioned domain, role and source identity determine access; a typed domain or title is not proof of permission. The operator may suspend or remove access when those permissions are revoked.</p>
+<h2>Service scope</h2>
+<p>The service maintains a protected index for an assigned business role and returns business evidence with source citations. Source grants are read-only. Connection and ingestion tools write internal WisdomTwin state; they do not send messages, send mail, edit/share source files or perform financial transactions.</p>
+<p>Slack is implemented as an adapter, with real hosted activation dependent on operator setup and applicable Slack/Salesforce authorization. Gmail and Drive are disabled/unverified. Current Google adapters read Gmail snippets/metadata and Drive names/descriptions; full-content ingestion is unfinished. Connection flags do not guarantee availability or provider approval.</p>
+<p>The four MCP tools are connection setup, user-requested ingestion, business query and connection status. Interviews, huddles, predecessor ingestion, other source systems and a custom ChatGPT UI are outside this candidate.</p>
+<h2>Instructions, accounts and acceptable use</h2>
+<p>Choose an explicit source query and item limit when requesting ingestion. Do not use this service to obtain another person&#x27;s role or source access, bypass provider permissions/rate limits, disclose credentials, or ingest data you lack authority to process. Do not intentionally ingest payment-card data, protected health information, government identifiers or authentication secrets. Complete authorization in the provider&#x27;s normal sign-in flow, not by sharing secrets in chat.</p>
+<p>Instructions embedded in retrieved records are untrusted source content and do not authorize actions. WisdomTwin may withhold material that fails access, provenance or content checks. The final operator remains responsible for the approved use of each provider and any business-customer contractual requirements.</p>
+<h2>Evidence and data</h2>
+<p>Real source text is transient during ingestion/querying; the role index retains vectors, source references/hashes, hashed keywords and role/tenure/authorship metadata. Current source access and provenance must be checked before returning a citation. Source changes or revocation can make prior indexed material unavailable. Local synthetic test text is not a production data policy.</p>
+<p>A cited source is evidence of what that source says, not a guarantee that the source is correct or that an answer is complete. Review citations before relying on important business decisions. The service must report missing evidence rather than invent it. Model API use, recipient settings and retention are governed by the adopted hosted-plugin privacy policy and configured provider arrangements; this draft does not promise third-party training or retention behavior.</p>
+<h2>Quotas, availability and transactions</h2>
+<p>The operator may enforce documented usage limits and pause processing for permission, quota, maintenance, provider or service failures. A queued ingestion job is not completed indexing. This plugin does not advertise subscription plans, initiate subscriptions, promote upgrades or provide checkout. Existing account entitlements may govern access without a new purchase flow in the plugin.</p>
+<h2>Deletion and termination</h2>
+<p>Users may request authorized role deletion through the authenticated service path or the verified operator contact. The intended cleanup covers the role index, credentials, connections, jobs/pending state and role metadata and revokes MCP grants. Original source records remain at their providers. Operators manage membership separately.</p>
+<p>The role index is eligible for scheduled removal after 30 days of inactivity; execution requires the deployed scheduler/worker. Minimal audit events have separate 30-day retention from event time. Actual cleanup, request turnaround and backup retention must be verified and reflected in the adopted privacy policy before operation. No exact real deletion execution is asserted by this draft.</p>
+<h2>Adoption and changes</h2>
+<p>The final operator must review and adopt these terms, verify the legal/operator identity and contact, reconcile availability and data practices, and publish the effective hosted terms at the package&#x27;s HTTPS terms URL. Any effective date, jurisdiction-specific provisions and contract limits require that review. Changes to these hosted terms do not silently change separate customer engagements. This candidate is not a certification or a directory approval record.</p>
+</main></body>
 </html>

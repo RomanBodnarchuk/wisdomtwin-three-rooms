@@ -7,13 +7,22 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
+from email.utils import parseaddr
 from pathlib import Path
 
 FIXTURE_PATH = Path(__file__).resolve().parent / "fixtures" / "slack" / "messages.json"
 
 
+class SourceUnavailable(RuntimeError):
+    """Source was deleted or the current user no longer has access."""
+
+
 def use_fixtures() -> bool:
-    return os.environ.get("WISDOMTWIN_USE_FIXTURES", "").strip().lower() in {"1", "true", "yes", "on"}
+    from runtime import flag, local_test_mode
+
+    if flag("WISDOMTWIN_USE_FIXTURES") and not local_test_mode():
+        raise RuntimeError("Fixtures are restricted to explicit loopback tests")
+    return flag("WISDOMTWIN_USE_FIXTURES") and local_test_mode()
 
 
 def load_slack_fixtures(max_items: int) -> list[dict[str, str]]:
@@ -33,6 +42,8 @@ def _request_json(url: str, token: str) -> dict:
         with urllib.request.urlopen(request, timeout=30) as response:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
+        if exc.code in {401, 403, 404}:
+            raise SourceUnavailable("Source access is unavailable") from None
         raise RuntimeError(f"Connector request failed with status {exc.code}") from None
 
 
@@ -43,23 +54,63 @@ def fetch_slack(token: str, query: str, max_items: int) -> list[dict[str, str]]:
         raise RuntimeError("Slack is not connected for this role")
     params = urllib.parse.urlencode({"query": query or "in:#general", "count": min(max_items, 100)})
     body = _request_json(f"https://slack.com/api/search.messages?{params}", token)
-    if not body.get("ok", True) and body.get("error"):
+    if body.get("ok") is not True:
         raise RuntimeError("Slack search was rejected")
     matches = body.get("messages", {}).get("matches", [])
     items: list[dict[str, str]] = []
     for match in matches[:max_items]:
-        channel = (match.get("channel") or {}).get("id", "channel")
-        timestamp = str(match.get("ts", "")).replace(".", "")
+        # Use Slack's actual workspace permalink; do not fabricate a source URL.
+        permalink = match.get("permalink", "")
+        parsed = urllib.parse.urlsplit(permalink)
+        if parsed.scheme != "https" or not parsed.hostname or not parsed.hostname.endswith(".slack.com") or parsed.username:
+            continue
         text = match.get("text") or ""
         if not text:
             continue
         items.append(
             {
-                "uri": f"https://slack.com/archives/{channel}/p{timestamp}",
+                "uri": permalink,
                 "text": text,
+                "author_provider_id": str(match.get("user") or ""),
             }
         )
     return items
+
+
+def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
+    """Revalidate message access with this user's grant; never fetch arbitrary URLs."""
+    import re
+
+    parsed = urllib.parse.urlsplit(uri)
+    if parsed.scheme != "https" or not parsed.hostname or not parsed.hostname.endswith(".slack.com") or parsed.username:
+        raise ValueError("Invalid Slack reference")
+    match = re.fullmatch(r"/archives/([A-Z0-9]+)/p([0-9]{7,})", parsed.path)
+    if not match:
+        raise ValueError("Invalid Slack message reference")
+    channel, compact_ts = match.groups()
+    ts = compact_ts[:-6] + "." + compact_ts[-6:]
+    params = urllib.parse.urlencode({"channel": channel, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
+    thread_ts = urllib.parse.parse_qs(parsed.query).get("thread_ts", [""])[0]
+    if thread_ts and not re.fullmatch(r"[0-9]+\.[0-9]{6}", thread_ts):
+        raise ValueError("Invalid Slack thread reference")
+    if thread_ts:
+        params = urllib.parse.urlencode({"channel": channel, "ts": thread_ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
+    body = _request_json("https://slack.com/api/" + ("conversations.replies?" if thread_ts else "conversations.history?") + params, token)
+    if body.get("ok") is not True:
+        if body.get("error") in {"message_not_found", "channel_not_found", "not_in_channel", "token_revoked", "account_inactive", "invalid_auth", "missing_scope", "access_denied"}:
+            return None
+        raise RuntimeError("Source access was rejected")
+    for message in body.get("messages", []):
+        if message.get("ts") == ts and message.get("text") and message.get("user"):
+            return {"uri": uri, "text": message["text"], "author_provider_id": message["user"]}
+    if not thread_ts:
+        params = urllib.parse.urlencode({"channel": channel, "ts": ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
+        body = _request_json("https://slack.com/api/conversations.replies?" + params, token)
+        if body.get("ok") is True:
+            for message in body.get("messages", []):
+                if message.get("ts") == ts and message.get("text") and message.get("user"):
+                    return {"uri": uri, "text": message["text"], "author_provider_id": message["user"]}
+    return None
 
 
 def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:
@@ -74,6 +125,8 @@ def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:
             f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{message['id']}?format=metadata",
             token,
         )
+        if "TRASH" in detail.get("labelIds", []):
+            continue
         snippet = detail.get("snippet") or ""
         if not snippet:
             continue
@@ -81,6 +134,7 @@ def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:
             {
                 "uri": f"https://mail.google.com/mail/u/0/#inbox/{message['id']}",
                 "text": snippet,
+                "author_provider_id": _gmail_author(detail),
             }
         )
     return items
@@ -88,20 +142,22 @@ def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:
 
 def fetch_drive(token: str, query: str, max_items: int) -> list[dict[str, str]]:
     safe_query = query.replace("\\", "\\\\").replace("'", "\\'")
-    drive_query = f"fullText contains '{safe_query}'" if query else "trashed = false"
+    drive_query = f"trashed = false and fullText contains '{safe_query}'" if query else "trashed = false"
     listed = _request_json(
         "https://www.googleapis.com/drive/v3/files?"
         + urllib.parse.urlencode(
             {
                 "q": drive_query,
                 "pageSize": min(max_items, 100),
-                "fields": "files(id,name,description)",
+                "fields": "files(id,name,description,trashed,lastModifyingUser(permissionId))",
             }
         ),
         token,
     )
     items: list[dict[str, str]] = []
     for file_row in listed.get("files", [])[:max_items]:
+        if file_row.get("trashed") is True:
+            continue
         text = " ".join(part for part in (file_row.get("name"), file_row.get("description")) if part)
         if not text:
             continue
@@ -109,6 +165,35 @@ def fetch_drive(token: str, query: str, max_items: int) -> list[dict[str, str]]:
             {
                 "uri": f"https://drive.google.com/file/d/{file_row['id']}/view",
                 "text": text,
+                "author_provider_id": (file_row.get("lastModifyingUser") or {}).get("permissionId", ""),
             }
         )
     return items
+
+
+def _gmail_author(detail: dict) -> str:
+    headers = (detail.get("payload") or {}).get("headers", [])
+    return parseaddr(next((header.get("value", "") for header in headers if header.get("name", "").lower() == "from"), ""))[1].lower()
+
+
+def refetch_google(token: str, service: str, uri: str) -> dict[str, str] | None:
+    import re
+
+    if service == "gmail":
+        match = re.fullmatch(r"https://mail\.google\.com/mail/u/0/#inbox/([a-zA-Z0-9_-]+)", uri)
+        if not match:
+            raise ValueError("Invalid Gmail reference")
+        detail = _request_json(f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{match[1]}?format=metadata", token)
+        if "TRASH" in detail.get("labelIds", []):
+            return None
+        return {"uri": uri, "text": detail.get("snippet", ""), "author_provider_id": _gmail_author(detail)}
+    if service == "drive":
+        match = re.fullmatch(r"https://drive\.google\.com/file/d/([a-zA-Z0-9_-]+)/view", uri)
+        if not match:
+            raise ValueError("Invalid Drive reference")
+        detail = _request_json(f"https://www.googleapis.com/drive/v3/files/{match[1]}?fields=id,name,description,trashed,lastModifyingUser(permissionId)", token)
+        if detail.get("trashed") is True:
+            return None
+        text = " ".join(part for part in (detail.get("name"), detail.get("description")) if part)
+        return {"uri": uri, "text": text, "author_provider_id": (detail.get("lastModifyingUser") or {}).get("permissionId", "")}
+    raise ValueError("Unsupported source provider")

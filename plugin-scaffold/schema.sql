@@ -45,6 +45,9 @@ CREATE TABLE IF NOT EXISTS judgment_seeds (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS tenures_one_open_per_role
+ON tenures (role_id) WHERE ended_on IS NULL;
+
 CREATE TABLE IF NOT EXISTS chunks (
     id UUID PRIMARY KEY,
     role_id UUID NOT NULL REFERENCES roles (id),
@@ -54,6 +57,10 @@ CREATE TABLE IF NOT EXISTS chunks (
     uri TEXT NOT NULL,
     excerpt TEXT NOT NULL,
     embedding vector(1536),
+    source_uri TEXT NOT NULL DEFAULT '',
+    source_hash TEXT NOT NULL DEFAULT '',
+    chunk_index INTEGER NOT NULL DEFAULT 0,
+    keyword_hashes JSONB NOT NULL DEFAULT '[]',
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (role_id, uri)
 );
@@ -102,6 +109,7 @@ CREATE TABLE IF NOT EXISTS active_role (
 CREATE TABLE IF NOT EXISTS oauth_transactions (
     id TEXT PRIMARY KEY,
     payload_json TEXT NOT NULL,
+    role_id UUID,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

@@ -1,15 +1,5 @@
-# Test users
+# Google test users — no accounts recorded
 
-Google testing mode allows up to 100 test users. Add each address in the OAuth consent screen, then record it here. This file starts empty on purpose. Do not invent addresses.
+No Google test account has been invented or added by this repository. Roman should add permitted managed business accounts privately in the Google Cloud consent-screen configuration and record access/review evidence securely outside Git. Provider testing restrictions must be checked in the current console.
 
-| Email | Added in Google Cloud Console | Notes |
-| --- | --- | --- |
-| | | |
-| | | |
-| | | |
-
-Rules:
-
-- Use managed business domains. gmail.com and the other consumer domains in the product blocklist will be rejected by WisdomTwin even if Google accepts them.
-- Keep the list at or under 100 while the app is unverified.
-- Testers will see Google's unverified-app warning on the consent screen.
+Consumer domains remain blocked by the product even if a provider permits them. A test address alone does not grant a WisdomTwin role: corporate identity and the operator-provisioned Google subject/domain/role must match. Keep test passwords, tokens, one-time codes and reviewer credentials outside the package.

@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 import os
+from runtime import flag, local_test_mode
 import urllib.error
 import urllib.request
 
@@ -28,6 +29,7 @@ def _openai_vectors(texts: list[str]) -> list[list[float]]:
         {
             "model": os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"),
             "input": texts,
+            "dimensions": EMBEDDING_DIMENSIONS,
         }
     ).encode("utf-8")
     request = urllib.request.Request(
@@ -57,6 +59,9 @@ def _openai_vectors(texts: list[str]) -> list[list[float]]:
 def embed_texts(texts: list[str]) -> list[list[float]]:
     if not texts:
         return []
-    if os.environ.get("OPENAI_API_KEY"):
+    if flag("WISDOMTWIN_ALLOW_PAID_MODEL_APIS") and os.environ.get("OPENAI_API_KEY"):
         return _openai_vectors(texts)
-    return [_local_vector(text) for text in texts]
+    if local_test_mode():
+        return [_local_vector(text) for text in texts]
+    from errors import OAUTH_PENDING, CodedToolError
+    raise CodedToolError(OAUTH_PENDING, "The embedding service is not configured or API spending is not authorized.")

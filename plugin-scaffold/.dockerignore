@@ -4,3 +4,8 @@ __pycache__
 .pytest_cache
 dist
 *.pyc
+*.sqlite3
+tests
+fixtures
+requirements.txt
+google-verification

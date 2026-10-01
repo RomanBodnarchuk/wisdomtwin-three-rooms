@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import re
+import hashlib
 from dataclasses import dataclass
 
 from store import ChunkRecord, Store
@@ -89,7 +90,8 @@ def hybrid_search(
         overlap = 0.0
         if question_terms:
             excerpt_terms = set(_terms(chunk.excerpt))
-            overlap = len(question_terms & excerpt_terms) / len(question_terms)
+            matched = {term for term in question_terms if term in excerpt_terms or hashlib.sha256(term.encode()).hexdigest() in chunk.keyword_hashes}
+            overlap = len(matched) / len(question_terms)
         vector_score = _cosine(embedding, chunk.embedding)
         rerank = (0.5 * fused) + (0.3 * vector_score) + (0.2 * overlap)
         ranked.append(RankedChunk(chunk=chunk, score=rerank))

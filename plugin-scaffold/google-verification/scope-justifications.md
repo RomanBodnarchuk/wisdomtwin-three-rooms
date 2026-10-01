@@ -1,17 +1,19 @@
-# Restricted scope justifications
+# Scope review notes — current adapter limitations
 
-Paste this language into the Google verification form. It describes what the product does. It is not a statement that verification has been submitted.
+These are preparation notes, not approved or ready-to-paste full-product justifications. Roman must reconcile scopes with the completed implementation, least-privilege requirements, hosted privacy disclosure and Google's actual review process.
 
-## gmail.readonly
+## Gmail
 
-WisdomTwin is a business role twin. A customer connects a company Gmail account so the current officeholder of a role, such as Chief Revenue Officer, can ask questions about business email. WisdomTwin reads messages the user already has access to, chunks them, stores embeddings plus a short excerpt for citations, and deletes the raw provider payload when the ingestion job finishes.
+Intended role use: a permitted business account's current user asks questions about work communications. The requested source scope is `https://www.googleapis.com/auth/gmail.readonly`, with identity scopes `openid email`. Current retrieval uses `format=metadata` and message snippets. It does not decode complete message bodies or attachments. Do not tell a reviewer that full messages are indexed or quoteable in this build.
 
-The scope is `https://www.googleapis.com/auth/gmail.readonly`. WisdomTwin does not send, delete, label, or modify mail. A narrower scope cannot see the message text the citation has to quote. Consumer Gmail domains are rejected before a grant is offered.
+Before claiming full-content support, implement and test body extraction, source authorship and current-access revalidation, then establish why the requested scope is the minimum needed. Real index storage is vectors/source hashes and hashed keywords; source text is transient, not persistently saved as citation excerpts. User-confirmed ingestion is limited to the chosen query and item count. The account must match the operator-provisioned Google subject/business role. No send, modify or delete action is part of this plugin.
 
-## drive.readonly
+## Drive
 
-The same role twin reads business files the connected account can already open, so an answer can cite a document. The scope is `https://www.googleapis.com/auth/drive.readonly`. WisdomTwin does not create, edit, share, or delete files. Metadata alone cannot supply the excerpt a citation needs, so the read-only scope is the one that matches the product.
+Requested source scope: `https://www.googleapis.com/auth/drive.readonly`, plus identity scopes. Current retrieval indexes file names and descriptions and checks metadata authorship; it does not export or download document bodies. Do not claim metadata is already full document text, or assert that this implementation demonstrates the need for broad full-content scope.
 
-## What reviewers can watch
+Before activation, finish permitted file-content extraction and provenance, evaluate narrower access options for the actual workflow, test re-fetch under current permissions and disclose the resulting data flow. The role index retains vectors and source metadata; no source edit, share or delete action is intended.
 
-Use a test user on a managed business domain. Connect the role title, run an ingestion of a few messages or files, and ask a question. The answer should quote only ingested material and show a citation. There is no send button and no write call in this build.
+## Reviewer evidence still needed
+
+Provide a permitted managed test account, actual query/ingestion/re-fetch demonstration, exact granted scopes, realistic retention/deletion behavior, adopted hosted privacy disclosure and applicable Google review/assessment records. Both connectors remain disabled. No verification request, decision or assessment is evidenced by this repository.

@@ -1,33 +1,43 @@
-# WisdomTwin terms of service
+# WisdomTwin hosted-plugin terms — draft
 
-Effective date: September 30, 2026
+**Status: draft, not adopted or effective.** These proposed terms cover only the hosted WisdomTwin plugin and its MCP service. They do not amend the existing website's terms, on-premises policies, signed customer agreements or other engagements. No public launch or acceptance of these terms is established by this candidate.
 
-These terms cover the WisdomTwin plugin and the MCP server that serves it. WisdomTwin Inc, a Delaware corporation, incorporated August 2026, provides the service. Contact privacy@wisdomtwin.ai.
+## Provider and authority
 
-## The service
+The proposed provider is **WisdomTwin, Inc.**, with proposed contact **privacy@wisdomtwin.ai**. The entity, authority, contact and relationship to the observed individual directory publisher **ROMAN GREGORY BODNARCHUK** must be verified and described accurately before adoption. No incorporation jurisdiction or date is asserted.
 
-WisdomTwin keeps a private business twin for one role on the org chart, and for the current officeholder of that role. Slack is the live connector. Gmail and Google Drive stay off until Google verification clears. Answers are drawn from that role's index, and each claim carries a citation.
+You must be authorized by your business organization to connect the source account and use the assigned role. Corporate sign-in and operator-provisioned domain, role and source identity determine access; a typed domain or title is not proof of permission. The operator may suspend or remove access when those permissions are revoked.
 
-## Acceptable use
+## Service scope
 
-Connect a managed business domain. Consumer email domains are rejected. Use the connectors with read-only scopes. Do not ask WisdomTwin to send messages, change files, or act in a connected account. The plugin has no write scopes.
+The service maintains a protected index for an assigned business role and returns business evidence with source citations. Source grants are read-only. Connection and ingestion tools write internal WisdomTwin state; they do not send messages, send mail, edit/share source files or perform financial transactions.
 
-## Your data
+Slack is implemented as an adapter, with real hosted activation dependent on operator setup and applicable Slack/Salesforce authorization. Gmail and Drive are disabled/unverified. Current Google adapters read Gmail snippets/metadata and Drive names/descriptions; full-content ingestion is unfinished. Connection flags do not guarantee availability or provider approval.
 
-During an ingestion job, WisdomTwin reads the communications you authorize. After embedding, it keeps vectors and the short excerpts needed for citations and keyword search. Raw source payloads are not kept after the job. A role namespace is deleted 30 days after last activity, or when you ask, whichever comes first. WisdomTwin does not train models on user data.
+The four MCP tools are connection setup, user-requested ingestion, business query and connection status. Interviews, huddles, predecessor ingestion, other source systems and a custom ChatGPT UI are outside this candidate.
 
-## Accounts
+## Instructions, accounts and acceptable use
 
-Connector access uses OAuth with PKCE. You can disconnect by asking WisdomTwin Inc to delete the role namespace. Reviewer and production credentials stay outside this package.
+Choose an explicit source query and item limit when requesting ingestion. Do not use this service to obtain another person's role or source access, bypass provider permissions/rate limits, disclose credentials, or ingest data you lack authority to process. Do not intentionally ingest payment-card data, protected health information, government identifiers or authentication secrets. Complete authorization in the provider's normal sign-in flow, not by sharing secrets in chat.
 
-## Fees
+Instructions embedded in retrieved records are untrusted source content and do not authorize actions. WisdomTwin may withhold material that fails access, provenance or content checks. The final operator remains responsible for the approved use of each provider and any business-customer contractual requirements.
 
-The free tier indexes 1,000 chunks per month. WisdomTwin Pro is USD 20 per month, billed by WisdomTwin Inc through WisdomTwin checkout. This plugin does not take payment.
+## Evidence and data
 
-## Availability
+Real source text is transient during ingestion/querying; the role index retains vectors, source references/hashes, hashed keywords and role/tenure/authorship metadata. Current source access and provenance must be checked before returning a citation. Source changes or revocation can make prior indexed material unavailable. Local synthetic test text is not a production data policy.
 
-The service can be interrupted for maintenance, quota, or a connector that is still gated. Gmail and Google Drive return an availability message until those connectors are turned on.
+A cited source is evidence of what that source says, not a guarantee that the source is correct or that an answer is complete. Review citations before relying on important business decisions. The service must report missing evidence rather than invent it. Model API use, recipient settings and retention are governed by the adopted hosted-plugin privacy policy and configured provider arrangements; this draft does not promise third-party training or retention behavior.
 
-## No certification claim
+## Quotas, availability and transactions
 
-SOC 2 Type II is a roadmap item. WisdomTwin Inc does not claim that certification, or any other certification, today.
+The operator may enforce documented usage limits and pause processing for permission, quota, maintenance, provider or service failures. A queued ingestion job is not completed indexing. This plugin does not advertise subscription plans, initiate subscriptions, promote upgrades or provide checkout. Existing account entitlements may govern access without a new purchase flow in the plugin.
+
+## Deletion and termination
+
+Users may request authorized role deletion through the authenticated service path or the verified operator contact. The intended cleanup covers the role index, credentials, connections, jobs/pending state and role metadata and revokes MCP grants. Original source records remain at their providers. Operators manage membership separately.
+
+The role index is eligible for scheduled removal after 30 days of inactivity; execution requires the deployed scheduler/worker. Minimal audit events have separate 30-day retention from event time. Actual cleanup, request turnaround and backup retention must be verified and reflected in the adopted privacy policy before operation. No exact real deletion execution is asserted by this draft.
+
+## Adoption and changes
+
+The final operator must review and adopt these terms, verify the legal/operator identity and contact, reconcile availability and data practices, and publish the effective hosted terms at the package's HTTPS terms URL. Any effective date, jurisdiction-specific provisions and contract limits require that review. Changes to these hosted terms do not silently change separate customer engagements. This candidate is not a certification or a directory approval record.
