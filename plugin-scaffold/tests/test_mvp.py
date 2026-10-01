@@ -1,4 +1,4 @@
-"""Ten MVP cases for the role twin tools."""
+"""Role twin tool cases for the directory plugin."""
 
 import json
 from datetime import date
@@ -211,6 +211,15 @@ def test_max_items_over_quota_returns_quota_exceeded():
     with pytest.raises(ToolError) as caught:
         call("ingest_data", {"service": "slack", "query": "pipeline", "max_items": 1001})
     assert "QUOTA_EXCEEDED" in str(caught.value)
+
+
+def test_missing_job_returns_job_not_found():
+    from errors import JOB_NOT_FOUND, CodedToolError
+    from ingest import run_job
+
+    with pytest.raises(CodedToolError) as caught:
+        run_job("00000000-0000-0000-0000-000000000001")
+    assert caught.value.code == JOB_NOT_FOUND
 
 
 def test_gmail_ingest_while_gated_returns_availability_message():

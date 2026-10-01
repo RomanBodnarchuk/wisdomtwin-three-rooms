@@ -17,7 +17,7 @@ uv pip install -r requirements.txt
 uv run pytest
 ```
 
-The eleven tests use Slack fixtures. With no database URL they use the in-memory store. Set `WISDOMTWIN_TEST_DATABASE_URL` to a Postgres database with pgvector to run the same eleven cases against `schema.sql`:
+The twelve tests use Slack fixtures. With no database URL they use the in-memory store. Set `WISDOMTWIN_TEST_DATABASE_URL` to a Postgres database with pgvector to run the same twelve cases against `schema.sql`:
 
 ```bash
 WISDOMTWIN_TEST_DATABASE_URL=postgresql:///wisdomtwin_test uv run pytest
@@ -124,7 +124,7 @@ The packet Roman needs is in `google-verification/`. Verification has not been s
 
 `deploy.sh` expects the Railway CLI, a logged-in session, and `RAILWAY_PUBLIC_URL`. It uploads this directory, sets variables whose names are listed in the script, and requests `/health`. It does not print variable values. Run it without shell tracing.
 
-Set the Railway service root to `plugin-scaffold` if the service is created from the repository root. The Postgres service must provide pgvector. The server applies `schema.sql` when `DATABASE_URL` is set. Apply that file yourself as well if you want the tables in place before the first boot.
+Set the Railway service root to `plugin-scaffold` if the service is created from the repository root. `Dockerfile` starts the web process. A second service can use the same image with the Procfile worker command. The Postgres service must provide pgvector. The server applies `schema.sql` when `DATABASE_URL` is set. Apply that file yourself as well if you want the tables in place before the first boot.
 
 `mcp.json` keeps a placeholder host until a public origin exists. Build the upload from that origin:
 
@@ -167,4 +167,4 @@ MCP authorization codes and access tokens are kept in process memory. A restart 
 uv run pytest
 ```
 
-The cases cover role creation and reuse, Slack fixture ingestion with tenure metadata, a cited answer, status, namespace deletion, consumer-domain rejection, an empty index, quota, gated Gmail, and a second caller. Each OAuth subject has its own organization, active role, and connection list. A second caller does not see the first caller's domain or chunks.
+The cases cover role creation and reuse, Slack fixture ingestion with tenure metadata, a cited answer, status, namespace deletion, consumer-domain rejection, an empty index, quota, a missing ingestion job, gated Gmail, and a second caller. Each OAuth subject has its own organization, active role, and connection list. A second caller does not see the first caller's domain or chunks.
