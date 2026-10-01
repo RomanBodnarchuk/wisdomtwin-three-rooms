@@ -89,7 +89,7 @@ class WisdomTwinAuthProvider:
             redirect_uri=AnyUrl(pending["redirect_uri"]),
             redirect_uri_provided_explicitly=pending["redirect_uri_provided_explicitly"],
             resource=pending["resource"],
-            subject="wisdomtwin-user",
+            subject=secrets.token_urlsafe(18),
         )
         query = {"code": code}
         if pending["state"]:

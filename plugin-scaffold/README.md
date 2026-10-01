@@ -17,7 +17,7 @@ uv pip install -r requirements.txt
 uv run pytest
 ```
 
-The ten tests use Slack fixtures. With no database URL they use the in-memory store. Set `WISDOMTWIN_TEST_DATABASE_URL` to a Postgres database with pgvector to run the same ten cases against `schema.sql`:
+The eleven tests use Slack fixtures. With no database URL they use the in-memory store. Set `WISDOMTWIN_TEST_DATABASE_URL` to a Postgres database with pgvector to run the same eleven cases against `schema.sql`:
 
 ```bash
 WISDOMTWIN_TEST_DATABASE_URL=postgresql:///wisdomtwin_test uv run pytest
@@ -159,10 +159,12 @@ Not implemented:
 
 Also out of this build: write scopes, actions on behalf of the user, and a ChatGPT UI surface.
 
+MCP authorization codes and access tokens are kept in process memory. A restart asks the ChatGPT client to authorize again. Connector credentials for Slack stay in the database, encrypted.
+
 ## Tests
 
 ```bash
 uv run pytest
 ```
 
-The cases cover role creation and reuse, Slack fixture ingestion with tenure metadata, a cited answer, status, namespace deletion, consumer-domain rejection, an empty index, quota, and gated Gmail.
+The cases cover role creation and reuse, Slack fixture ingestion with tenure metadata, a cited answer, status, namespace deletion, consumer-domain rejection, an empty index, quota, gated Gmail, and a second caller. Each OAuth subject has its own organization, active role, and connection list. A second caller does not see the first caller's domain or chunks.

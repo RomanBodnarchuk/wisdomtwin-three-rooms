@@ -28,9 +28,21 @@ from errors import (
 )
 from generation import EMPTY_CONTEXT, NON_BUSINESS_REFUSAL, answer_from_context, is_non_business
 from oauth_connectors import google_authorize_url, new_pkce, slack_authorize_url
-from retrieval import hybrid_search
-from store import ChunkRecord, current_store, retention_cutoff
+from retrieval import _terms, hybrid_search
+from store import ChunkRecord, actor_subject, current_actor, current_store, retention_cutoff
 from tokens import decrypt_token
+
+
+def bind_actor() -> str:
+    from auth_provider import auth_is_required
+
+    if auth_is_required():
+        from mcp.server.auth.middleware.auth_context import get_access_token
+
+        token = get_access_token()
+        subject = token.subject if token is not None and token.subject else "local"
+        actor_subject.set(subject)
+    return current_actor()
 
 
 def _audit(tool_name: str, *, error_code: str | None = None, organization_id: str | None = None, role_id: str | None = None) -> None:
@@ -43,6 +55,7 @@ def _audit(tool_name: str, *, error_code: str | None = None, organization_id: st
 
 
 def connect_business_account(service: str, domain: str, role_title: str) -> dict:
+    bind_actor()
     store = current_store()
     normalized = normalize_domain(domain)
     reason = domain_rejection_reason(normalized)
@@ -98,6 +111,7 @@ def _require_active_role():
 
 
 def ingest_data(service: str, query: str, max_items: int = 1000) -> dict:
+    bind_actor()
     store = current_store()
     if service in {"gmail", "drive"} and not connector_enabled(service):
         _audit("ingest_data", error_code=OAUTH_PENDING)
@@ -142,6 +156,7 @@ def ingest_data(service: str, query: str, max_items: int = 1000) -> dict:
 
 
 def query_twin(question: str, max_results: int = 10, max_tokens: int = 512) -> dict:
+    bind_actor()
     store = current_store()
     role_id = store.get_active_role_id()
     role = store.get_role(role_id) if role_id else None
@@ -161,6 +176,9 @@ def query_twin(question: str, max_results: int = 10, max_tokens: int = 512) -> d
         limit=max(1, min(max_results, 10)),
     )
     chunks = [item.chunk for item in ranked]
+    question_terms = set(_terms(question))
+    supporting = [chunk for chunk in chunks if question_terms & set(_terms(chunk.excerpt))]
+    chunks = supporting or chunks[:1]
     if not chunks:
         _audit("query_twin", organization_id=organization_id, role_id=role.id)
         return {"answer": EMPTY_CONTEXT, "citations": []}
@@ -172,6 +190,7 @@ def query_twin(question: str, max_results: int = 10, max_tokens: int = 512) -> d
 
 
 def list_twins_status() -> list[dict]:
+    bind_actor()
     store = current_store()
     rows = []
     for connection in store.connections():

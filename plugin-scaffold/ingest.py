@@ -8,6 +8,7 @@ from celery import Celery
 
 from connectors import fetch_drive, fetch_gmail, fetch_slack
 from errors import JOB_NOT_FOUND, CodedToolError
+from mcp.server.mcpserver.exceptions import ToolError
 
 celery_app = Celery(
     "wisdomtwin",
@@ -34,14 +35,18 @@ def run_job(job_id: str):
 
     store.update_job(job.id, status="running", progress=10, chunks_ingested=0)
     token = connector_token(role.id, job.service)
-    if job.service == "slack":
-        items = fetch_slack(token, job.query, job.max_items)
-    elif job.service == "gmail":
-        items = fetch_gmail(token, job.query, job.max_items)
-    elif job.service == "drive":
-        items = fetch_drive(token, job.query, job.max_items)
-    else:
-        items = []
+    try:
+        if job.service == "slack":
+            items = fetch_slack(token, job.query, job.max_items)
+        elif job.service == "gmail":
+            items = fetch_gmail(token, job.query, job.max_items)
+        elif job.service == "drive":
+            items = fetch_drive(token, job.query, job.max_items)
+        else:
+            items = []
+    except Exception:
+        store.update_job(job.id, status="failed", progress=10, chunks_ingested=0)
+        raise ToolError("The business account is not connected for this role.") from None
     store.update_job(job.id, status="running", progress=40, chunks_ingested=0)
     records = build_indexed_chunks(
         role.id,

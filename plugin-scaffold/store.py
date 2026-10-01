@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextvars
 import json
 import math
 import os
@@ -12,6 +13,13 @@ from pathlib import Path
 from typing import Protocol
 
 from domain import EMBEDDING_DIMENSIONS, RETENTION_DAYS
+
+
+actor_subject: contextvars.ContextVar[str] = contextvars.ContextVar("wisdomtwin_actor", default="local")
+
+
+def current_actor() -> str:
+    return actor_subject.get()
 
 
 def _now() -> datetime:
@@ -27,6 +35,7 @@ class Organization:
     id: str
     domain: str
     created_at: datetime
+    subject: str = "local"
 
 
 @dataclass
@@ -97,6 +106,7 @@ class Connection:
     domain: str
     role_title: str
     connected_at: datetime
+    subject: str = "local"
 
 
 class Store(Protocol):
@@ -187,19 +197,21 @@ class MemoryStore:
     connection_rows: list[Connection] = field(default_factory=list)
     secrets: dict[str, dict] = field(default_factory=dict)
     credentials: dict[tuple[str, str], str] = field(default_factory=dict)
-    active_role_id: str | None = None
+    active_roles: dict[str, str] = field(default_factory=dict)
 
     def upsert_organization(self, domain: str) -> Organization:
+        subject = current_actor()
         for org in self.organizations.values():
-            if org.domain == domain:
+            if org.domain == domain and org.subject == subject:
                 return org
-        org = Organization(id=_id(), domain=domain, created_at=_now())
+        org = Organization(id=_id(), domain=domain, created_at=_now(), subject=subject)
         self.organizations[org.id] = org
         return org
 
     def get_organization_by_domain(self, domain: str) -> Organization | None:
+        subject = current_actor()
         for org in self.organizations.values():
-            if org.domain == domain:
+            if org.domain == domain and org.subject == subject:
                 return org
         return None
 
@@ -257,10 +269,10 @@ class MemoryStore:
         return tenure
 
     def set_active_role(self, role_id: str) -> None:
-        self.active_role_id = role_id
+        self.active_roles[current_actor()] = role_id
 
     def get_active_role_id(self) -> str | None:
-        return self.active_role_id
+        return self.active_roles.get(current_actor())
 
     def get_role(self, role_id: str) -> Role | None:
         return self.roles.get(role_id)
@@ -272,6 +284,7 @@ class MemoryStore:
         self.connection_rows = [
             row for row in self.connection_rows if not (row.role_id == role_id and row.service == service)
         ]
+        subject = current_actor()
         self.connection_rows.append(
             Connection(
                 role_id=role_id,
@@ -279,11 +292,13 @@ class MemoryStore:
                 domain=domain,
                 role_title=role_title,
                 connected_at=_now(),
+                subject=subject,
             )
         )
 
     def connections(self) -> list[Connection]:
-        return list(self.connection_rows)
+        subject = current_actor()
+        return [row for row in self.connection_rows if row.subject == subject]
 
     def monthly_chunk_count(self, organization_id: str, when: datetime | None = None) -> int:
         moment = when or _now()
@@ -428,7 +443,7 @@ class PostgresStore:
         self._psycopg = psycopg
         self._register_vector = register_vector
         self._database_url = database_url
-        self._active_role_id: str | None = None
+        self._active_roles: dict[str, str] = {}
         self._ensure_schema()
 
     def _connect(self):
@@ -443,11 +458,43 @@ class PostgresStore:
             connection.autocommit = True
             for statement in _sql_statements(schema):
                 connection.execute(statement)
+            self._migrate_actor_scope(connection)
         finally:
             connection.close()
 
+    def _migrate_actor_scope(self, connection) -> None:
+        connection.execute(
+            "ALTER TABLE organizations ADD COLUMN IF NOT EXISTS subject TEXT NOT NULL DEFAULT 'local'"
+        )
+        connection.execute("ALTER TABLE organizations DROP CONSTRAINT IF EXISTS organizations_domain_key")
+        connection.execute(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS organizations_subject_domain_key
+            ON organizations (subject, domain)
+            """
+        )
+        connection.execute(
+            "ALTER TABLE connections ADD COLUMN IF NOT EXISTS subject TEXT NOT NULL DEFAULT 'local'"
+        )
+        has_subject = connection.execute(
+            """
+            SELECT 1 FROM information_schema.columns
+            WHERE table_schema = 'public' AND table_name = 'active_role' AND column_name = 'subject'
+            """
+        ).fetchone()
+        if not has_subject:
+            connection.execute("DROP TABLE active_role")
+            connection.execute(
+                """
+                CREATE TABLE active_role (
+                    subject TEXT PRIMARY KEY,
+                    role_id UUID NOT NULL REFERENCES roles (id)
+                )
+                """
+            )
+
     def truncate_all(self) -> None:
-        self._active_role_id = None
+        self._active_roles = {}
         with self._connect() as connection:
             connection.execute(
                 """
@@ -472,25 +519,28 @@ class PostgresStore:
         with self._connect() as connection:
             row = connection.execute(
                 """
-                INSERT INTO organizations (id, domain)
-                VALUES (%s, %s)
-                ON CONFLICT (domain) DO UPDATE SET domain = EXCLUDED.domain
-                RETURNING id, domain, created_at
+                INSERT INTO organizations (id, subject, domain)
+                VALUES (%s, %s, %s)
+                ON CONFLICT (subject, domain) DO UPDATE SET domain = EXCLUDED.domain
+                RETURNING id, domain, created_at, subject
                 """,
-                (_id(), domain),
+                (_id(), current_actor(), domain),
             ).fetchone()
             connection.commit()
-        return Organization(id=str(row[0]), domain=row[1], created_at=row[2])
+        return Organization(id=str(row[0]), domain=row[1], created_at=row[2], subject=row[3])
 
     def get_organization_by_domain(self, domain: str) -> Organization | None:
         with self._connect() as connection:
             row = connection.execute(
-                "SELECT id, domain, created_at FROM organizations WHERE domain = %s",
-                (domain,),
+                """
+                SELECT id, domain, created_at, subject
+                FROM organizations WHERE domain = %s AND subject = %s
+                """,
+                (domain, current_actor()),
             ).fetchone()
         if not row:
             return None
-        return Organization(id=str(row[0]), domain=row[1], created_at=row[2])
+        return Organization(id=str(row[0]), domain=row[1], created_at=row[2], subject=row[3])
 
     def ensure_officeholder(self, organization_id: str) -> Person:
         with self._connect() as connection:
@@ -575,21 +625,32 @@ class PostgresStore:
         return tenure
 
     def set_active_role(self, role_id: str) -> None:
-        self._active_role_id = role_id
+        subject = current_actor()
+        self._active_roles[subject] = role_id
         with self._connect() as connection:
-            connection.execute("DELETE FROM active_role")
-            connection.execute("INSERT INTO active_role (role_id) VALUES (%s)", (role_id,))
+            connection.execute(
+                """
+                INSERT INTO active_role (subject, role_id) VALUES (%s, %s)
+                ON CONFLICT (subject) DO UPDATE SET role_id = EXCLUDED.role_id
+                """,
+                (subject, role_id),
+            )
             connection.commit()
 
     def get_active_role_id(self) -> str | None:
-        if self._active_role_id:
-            return self._active_role_id
+        subject = current_actor()
+        cached = self._active_roles.get(subject)
+        if cached:
+            return cached
         with self._connect() as connection:
-            row = connection.execute("SELECT role_id FROM active_role LIMIT 1").fetchone()
+            row = connection.execute(
+                "SELECT role_id FROM active_role WHERE subject = %s",
+                (subject,),
+            ).fetchone()
         if not row:
             return None
-        self._active_role_id = str(row[0])
-        return self._active_role_id
+        self._active_roles[subject] = str(row[0])
+        return self._active_roles[subject]
 
     def get_role(self, role_id: str) -> Role | None:
         with self._connect() as connection:
@@ -618,22 +679,36 @@ class PostgresStore:
         with self._connect() as connection:
             connection.execute(
                 """
-                INSERT INTO connections (id, role_id, service, domain, role_title)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO connections (id, role_id, service, domain, role_title, subject)
+                VALUES (%s, %s, %s, %s, %s, %s)
                 ON CONFLICT (role_id, service) DO UPDATE
-                SET domain = EXCLUDED.domain, role_title = EXCLUDED.role_title, connected_at = now()
+                SET domain = EXCLUDED.domain,
+                    role_title = EXCLUDED.role_title,
+                    subject = EXCLUDED.subject,
+                    connected_at = now()
                 """,
-                (_id(), role_id, service, domain, role_title),
+                (_id(), role_id, service, domain, role_title, current_actor()),
             )
             connection.commit()
 
     def connections(self) -> list[Connection]:
         with self._connect() as connection:
             rows = connection.execute(
-                "SELECT role_id, service, domain, role_title, connected_at FROM connections ORDER BY connected_at"
+                """
+                SELECT role_id, service, domain, role_title, connected_at, subject
+                FROM connections WHERE subject = %s ORDER BY connected_at
+                """,
+                (current_actor(),),
             ).fetchall()
         return [
-            Connection(role_id=str(row[0]), service=row[1], domain=row[2], role_title=row[3], connected_at=row[4])
+            Connection(
+                role_id=str(row[0]),
+                service=row[1],
+                domain=row[2],
+                role_title=row[3],
+                connected_at=row[4],
+                subject=row[5],
+            )
             for row in rows
         ]
 

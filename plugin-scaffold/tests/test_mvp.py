@@ -127,6 +127,37 @@ def test_query_returns_an_answer_with_a_citation():
     assert all(item["uri"] != other.uri for item in citations)
 
 
+def test_another_caller_does_not_see_the_role():
+    from store import actor_subject
+
+    connected = as_json(
+        call(
+            "connect_business_account",
+            {"service": "slack", "domain": "example-corp.com", "role_title": "CRO"},
+        )
+    )
+    call("ingest_data", {"service": "slack", "query": "pipeline", "max_items": 10})
+    token = actor_subject.set("other-caller")
+    try:
+        hidden = call("query_twin", {"question": "What is the Acme pipeline stage?"})
+        assert hidden.content[0].text == "I have nothing ingested on that."
+        assert not any("example-corp.com" in block.text for block in call("list_twins_status", {}).content)
+        other = as_json(
+            call(
+                "connect_business_account",
+                {"service": "slack", "domain": "other-corp.example", "role_title": "VP of Sales"},
+            )
+        )
+        assert other["role_id"] != connected["role_id"]
+        listed = [json.loads(block.text) for block in call("list_twins_status", {}).content]
+        assert len(listed) == 1
+        assert listed[0]["domain"] == "other-corp.example"
+        assert listed[0]["role_title"] == "VP of Sales"
+        assert current_store().get_organization_by_domain("example-corp.com") is None
+    finally:
+        actor_subject.reset(token)
+
+
 def test_status_lists_role_and_domain():
     call(
         "connect_business_account",

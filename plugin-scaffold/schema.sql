@@ -7,8 +7,10 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 CREATE TABLE IF NOT EXISTS organizations (
     id UUID PRIMARY KEY,
-    domain TEXT NOT NULL UNIQUE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    subject TEXT NOT NULL DEFAULT 'local',
+    domain TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (subject, domain)
 );
 
 CREATE TABLE IF NOT EXISTS persons (
@@ -87,12 +89,14 @@ CREATE TABLE IF NOT EXISTS connections (
     service TEXT NOT NULL,
     domain TEXT NOT NULL,
     role_title TEXT NOT NULL,
+    subject TEXT NOT NULL DEFAULT 'local',
     connected_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (role_id, service)
 );
 
 CREATE TABLE IF NOT EXISTS active_role (
-    role_id UUID PRIMARY KEY REFERENCES roles (id)
+    subject TEXT PRIMARY KEY,
+    role_id UUID NOT NULL REFERENCES roles (id)
 );
 
 CREATE TABLE IF NOT EXISTS oauth_transactions (
