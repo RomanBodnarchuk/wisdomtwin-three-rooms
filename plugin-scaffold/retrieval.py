@@ -9,8 +9,43 @@ from dataclasses import dataclass
 from store import ChunkRecord, Store
 
 
+_STOPWORDS = {
+    "the",
+    "and",
+    "for",
+    "with",
+    "that",
+    "this",
+    "from",
+    "what",
+    "who",
+    "how",
+    "why",
+    "when",
+    "where",
+    "which",
+    "are",
+    "was",
+    "were",
+    "does",
+    "did",
+    "about",
+    "into",
+    "over",
+    "than",
+    "then",
+    "its",
+    "been",
+    "being",
+}
+
+
 def _terms(text: str) -> list[str]:
-    return [token for token in re.findall(r"[a-z0-9]+", text.lower()) if len(token) > 2]
+    return [
+        token
+        for token in re.findall(r"[a-z0-9]+", text.lower())
+        if len(token) > 2 and token not in _STOPWORDS
+    ]
 
 
 def _cosine(left: list[float], right: list[float]) -> float:

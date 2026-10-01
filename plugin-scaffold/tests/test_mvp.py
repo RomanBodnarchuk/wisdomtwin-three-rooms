@@ -125,6 +125,9 @@ def test_query_returns_an_answer_with_a_citation():
     assert citations
     assert all("uri" in item and "snippet" in item for item in citations)
     assert all(item["uri"] != other.uri for item in citations)
+    assert any(item["uri"].endswith("/p1001") for item in citations)
+    assert all("Northwind" not in item["snippet"] for item in citations)
+    assert "Northwind" not in result.content[0].text
 
 
 def test_another_caller_does_not_see_the_role():
