@@ -44,7 +44,7 @@ def run_job(job_id: str, subject: str | None = None):
 
 
 def _run_claimed_job(store, job):
-    from service import build_indexed_chunks, connector_token
+    from service import build_indexed_chunks, connector_token, source_rate_context
     from domain import connector_enabled, MONTHLY_CHUNK_QUOTA
     from errors import OAUTH_PENDING, CONNECTOR_FAILED
 
@@ -60,7 +60,8 @@ def _run_claimed_job(store, job):
         fetcher = {"slack": fetch_slack, "gmail": fetch_gmail, "drive": fetch_drive}.get(job.service)
         if fetcher is None:
             raise CodedToolError(CONNECTOR_FAILED, "Unsupported source provider.")
-        items = fetcher(token, job.query, job.max_items)
+        with source_rate_context(job.service):
+            items = fetcher(token, job.query, job.max_items)
         store.update_job(job.id, status="running", progress=40, chunks_ingested=0)
         remaining = MONTHLY_CHUNK_QUOTA - store.monthly_chunk_count(role.organization_id)
         records = build_indexed_chunks(role.id, tenure.id, tenure.person_id, job.service,

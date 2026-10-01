@@ -185,6 +185,7 @@ class Store(Protocol):
     def pop_secret(self, key: str) -> dict | None: ...
     def save_credential(self, role_id: str, service: str, ciphertext: str) -> None: ...
     def get_credential(self, role_id: str, service: str) -> str | None: ...
+    def replace_credential(self, role_id: str, service: str, expected: str, replacement: str) -> bool: ...
     def role_count_for_domain(self, domain: str) -> int: ...
     def open_tenure_count(self, role_id: str) -> int: ...
 
@@ -563,6 +564,25 @@ class MemoryStore:
 
     def get_credential(self, role_id: str, service: str) -> str | None:
         return self.credentials.get((role_id, service))
+
+    @contextmanager
+    def credential_lock(self, role_id: str, service: str):
+        with self.lock:
+            lock = self.__dict__.setdefault("_credential_locks", {}).setdefault((role_id, service), threading.Lock())
+        acquired = lock.acquire(blocking=False)
+        try:
+            yield acquired
+        finally:
+            if acquired:
+                lock.release()
+
+    def replace_credential(self, role_id: str, service: str, expected: str, replacement: str) -> bool:
+        with self.lock:
+            _require_role(self, role_id)
+            if self.credentials.get((role_id, service)) != expected:
+                return False
+            self.credentials[(role_id, service)] = replacement
+            return True
 
     def role_count_for_domain(self, domain: str) -> int:
         org = self.get_organization_by_domain(domain)
@@ -1270,6 +1290,25 @@ class PostgresStore:
             return None
         return row[0]
 
+    @contextmanager
+    def credential_lock(self, role_id: str, service: str):
+        with self._connect() as connection:
+            key = f"connector:{role_id}:{service}"
+            acquired = connection.execute("SELECT pg_try_advisory_lock(hashtextextended(%s,0))", (key,)).fetchone()[0]
+            try:
+                yield bool(acquired)
+            finally:
+                if acquired:
+                    connection.execute("SELECT pg_advisory_unlock(hashtextextended(%s,0))", (key,))
+
+    def replace_credential(self, role_id: str, service: str, expected: str, replacement: str) -> bool:
+        with self._connect() as connection:
+            changed = connection.execute("""UPDATE connector_credentials SET token_ciphertext=%s
+                WHERE role_id=%s AND service=%s AND token_ciphertext=%s""",
+                (replacement, role_id, service, expected)).rowcount
+            connection.commit()
+        return changed == 1
+
     def role_count_for_domain(self, domain: str) -> int:
         org = self.get_organization_by_domain(domain)
         if not org:
@@ -1317,7 +1356,7 @@ for _store_type in (MemoryStore, PostgresStore):
     for _name in ("ensure_officeholder", "find_role", "create_role", "monthly_chunk_count"):
         setattr(_store_type, _name, _guard_scope(getattr(_store_type, _name), "organization"))
     for _name in ("find_open_tenure", "open_tenure", "set_active_role", "record_connection",
-                  "touch_role", "delete_namespace", "save_credential", "get_credential",
+                  "touch_role", "delete_namespace", "save_credential", "get_credential", "replace_credential", "credential_lock",
                   "create_job", "open_tenure_count"):
         setattr(_store_type, _name, _guard_scope(getattr(_store_type, _name), "role"))
 

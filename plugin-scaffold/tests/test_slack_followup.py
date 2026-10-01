@@ -112,20 +112,20 @@ def test_deleted_slack_thread_alone_abstains_exactly(monkeypatch, thread_referen
 
 
 @pytest.mark.parametrize("thread_reference", [True, False], ids=["explicit-thread", "history-fallback"])
-def test_reply_provider_outage_is_a_coded_failure_without_partial_evidence(monkeypatch, thread_reference):
+def test_reply_provider_outage_reports_partial_coverage_with_verified_evidence(monkeypatch, thread_reference):
     failed = {"uri": deleted_uri(thread_reference), "text": "Acme pipeline unavailable thread data",
         "author_provider_id": "AUTHOR_DELETED"}
-    # Valid evidence is hydrated first; a later outage must not return it as a
-    # partial answer or classify the unavailable thread as permanently deleted.
+    # Healthy evidence remains useful, but an outage must stay visible and must
+    # never be classified as a deletion or supply an unverified citation.
     indexed_sources(monkeypatch, [VALID_SOURCE, failed])
     requested = []
     monkeypatch.setattr(connectors, "_request_json", thread_response("internal_error", requested))
-    monkeypatch.setattr(service, "answer_from_context", lambda *args: pytest.fail("Outage must prevent evidence output"))
-    with pytest.raises(CodedToolError, match="CONNECTOR_FAILED") as caught:
-        service.query_twin("Acme pipeline stage")
-    assert "retry" in str(caught.value).lower()
-    assert VALID_SOURCE["text"] not in str(caught.value)
-    assert "unavailable thread data" not in str(caught.value)
+    result = service.query_twin("Acme pipeline stage")
+    assert "partial source coverage" in result["answer"].lower()
+    assert "retry" in result["answer"].lower()
+    assert VALID_SOURCE["text"] in result["answer"]
+    assert "unavailable thread data" not in result["answer"]
+    assert [item["uri"] for item in result["citations"]] == [VALID_URI]
     assert ("CDELETED", "/api/conversations.replies") in requested
 
 
@@ -201,7 +201,7 @@ def test_repeated_429_retries_only_once_and_preserves_retry_guidance(monkeypatch
 @pytest.mark.parametrize("retry_headers,expected_delay,expected_waits", [
     (["60"], 60, []), (["1", "1"], 1, [1]),
 ], ids=["excessive-delay", "repeated-429"])
-def test_rate_limit_failure_has_safe_guidance_and_returns_no_evidence(monkeypatch, offline_clock_and_requests,
+def test_rate_limit_failure_has_safe_guidance_and_only_verified_evidence(monkeypatch, offline_clock_and_requests,
     retry_headers, expected_delay, expected_waits):
     failed = {"uri": deleted_uri(True), "text": "Acme pipeline rate-limited thread data",
         "author_provider_id": "AUTHOR_DELETED"}
@@ -219,13 +219,13 @@ def test_rate_limit_failure_has_safe_guidance_and_returns_no_evidence(monkeypatc
         raise pending.pop(0)
 
     monkeypatch.setattr("urllib.request.urlopen", urlopen)
-    monkeypatch.setattr(service, "answer_from_context", lambda *args: pytest.fail("429 must prevent evidence output"))
-    with pytest.raises(CodedToolError, match="CONNECTOR_FAILED") as caught:
-        service.query_twin("Acme pipeline stage")
-    error = str(caught.value).lower()
-    assert "retry" in error and str(expected_delay) in error
-    assert VALID_SOURCE["text"].lower() not in error
-    assert failed["text"].lower() not in error
+    result = service.query_twin("Acme pipeline stage")
+    answer = result["answer"].lower()
+    assert "partial source coverage" in answer
+    assert "retry" in answer and str(expected_delay) in answer
+    assert VALID_SOURCE["text"].lower() in answer
+    assert failed["text"].lower() not in answer
+    assert [item["uri"] for item in result["citations"]] == [VALID_URI]
     assert requested[0] == "CVALID" and len(requested) == 1 + len(retry_headers)
     assert offline_clock_and_requests == expected_waits
     assert all(record.excerpt == "" for record in store.chunks_for_role(role.id))

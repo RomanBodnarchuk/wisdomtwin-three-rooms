@@ -236,8 +236,13 @@ def test_deletion_removes_tokens_connections_jobs_active_role_and_pending_state(
     assert store.connections() == []
     assert store.get_job(job_id) is None
     assert store.get_active_role_id() is None
-    assert not store.secrets
-    assert not store.credentials
+    if hasattr(store, "secrets"):
+        assert not store.secrets
+        assert not store.credentials
+    else:
+        with store._connect() as db:
+            for table in ("oauth_transactions", "connector_credentials"):
+                assert db.execute(f"SELECT count(*) FROM {table} WHERE role_id=%s", (role_id,)).fetchone()[0] == 0
     from ingest import run_job
     with pytest.raises(CodedToolError, match="JOB_NOT_FOUND"):
         run_job(job_id)

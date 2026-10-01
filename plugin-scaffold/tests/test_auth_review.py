@@ -449,4 +449,11 @@ def test_in_flight_callback_cannot_restore_credential_after_namespace_deletion(c
         current_store().delete_namespace(pending["role_id"])
         with pytest.raises((ValueError, CodedToolError)):
             provider_binding.bind_slack(verified_pending, verified_member, slack_body())
-    assert current_store().credentials == {}
+    store = current_store()
+    assert store.get_role(pending["role_id"]) is None
+    if hasattr(store, "credentials"):
+        assert store.credentials == {}
+    else:
+        with store._connect() as db:
+            assert db.execute("SELECT count(*) FROM connector_credentials WHERE role_id=%s",
+                              (pending["role_id"],)).fetchone()[0] == 0

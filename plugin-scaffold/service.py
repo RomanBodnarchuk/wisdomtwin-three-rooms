@@ -5,8 +5,9 @@ from __future__ import annotations
 import os
 import secrets
 import json
-import time
 import hashlib
+import math
+from contextlib import nullcontext
 from dataclasses import replace
 import uuid
 import contextvars
@@ -14,7 +15,7 @@ from functools import wraps
 from datetime import date, datetime, timezone
 
 from chunking import chunk_text
-from connectors import fetch_drive, fetch_gmail, fetch_slack, use_fixtures
+from connectors import use_fixtures
 from domain import (
     COMING_SOON,
     MONTHLY_CHUNK_QUOTA,
@@ -37,7 +38,6 @@ from generation import EMPTY_CONTEXT, NON_BUSINESS_REFUSAL, answer_from_context,
 from oauth_connectors import google_authorize_url, new_pkce, slack_authorize_url, public_base_url
 from retrieval import _terms, hybrid_search
 from store import ChunkRecord, actor_subject, current_actor, current_store, retention_cutoff
-from tokens import decrypt_token
 from safety import unsafe_text
 
 _call_audited = contextvars.ContextVar("wisdomtwin_call_audited", default=False)
@@ -185,6 +185,9 @@ def ingest_data(service: str, query: str, max_items: int = 1000) -> dict:
             QUOTA_EXCEEDED,
             f"max_items exceeds the free-tier monthly quota of {MONTHLY_CHUNK_QUOTA} chunks.",
         )
+    if not use_fixtures():
+        # Surface reconnect before returning a queued job which cannot authenticate.
+        connector_token(role.id, service)
     job = store.create_job(role.id, service, query, max_items)
     _audit("ingest_data", organization_id=role.organization_id, role_id=role.id)
     if os.environ.get("REDIS_URL", "").strip():
@@ -228,12 +231,16 @@ def query_twin(question: str, max_results: int = 10, max_tokens: int = 512) -> d
     ranked = hybrid_search(store, role_id=role.id, question=question, embedding=embedding,
                            limit=max(1, min(max_results, 10)))
     chunks = [item.chunk for item in ranked]
+    source_failures = []
     if not use_fixtures():
         chunks = hydrate_sources(chunks)
+        source_failures = chunks.failures
     question_terms = set(_terms(question))
     supporting = [chunk for chunk in chunks if question_terms & set(_terms(chunk.excerpt)) and not unsafe_text(chunk.excerpt)]
     chunks = supporting
     if not chunks:
+        if source_failures:
+            raise source_failures[0]
         _audit("query_twin", organization_id=organization_id, role_id=role.id)
         return {"answer": EMPTY_CONTEXT, "citations": []}
     chunks = chunks[:3]
@@ -241,7 +248,12 @@ def query_twin(question: str, max_results: int = 10, max_tokens: int = 512) -> d
     # Citation snippets contain every returned excerpt, including chunk offsets.
     answer = answer_from_context(question, chunks, max(32, min(max_tokens, 2048)))
     if answer == EMPTY_CONTEXT:
+        if source_failures:
+            raise source_failures[0]
         chunks = []
+    elif source_failures:
+        guidance = " ".join(dict.fromkeys(error.detail for error in source_failures))
+        answer += "\n\nPartial source coverage: some selected sources could not be revalidated. " + guidance
     citations = [{"uri": chunk.uri, "snippet": chunk.excerpt, "trust": "untrusted_source_data"} for chunk in chunks]
     store.touch_role(role.id)
     _audit("query_twin", organization_id=organization_id, role_id=role.id)
@@ -317,21 +329,26 @@ def sweep_expired(now: datetime | None = None) -> int:
 def connector_token(role_id: str, service: str) -> str:
     if use_fixtures() and service == "slack":
         return ""
-    ciphertext = current_store().get_credential(role_id, service)
-    if not ciphertext:
-        return ""
-    payload = json.loads(decrypt_token(ciphertext))
-    if payload.get("subject") != current_actor() or payload.get("role_id") != role_id or payload.get("service") != service or payload.get("expires_at", 0) <= time.time():
-        return ""
-    from security_store import require_membership
-    role = current_store().get_role(role_id)
-    org = current_store().get_organization(role.organization_id)
-    member = require_membership(current_actor(), org.domain, role.title)
-    if service == "slack" and (payload.get("team_id") != member["slack_team_id"] or payload.get("user_id") != member["slack_user_id"]):
-        return ""
-    if service in {"gmail", "drive"} and payload.get("provider_subject") != member["google_subject"]:
-        return ""
-    return payload["access_token"]
+    from provider_lifecycle import resolve_connector_token
+
+    return resolve_connector_token(role_id, service)
+
+
+def source_rate_context(service: str):
+    """Provider limits apply to the app/workspace/method, across bound user grants."""
+    if service != "slack" or use_fixtures():
+        return nullcontext()
+    from connectors import slack_rate_context
+    from security_store import security_store
+    from auth_provider import auth_is_required
+
+    member = security_store().membership(current_actor())
+    app_id = os.environ.get("SLACK_CLIENT_ID", "").strip()
+    if member and member.get("slack_team_id") and app_id:
+        return slack_rate_context(team_id=member["slack_team_id"], app_id=app_id)
+    if auth_is_required():
+        raise CodedToolError(AUTHORIZATION_REQUIRED, "Verified Slack workspace and app binding are required.")
+    return nullcontext()  # Explicit loopback mocks have no real provider membership.
 
 
 def build_indexed_chunks(role_id: str, tenure_id: str, author_person_id: str, service: str,
@@ -370,38 +387,75 @@ def build_indexed_chunks(role_id: str, tenure_id: str, author_person_id: str, se
     return records
 
 
-def hydrate_sources(records: list[ChunkRecord]) -> list[ChunkRecord]:
-    """Re-fetch text with the current user's token and discard changed/inaccessible sources."""
-    from connectors import refetch_slack, refetch_google, SourceUnavailable, SourceRateLimited
+class HydratedSources(list):
+    def __init__(self, records, failures):
+        super().__init__(records)
+        self.failures = failures
+
+
+def hydrate_sources(records: list[ChunkRecord]) -> HydratedSources:
+    """Revalidate current grants and evidence; keep temporary failures observable."""
+    from connectors import refetch_slack_batch, refetch_google, SourceUnavailable, SourceRateLimited, SourceRevalidationIncomplete
     from errors import CONNECTOR_FAILED
 
     hydrated = []
-    cache: dict[tuple[str, str], dict | None] = {}
+    failures = []
+    eligible = []
+    groups: dict[tuple[str, str], list[str]] = {}
+    cache: dict[tuple[str, str, str], dict | None | Exception] = {}
     for record in records:
         # Legacy records containing raw excerpts are never returned in production.
         if record.excerpt or not record.source_uri or not record.source_hash or not connector_enabled(record.service):
             continue
-        key = (record.service, record.source_uri)
-        if key not in cache:
-            token = connector_token(record.role_id, record.service)
+        eligible.append(record)
+        groups.setdefault((record.role_id, record.service), []).append(record.source_uri)
+    for (role_id, service), uris in groups.items():
+        uris = list(dict.fromkeys(uris))
+        try:
+            token = connector_token(role_id, service)
             if not token:
                 continue
-            try:
-                cache[key] = refetch_slack(token, record.source_uri) if record.service == "slack" else refetch_google(token, record.service, record.source_uri)
-            except SourceUnavailable:
+            with source_rate_context(service):
+                if service == "slack":
+                    sources = refetch_slack_batch(token, uris)
+                else:
+                    sources = {}
+                    for uri in uris:
+                        try:
+                            sources[uri] = refetch_google(token, service, uri)
+                        except Exception as exc:
+                            sources[uri] = exc
+        except CodedToolError as exc:
+            if exc.code == AUTHORIZATION_REQUIRED:
+                raise
+            sources = dict.fromkeys(uris, exc)
+        except Exception as exc:
+            sources = dict.fromkeys(uris, exc)
+        for uri, source in sources.items():
+            key = (role_id, service, uri)
+            if isinstance(source, SourceUnavailable):
                 cache[key] = None
-            except SourceRateLimited as exc:
-                import math
-
-                _audit("query_twin", error_code=CONNECTOR_FAILED, role_id=record.role_id)
-                guidance = (f"Retry after at least {math.ceil(exc.retry_after_seconds)} seconds."
-                            if exc.retry_after_seconds is not None else "Retry after the provider's rate limit clears.")
-                raise CodedToolError(CONNECTOR_FAILED, f"Source provider is rate limited. {guidance}") from None
-            except Exception:
-                _audit("query_twin", error_code=CONNECTOR_FAILED, role_id=record.role_id)
-                raise CodedToolError(CONNECTOR_FAILED, "Source revalidation failed. Retry after the provider recovers.") from None
+            elif isinstance(source, Exception):
+                if isinstance(source, SourceRateLimited):
+                    delay = source.retry_after_seconds
+                    guidance = (f"Retry after at least {math.ceil(delay)} seconds."
+                                if delay is not None and math.isfinite(delay) and delay >= 0
+                                else "Retry after the provider's rate limit clears.")
+                    failure = CodedToolError(CONNECTOR_FAILED, "Source provider is rate limited. " + guidance)
+                elif isinstance(source, SourceRevalidationIncomplete):
+                    failure = CodedToolError(CONNECTOR_FAILED, "A bounded source page did not cover every selected message. Retry later or narrow the question.")
+                elif isinstance(source, CodedToolError):
+                    failure = source
+                else:
+                    failure = CodedToolError(CONNECTOR_FAILED, "Source revalidation failed. Retry after the provider recovers.")
+                failures.append(failure)
+                cache[key] = None
+            else:
+                cache[key] = source
+    for record in eligible:
+        key = (record.role_id, record.service, record.source_uri)
         source = cache.get(key)
-        if not source or unsafe_text(source["text"]):
+        if not isinstance(source, dict) or not isinstance(source.get("text"), str) or unsafe_text(source["text"]):
             continue
         role = current_store().get_role(record.role_id)
         if role is None:
@@ -416,4 +470,6 @@ def hydrate_sources(records: list[ChunkRecord]) -> list[ChunkRecord]:
         if hashlib.sha256(excerpt.encode()).hexdigest() != record.source_hash:
             continue
         hydrated.append(replace(record, excerpt=excerpt))
-    return hydrated
+    if failures:
+        _audit("query_twin", error_code=failures[0].code)
+    return HydratedSources(hydrated, failures)

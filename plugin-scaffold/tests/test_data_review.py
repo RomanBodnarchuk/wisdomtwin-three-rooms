@@ -65,7 +65,12 @@ def test_metadata_index_keeps_only_hashes_vectors_and_real_author():
     assert record.keyword_hashes and all(len(value) == 64 for value in record.keyword_hashes)
     assert record.tenure_id == tenure.id
     assert record.author_person_id != tenure.person_id
-    assert store.persons[record.author_person_id].organization_id == org.id
+    if hasattr(store, "persons"):
+        assert store.persons[record.author_person_id].organization_id == org.id
+    else:
+        with store._connect() as db:
+            assert str(db.execute("SELECT organization_id FROM persons WHERE id=%s",
+                                  (record.author_person_id,)).fetchone()[0]) == org.id
     assert store.keyword_search(role.id, ["acme"], 1)[0].id == record.id
 
 
@@ -115,7 +120,12 @@ def test_missing_current_grant_never_refetches_or_uses_cached_evidence(monkeypat
 
 def test_legacy_raw_excerpt_is_not_returned_in_real_source_mode(monkeypatch):
     store, org, role, tenure, records = indexed_source()
-    store.chunks[records[0].id].excerpt = SOURCE["text"]
+    if hasattr(store, "chunks"):
+        store.chunks[records[0].id].excerpt = SOURCE["text"]
+    else:
+        with store._connect() as db:
+            db.execute("UPDATE chunks SET excerpt=%s WHERE id=%s", (SOURCE["text"], records[0].id))
+            db.commit()
     enable_mock_source_queries(monkeypatch)
     monkeypatch.setattr(connectors, "refetch_slack", lambda *args: pytest.fail("Legacy text must be excluded"))
     assert service.query_twin("Acme pipeline stage") == {
@@ -222,6 +232,12 @@ def test_old_month_source_replacement_cannot_expand_a_full_current_quota(monkeyp
     store, org, role, tenure, records = indexed_source()
     old = records[0]
     old.created_at = datetime.now(timezone.utc).replace(day=1) - timedelta(days=1)
+    if not hasattr(store, "chunks"):
+        # Production deliberately uses database insertion time. Backdate only
+        # this synthetic fixture instead of changing production quota accounting.
+        with store._connect() as db:
+            db.execute("UPDATE chunks SET created_at=%s WHERE id=%s", (old.created_at, old.id))
+            db.commit()
     for suffix in ("A", "B"):
         store.upsert_chunks([replace(old, id=str(uuid.uuid4()), uri=SLACK_URI + suffix,
             source_uri=SLACK_URI + suffix, created_at=datetime.now(timezone.utc))])

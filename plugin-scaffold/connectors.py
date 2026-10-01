@@ -5,7 +5,10 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 import time
+import contextvars
+from contextlib import contextmanager
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -16,6 +19,7 @@ FIXTURE_PATH = Path(__file__).resolve().parent / "fixtures" / "slack" / "message
 MAX_RATE_LIMIT_WAIT_SECONDS = 2
 SLACK_UNAVAILABLE_ERRORS = frozenset({"message_not_found", "thread_not_found", "channel_not_found",
     "not_in_channel", "token_revoked", "account_inactive", "invalid_auth", "missing_scope", "access_denied"})
+_slack_rate_scope = contextvars.ContextVar("wisdomtwin_slack_rate_scope", default=None)
 
 
 class SourceUnavailable(RuntimeError):
@@ -28,6 +32,43 @@ class SourceRateLimited(RuntimeError):
     def __init__(self, retry_after_seconds: float | None) -> None:
         self.retry_after_seconds = retry_after_seconds
         super().__init__("Source provider is rate limited")
+
+
+class SourceRevalidationIncomplete(RuntimeError):
+    """A bounded page did not establish whether a selected source still exists."""
+
+
+@contextmanager
+def slack_rate_context(*, team_id: str, app_id: str):
+    """Use the verified workspace and configured app, never a user's access token."""
+    if not all(isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", value)
+               for value in (team_id, app_id)):
+        raise ValueError("Verified Slack workspace and app identifiers are required")
+    marker = _slack_rate_scope.set((team_id, app_id))
+    try:
+        yield
+    finally:
+        _slack_rate_scope.reset(marker)
+
+
+def _slack_rate_key(url: str) -> tuple[str, float] | None:
+    scope = _slack_rate_scope.get()
+    parsed = urllib.parse.urlsplit(url)
+    if not scope or parsed.scheme != "https" or parsed.netloc != "slack.com":
+        return None
+    method = parsed.path.removeprefix("/api/")
+    if method == "search.messages":
+        interval = 3.0  # Tier 2: conservative 20 requests/minute.
+    elif method in {"conversations.history", "conversations.replies"}:
+        rate_class = os.environ.get("SLACK_HISTORY_RATE_CLASS", "restricted").strip().lower()
+        if rate_class not in {"restricted", "tier3"}:
+            raise ValueError("Slack history rate class must be explicitly configured")
+        # Tier 3 is an operator assertion of Marketplace/internal/exempt eligibility.
+        # Qualifying commercial non-Marketplace apps default to one request/minute.
+        interval = 60.0 if rate_class == "restricted" else 1.2
+    else:
+        return None
+    return json.dumps([scope[1], scope[0], method]), interval
 
 
 def _retry_after_seconds(value: str | None) -> float | None:
@@ -63,6 +104,13 @@ def load_slack_fixtures(max_items: int) -> list[dict[str, str]]:
 
 
 def _request_json(url: str, token: str) -> dict:
+    rate = _slack_rate_key(url)
+    if rate:
+        from security_store import security_store
+
+        delay = security_store().reserve_provider_request(*rate)
+        if delay:
+            raise SourceRateLimited(delay)
     request = urllib.request.Request(
         url,
         headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
@@ -70,14 +118,22 @@ def _request_json(url: str, token: str) -> dict:
     for attempt in range(2):
         try:
             with urllib.request.urlopen(request, timeout=30) as response:
-                return json.loads(response.read().decode("utf-8"))
+                body = json.loads(response.read().decode("utf-8"))
+            if rate:
+                security_store().extend_provider_cooldown(rate[0], rate[1])
+            return body
         except urllib.error.HTTPError as exc:
             if exc.code == 429:
                 delay = _retry_after_seconds(exc.headers.get("Retry-After") if exc.headers else None)
                 exc.close()
+                if rate and delay is not None:
+                    security_store().extend_provider_cooldown(rate[0], delay)
                 if attempt == 0 and delay is not None and delay <= MAX_RATE_LIMIT_WAIT_SECONDS:
                     time.sleep(delay)
                     continue
+                if rate:
+                    remaining = security_store().reserve_provider_request(*rate)
+                    delay = max(delay or 0, remaining)
                 raise SourceRateLimited(delay) from None
             if exc.code in {401, 403, 404}:
                 raise SourceUnavailable("Source access is unavailable") from None
@@ -114,10 +170,7 @@ def fetch_slack(token: str, query: str, max_items: int) -> list[dict[str, str]]:
     return items
 
 
-def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
-    """Revalidate message access with this user's grant; never fetch arbitrary URLs."""
-    import re
-
+def _slack_reference(uri: str) -> tuple[str, str, str]:
     parsed = urllib.parse.urlsplit(uri)
     if parsed.scheme != "https" or not parsed.hostname or not parsed.hostname.endswith(".slack.com") or parsed.username:
         raise ValueError("Invalid Slack reference")
@@ -126,10 +179,16 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
         raise ValueError("Invalid Slack message reference")
     channel, compact_ts = match.groups()
     ts = compact_ts[:-6] + "." + compact_ts[-6:]
-    params = urllib.parse.urlencode({"channel": channel, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
     thread_ts = urllib.parse.parse_qs(parsed.query).get("thread_ts", [""])[0]
     if thread_ts and not re.fullmatch(r"[0-9]+\.[0-9]{6}", thread_ts):
         raise ValueError("Invalid Slack thread reference")
+    return channel, ts, thread_ts
+
+
+def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
+    """Revalidate message access with this user's grant; never fetch arbitrary URLs."""
+    channel, ts, thread_ts = _slack_reference(uri)
+    params = urllib.parse.urlencode({"channel": channel, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
     if thread_ts:
         params = urllib.parse.urlencode({"channel": channel, "ts": thread_ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
     body = _request_json("https://slack.com/api/" + ("conversations.replies?" if thread_ts else "conversations.history?") + params, token)
@@ -140,6 +199,8 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
     for message in body.get("messages", []):
         if message.get("ts") == ts and message.get("text") and message.get("user"):
             return {"uri": uri, "text": message["text"], "author_provider_id": message["user"]}
+    if body.get("has_more") or (body.get("response_metadata") or {}).get("next_cursor"):
+        raise SourceRevalidationIncomplete("Current source page is incomplete")
     if not thread_ts:
         params = urllib.parse.urlencode({"channel": channel, "ts": ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
         body = _request_json("https://slack.com/api/conversations.replies?" + params, token)
@@ -150,7 +211,73 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
         for message in body.get("messages", []):
             if message.get("ts") == ts and message.get("text") and message.get("user"):
                 return {"uri": uri, "text": message["text"], "author_provider_id": message["user"]}
+        if body.get("has_more") or (body.get("response_metadata") or {}).get("next_cursor"):
+            raise SourceRevalidationIncomplete("Current source page is incomplete")
     return None
+
+
+def refetch_slack_batch(token: str, uris: list[str]) -> dict[str, dict | None | Exception]:
+    """One bounded current-access read per channel/thread; retain no provider text."""
+    results: dict[str, dict | None | Exception] = {}
+    groups: dict[tuple[str, str], list[tuple[str, str]]] = {}
+    for uri in dict.fromkeys(uris):
+        try:
+            channel, ts, thread_ts = _slack_reference(uri)
+            groups.setdefault((channel, thread_ts), []).append((uri, ts))
+        except ValueError as exc:
+            results[uri] = exc
+    for (channel, thread_ts), targets in groups.items():
+        try:
+            if len(targets) == 1:
+                results[targets[0][0]] = refetch_slack(token, targets[0][0])
+                continue
+            timestamps = [ts for _, ts in targets]
+            params = {"channel": channel, "oldest": min(timestamps), "latest": max(timestamps),
+                      "inclusive": "true", "limit": 15}
+            if thread_ts:
+                params["ts"] = thread_ts
+            method = "conversations.replies" if thread_ts else "conversations.history"
+            body = _request_json(f"https://slack.com/api/{method}?" + urllib.parse.urlencode(params), token)
+            if body.get("ok") is not True:
+                if body.get("error") in SLACK_UNAVAILABLE_ERRORS:
+                    for uri, _ in targets:
+                        results[uri] = None
+                    continue
+                raise RuntimeError("Source access was rejected")
+            messages = {row.get("ts"): row for row in body.get("messages", [])
+                        if isinstance(row, dict) and row.get("text") and row.get("user")}
+            incomplete = body.get("has_more") or (body.get("response_metadata") or {}).get("next_cursor")
+            for uri, ts in targets:
+                row = messages.get(ts)
+                if row:
+                    results[uri] = {"uri": uri, "text": row["text"], "author_provider_id": row["user"]}
+                elif incomplete:
+                    results[uri] = SourceRevalidationIncomplete("Current source page is incomplete")
+                elif not thread_ts:
+                    # A permalink may omit thread_ts; only a replies check can
+                    # distinguish a missing thread message from deletion.
+                    query = urllib.parse.urlencode({"channel": channel, "ts": ts, "oldest": ts,
+                                                   "latest": ts, "inclusive": "true", "limit": 1})
+                    try:
+                        reply = _request_json("https://slack.com/api/conversations.replies?" + query, token)
+                        if reply.get("ok") is not True:
+                            if reply.get("error") in SLACK_UNAVAILABLE_ERRORS:
+                                results[uri] = None
+                                continue
+                            raise RuntimeError("Source access was rejected")
+                        found = next((row for row in reply.get("messages", []) if row.get("ts") == ts
+                                      and row.get("text") and row.get("user")), None)
+                        results[uri] = ({"uri": uri, "text": found["text"], "author_provider_id": found["user"]}
+                                        if found else (SourceRevalidationIncomplete("Current source page is incomplete")
+                                        if reply.get("has_more") or (reply.get("response_metadata") or {}).get("next_cursor") else None))
+                    except Exception as exc:
+                        results[uri] = exc
+                else:
+                    results[uri] = None
+        except Exception as exc:
+            for uri, _ in targets:
+                results[uri] = exc
+    return results
 
 
 def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:

@@ -91,6 +91,28 @@ class SecurityStore:
         with self.connection() as db:
             self._put(db, kind, key, payload, ttl, subject, family)
 
+    def reserve_provider_request(self, key: str, interval: float) -> float:
+        """Atomically share a provider method cooldown across processes and users."""
+        with self.connection() as db:
+            self._lock(db, "provider_rate", key)
+            now = time.time()
+            row = self.execute(db, "SELECT expires FROM security_entries WHERE kind='provider_rate' AND key_hash=?",
+                               (_digest(key),)).fetchone()
+            if row and row[0] > now:
+                return row[0] - now
+            self._put(db, "provider_rate", key, {"cooldown": True}, interval, "", "")
+            return 0.0
+
+    def extend_provider_cooldown(self, key: str, delay: float) -> None:
+        """A provider Retry-After may lengthen, never shorten, the shared cooldown."""
+        with self.connection() as db:
+            self._lock(db, "provider_rate", key)
+            now = time.time()
+            row = self.execute(db, "SELECT expires FROM security_entries WHERE kind='provider_rate' AND key_hash=?",
+                               (_digest(key),)).fetchone()
+            until = max(row[0] if row else now, now + delay)
+            self._put(db, "provider_rate", key, {"cooldown": True}, until - now, "", "")
+
     def _subject_epoch(self, db, subject: str) -> int:
         row = self.execute(db, "SELECT epoch FROM security_subject_epochs WHERE subject=?", (subject,)).fetchone()
         return int(row[0]) if row else 0
@@ -109,6 +131,14 @@ class SecurityStore:
             self._lock(db, "subject", subject)
             self._check_subject(db, subject, expected_epoch)
             self._put(db, kind, key, payload, ttl, subject, "")
+
+    @contextmanager
+    def guard_subject_epoch(self, subject: str, expected_epoch: int):
+        """Keep membership mutation serialized with a bound credential replacement."""
+        with self.connection() as db:
+            self._lock(db, "subject", subject)
+            self._check_subject(db, subject, expected_epoch)
+            yield
 
     def issue_grants(self, subject: str, expected_epoch: int, family: str, entries: list[tuple[str, str, dict, int]]) -> None:
         """Validate and insert the complete pair atomically with all revocation paths."""

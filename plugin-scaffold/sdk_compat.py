@@ -8,10 +8,41 @@ a version whose RevocationRequest gives that optional field a default.
 
 from __future__ import annotations
 
+import json
 from urllib.parse import parse_qsl, urlencode
 
 from mcp.server import MCPServer
 from starlette.responses import JSONResponse
+
+
+class PublicClientMetadataAdapter:
+    """Correct only the pinned SDK's auth-method advertisement for our public client."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http" or scope.get("method") != "GET" or scope.get("path") != "/.well-known/oauth-authorization-server":
+            return await self.app(scope, receive, send)
+        messages = []
+
+        async def capture(message):
+            messages.append(message)
+
+        await self.app(scope, receive, capture)
+        start = next((message for message in messages if message["type"] == "http.response.start"), None)
+        raw = b"".join(message.get("body", b"") for message in messages if message["type"] == "http.response.body")
+        if start and start["status"] == 200:
+            metadata = json.loads(raw)
+            metadata["token_endpoint_auth_methods_supported"] = ["none"]
+            if metadata.get("revocation_endpoint"):
+                metadata["revocation_endpoint_auth_methods_supported"] = ["none"]
+            encoded = json.dumps(metadata).encode()
+            headers = [(name, value) for name, value in start["headers"] if name != b"content-length"]
+            await send({**start, "headers": headers + [(b"content-length", str(len(encoded)).encode())]})
+            return await send({"type": "http.response.body", "body": encoded})
+        for message in messages:
+            await send(message)
 
 
 class PublicClientRevokeAdapter:
@@ -56,4 +87,5 @@ class WisdomTwinMCPServer(MCPServer):
     def streamable_http_app(self, **kwargs):
         app = super().streamable_http_app(**kwargs)
         app.add_middleware(PublicClientRevokeAdapter)
+        app.add_middleware(PublicClientMetadataAdapter)
         return app

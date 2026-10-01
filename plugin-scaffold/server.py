@@ -17,7 +17,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse
 
 from sdk_compat import WisdomTwinMCPServer
-from mcp.server.auth.settings import AuthSettings, RevocationOptions
+from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions, RevocationOptions
 from mcp.types import CallToolResult, EmbeddedResource, TextContent, TextResourceContents, ToolAnnotations
 
 import service as twin_service
@@ -53,10 +53,11 @@ _server_kwargs = {
 if auth_is_required():
     base = public_base_url()
     _server_kwargs["auth"] = AuthSettings(
-        issuer_url=AnyHttpUrl(base),
+        issuer_url=base,
         resource_server_url=AnyHttpUrl(f"{base}/mcp"),
         required_scopes=[MCP_SCOPE],
         validate_token_resource=True,
+        client_registration_options=ClientRegistrationOptions(enabled=False, valid_scopes=[MCP_SCOPE]),
         revocation_options=RevocationOptions(enabled=True),
     )
     _server_kwargs["auth_server_provider"] = _auth_provider

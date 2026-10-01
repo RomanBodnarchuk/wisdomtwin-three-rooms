@@ -48,6 +48,12 @@ def bind_slack(pending: dict, member: dict, body: dict) -> None:
         raise ValueError("A read-only Slack user grant is required")
     if not member["slack_team_id"] or not member["slack_user_id"] or team_id != member["slack_team_id"] or user_id != member["slack_user_id"]:
         raise ValueError("Slack team or user does not match the provisioned member")
+    verify_slack_identity(token, member)
+    _save(pending, body=user, token=token, binding={"team_id": team_id, "user_id": user_id})
+
+
+def verify_slack_identity(token: str, member: dict) -> None:
+    team_id, user_id = member["slack_team_id"], member["slack_user_id"]
     identity = request_json("https://slack.com/api/auth.test", token=token)
     if identity.get("ok") is not True or identity.get("team_id") != team_id or identity.get("user_id") != user_id:
         raise ValueError("Slack token identity does not match the callback")
@@ -56,7 +62,6 @@ def bind_slack(pending: dict, member: dict, body: dict) -> None:
     email = (verified_user.get("profile") or {}).get("email", "").strip().lower()
     if profile.get("ok") is not True or verified_user.get("deleted") or verified_user.get("is_bot") or verified_user.get("id") != user_id or email != member["email"]:
         raise ValueError("Slack corporate email does not match the login")
-    _save(pending, body=user, token=token, binding={"team_id": team_id, "user_id": user_id})
 
 
 def bind_google(pending: dict, member: dict, body: dict) -> None:
@@ -73,7 +78,28 @@ def bind_google(pending: dict, member: dict, body: dict) -> None:
 
 
 def _save(pending: dict, *, body: dict, token: str, binding: dict) -> None:
-    expires = max(1, min(int(body.get("expires_in", 86400)), 86400))
-    payload = {"access_token": token, "subject": pending["subject"], "role_id": pending["role_id"],
-               "service": pending["service"], "expires_at": time.time() + expires, **binding}
+    payload = credential_payload(pending, body=body, token=token, binding=binding)
     current_store().save_credential(pending["role_id"], pending["service"], encrypt_token(json.dumps(payload)))
+
+
+def credential_payload(pending: dict, *, body: dict, token: str, binding: dict) -> dict:
+    if not isinstance(token, str) or not token:
+        raise ValueError("A provider access token is required")
+    expires = body.get("expires_in")
+    refresh = body.get("refresh_token")
+    if expires is None:
+        if pending["service"] != "slack" or refresh:
+            raise ValueError("The provider must declare this grant's lifetime")
+        expiry = None  # Slack's nonrotating grants have no provider expiration.
+    else:
+        if type(expires) is not int or expires <= 0:
+            raise ValueError("Invalid provider token lifetime")
+        expiry = time.time() + expires
+    payload = {"credential_version": 2, "access_token": token, "subject": pending["subject"],
+               "role_id": pending["role_id"], "service": pending["service"],
+               "expires_at": expiry, "scopes": sorted(set(str(body.get("scope", "")).replace(",", " ").split())), **binding}
+    if refresh is not None:
+        if not isinstance(refresh, str) or not refresh:
+            raise ValueError("Invalid provider refresh token")
+        payload.update(refresh_token=refresh, refresh_expires_at=time.time() + 30 * 86400)
+    return payload

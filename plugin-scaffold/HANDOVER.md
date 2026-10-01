@@ -19,6 +19,8 @@ Consumer domains are rejected. Domain/title inputs are not identity proof. Corpo
 
 The bounded [review follow-up](REVIEW_FOLLOWUP.md) adds atomic membership-generation checks to consent/issuance and family revocation on used-refresh replay. Pre-generation grants require a new sign-in. Durable generation markers survive membership removal so re-provisioning cannot resurrect an in-flight exchange; they contain a pseudonymous subject and integer, not source text or a credential.
 
+The [four-issue follow-up](REVIEW_ROUND2.md) preserves provider-declared lifetime, provides opt-in refresh only for existing rotating Slack grants, shares method cooldowns and batches current-access reads, and advertises the configured predefined public MCP client accurately. Queries with healthy matching evidence state partial coverage when other selected sources are temporarily unavailable; without verified support, they report a coded failure. Optional paid generation retains valid `max` reasoning, an explicitly configured total budget and safe `GENERATION_FAILED` diagnostics without a hidden fallback. External Claude, Z.ai and Grok reviews remain pending actual authorized access and evidence.
+
 ## Data and model boundaries
 
 Real indexes retain vectors, source URIs, chunk hashes, hashed keywords, authorship and role/tenure metadata. Real source text is transient during ingestion and queries. Querying re-fetches current source access and checks hash and authorship before returning citation text. Old stored excerpts must not become production citations. The ten-message synthetic fixture may retain text locally. Audit events contain minimal action/outcome identifiers, not source payloads.

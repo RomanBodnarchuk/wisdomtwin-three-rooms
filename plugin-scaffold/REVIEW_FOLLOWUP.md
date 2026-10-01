@@ -2,6 +2,8 @@
 
 This continues PR [15](https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms/pull/15) from `939edde25ce9d8d83dabe60990df019c3ed982e4`. The original candidate ZIP, diff, source archive and `CHECKPOINT.json` are preserved unchanged. A separate follow-up checkpoint records the exact new source commit and artifact hashes. The original four tools and two packaged skills remain.
 
+This is the historical `187a25f` validation record. The later four-issue follow-up and revised explicit partial-coverage behavior are described in [REVIEW_ROUND2.md](REVIEW_ROUND2.md).
+
 ## Confirmed findings and fixes
 
 | Finding | Resulting behavior | Reproduced evidence |

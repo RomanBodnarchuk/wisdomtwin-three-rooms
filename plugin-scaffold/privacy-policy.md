@@ -25,9 +25,12 @@ The intended hosted service processes:
 - Authorized business source text transiently during ingestion and current-access retrieval, and the user's business question while answering it.
 - Indexed vectors, source URIs, chunk positions/content hashes and hashed keywords under the protected role namespace. These remain protected data; hashing does not make business records anonymous.
 - Encrypted source credentials and durable MCP authorization state, including limited-lived authorization transactions, grants and refresh-token state. Refresh relationships are retained while a successor remains active to detect replay. Minimal membership-generation markers contain a pseudonymous subject and integer and remain after membership removal to prevent stale exchanges from becoming valid on reprovisioning.
+- Minimal provider-request security state: opaque digests and timing markers share Slack app/workspace/method cooldowns across users. Digest-only refresh-attempt markers expire after 30 days and prevent replay of a single-use refresh token after an uncertain outcome; role/MCP revocation does not clear those replay markers. These markers contain no provider source text, user questions, raw access/refresh tokens or source credentials.
 - Minimal audit events such as action, outcome/error code, organization/role identifiers and event time. Audit events do not intentionally include source text, raw provider payloads, tokens or full user questions. Operational hosting logs need separate configuration and retention confirmation before adoption.
 
 Real source text is not intended to persist in the role index. A query re-fetches sources with the caller's current source grant, then checks content hash and authorship. Changed or inaccessible material is withheld. Citation snippets returned to ChatGPT are transient service output and may be retained by the user's ChatGPT environment under its own settings. Local synthetic fixtures can retain test text; that mode is restricted to explicit loopback local/test execution and is not the hosted data path.
+
+Provider outages, rate limits or bounded pages can prevent complete current-source coverage. A response uses only verified matching evidence and states partial coverage and retry/reconnect guidance. When no matching evidence can be verified because of a temporary failure, the service returns an error rather than treating the outage as an empty business record.
 
 ## Purposes and recipients
 
