@@ -47,7 +47,7 @@ def authorize(provider, subject):
     txn = parse_qs(urlsplit(uri).query)["txn"][0]
     member = provider.db.membership(subject)
     provider.db.put("session", "synthetic-session", {"transaction": txn, "subject": subject,
-        "email": member["email"], "csrf": "synthetic-csrf"}, 300, subject=subject)
+        "email": member["email"], "csrf": "synthetic-csrf", "subject_epoch": provider.db.subject_epoch(subject)}, 300, subject=subject)
     redirect = provider.approve(txn, session_key="synthetic-session", csrf="synthetic-csrf")
     code = parse_qs(urlsplit(redirect).query)["code"][0]
     return client, run(provider.load_authorization_code, client, code)
@@ -96,8 +96,8 @@ def test_codes_refresh_rotation_and_family_revocation():
     with pytest.raises(TokenError):
         run(provider.exchange_refresh_token, client, refresh, ["admin:write"])
     rotated = run(provider.exchange_refresh_token, client, refresh, ["twin:read"])
-    assert run(provider.load_refresh_token, client, tokens.refresh_token) is None
     run(provider.revoke_token, run(provider.load_access_token, rotated.access_token))
+    assert run(provider.load_refresh_token, client, tokens.refresh_token) is None
     assert run(provider.load_access_token, tokens.access_token) is None
     assert run(WisdomTwinAuthProvider().load_refresh_token, client, rotated.refresh_token) is None
 

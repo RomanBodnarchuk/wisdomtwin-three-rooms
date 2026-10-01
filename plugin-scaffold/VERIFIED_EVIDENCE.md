@@ -2,6 +2,8 @@
 
 This is a tested private candidate for PR [15](https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms/pull/15), branch `cursor/wisdomtwin-mcp-plugin-8d09`. It is not a completed public deployment, provider approval, legal adoption or directory submission.
 
+This document describes checkpoint `939edde25ce9d8d83dabe60990df019c3ed982e4`; its four private artifact files remain immutable. The later bounded review fixes and current validation are recorded separately in [REVIEW_FOLLOWUP.md](REVIEW_FOLLOWUP.md). CI for the original checkpoint [passed](https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms/actions/runs/36892795670).
+
 ## Environment and baseline
 
 - Saved cloud workspace: `/workspace/wisdomtwin-three-rooms`; Python 3.12.14.

@@ -17,6 +17,8 @@ The indexed business twin is scoped to one authorized role and tenure. Preserve 
 
 Consumer domains are rejected. Domain/title inputs are not identity proof. Corporate OIDC must verify signature, issuer, subject, audience, nonce and verified email; operators provision exact domain/role entitlements and Slack workspace/user or Google subject. Source callbacks bind to those identities and granted scopes. Durable encrypted Postgres authorization state supports revocation across processes; fixture SQLite is not a production substitute.
 
+The bounded [review follow-up](REVIEW_FOLLOWUP.md) adds atomic membership-generation checks to consent/issuance and family revocation on used-refresh replay. Pre-generation grants require a new sign-in. Durable generation markers survive membership removal so re-provisioning cannot resurrect an in-flight exchange; they contain a pseudonymous subject and integer, not source text or a credential.
+
 ## Data and model boundaries
 
 Real indexes retain vectors, source URIs, chunk hashes, hashed keywords, authorship and role/tenure metadata. Real source text is transient during ingestion and queries. Querying re-fetches current source access and checks hash and authorship before returning citation text. Old stored excerpts must not become production citations. The ten-message synthetic fixture may retain text locally. Audit events contain minimal action/outcome identifiers, not source payloads.

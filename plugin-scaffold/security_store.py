@@ -30,6 +30,10 @@ def _digest(value: str) -> str:
     return hashlib.sha256(value.encode()).hexdigest()
 
 
+class GrantInvalidated(PermissionError):
+    """The consent's membership epoch or token family is no longer current."""
+
+
 class SecurityStore:
     def __init__(self, *, database_url: str = "", sqlite_path: str = "") -> None:
         if not database_url and (not sqlite_path or not local_test_mode()):
@@ -48,6 +52,8 @@ class SecurityStore:
             self.execute(db, """CREATE TABLE IF NOT EXISTS security_memberships (
                 subject TEXT NOT NULL, domain TEXT NOT NULL, payload TEXT NOT NULL,
                 PRIMARY KEY (subject, domain))""")
+            self.execute(db, """CREATE TABLE IF NOT EXISTS security_subject_epochs (
+                subject TEXT PRIMARY KEY, epoch BIGINT NOT NULL)""")
 
     @contextmanager
     def connection(self):
@@ -67,13 +73,57 @@ class SecurityStore:
     def execute(self, db, sql: str, params: tuple = ()):
         return db.execute(sql.replace("?", "%s") if self.database_url else sql, params)
 
+    def _lock(self, db, namespace: str, key: str) -> None:
+        if self.database_url:
+            lock_id = int.from_bytes(hashlib.sha256(f"{namespace}:{key}".encode()).digest()[:8], "big", signed=True)
+            self.execute(db, "SELECT pg_advisory_xact_lock(?)", (lock_id,))
+        elif not db.in_transaction:
+            # SQLite serializes writes; Postgres locks only the affected identity/family.
+            self.execute(db, "BEGIN IMMEDIATE")
+
+    def _put(self, db, kind: str, key: str, payload: dict, ttl: int, subject: str, family: str) -> None:
+        self.execute(db, """INSERT INTO security_entries (kind,key_hash,payload,expires,subject,family)
+            VALUES (?,?,?,?,?,?) ON CONFLICT (kind,key_hash) DO UPDATE SET
+            payload=EXCLUDED.payload,expires=EXCLUDED.expires,subject=EXCLUDED.subject,family=EXCLUDED.family""",
+            (kind, _digest(key), encrypt_token(json.dumps(payload)), time.time() + ttl, subject, family))
+
     def put(self, kind: str, key: str, payload: dict, ttl: int, *, subject: str = "", family: str = "") -> None:
-        encrypted = encrypt_token(json.dumps(payload))
         with self.connection() as db:
-            self.execute(db, """INSERT INTO security_entries (kind,key_hash,payload,expires,subject,family)
-                VALUES (?,?,?,?,?,?) ON CONFLICT (kind,key_hash) DO UPDATE SET
-                payload=EXCLUDED.payload,expires=EXCLUDED.expires,subject=EXCLUDED.subject,family=EXCLUDED.family""",
-                (kind, _digest(key), encrypted, time.time() + ttl, subject, family))
+            self._put(db, kind, key, payload, ttl, subject, family)
+
+    def _subject_epoch(self, db, subject: str) -> int:
+        row = self.execute(db, "SELECT epoch FROM security_subject_epochs WHERE subject=?", (subject,)).fetchone()
+        return int(row[0]) if row else 0
+
+    def subject_epoch(self, subject: str) -> int:
+        with self.connection() as db:
+            return self._subject_epoch(db, subject)
+
+    def _check_subject(self, db, subject: str, expected_epoch: int) -> None:
+        members = self.execute(db, "SELECT 1 FROM security_memberships WHERE subject=?", (subject,)).fetchall()
+        if type(expected_epoch) is not int or self._subject_epoch(db, subject) != expected_epoch or len(members) != 1:
+            raise GrantInvalidated("Corporate membership or consent changed")
+
+    def put_subject_entry(self, kind: str, key: str, payload: dict, ttl: int, *, subject: str, expected_epoch: int) -> None:
+        with self.connection() as db:
+            self._lock(db, "subject", subject)
+            self._check_subject(db, subject, expected_epoch)
+            self._put(db, kind, key, payload, ttl, subject, "")
+
+    def issue_grants(self, subject: str, expected_epoch: int, family: str, entries: list[tuple[str, str, dict, int]]) -> None:
+        """Validate and insert the complete pair atomically with all revocation paths."""
+        with self.connection() as db:
+            self._lock(db, "subject", subject)
+            self._lock(db, "family", family)
+            self._check_subject(db, subject, expected_epoch)
+            if self.execute(db, "SELECT 1 FROM security_revocations WHERE family=? AND expires>?", (family, time.time())).fetchone():
+                raise GrantInvalidated("Token family was revoked")
+            for kind, key, payload, ttl in entries:
+                self._put(db, kind, key, payload, ttl, subject, family)
+            # Keep old refresh relationships for the lifetime of their active successor.
+            lineage_ttl = max(ttl for kind, _, _, ttl in entries if kind == "family")
+            self.execute(db, "UPDATE security_entries SET expires=? WHERE kind='family' AND family=?",
+                         (time.time() + lineage_ttl, family))
 
     def get(self, kind: str, key: str, *, consume: bool = False) -> dict | None:
         with self.connection() as db:
@@ -92,17 +142,24 @@ class SecurityStore:
 
     def revoke_family(self, family: str) -> None:
         with self.connection() as db:
+            self._lock(db, "family", family)
             self.execute(db, "INSERT INTO security_revocations (family,expires) VALUES (?,?) ON CONFLICT (family) DO UPDATE SET expires=EXCLUDED.expires",
                          (family, time.time() + 31 * 86400))
             self.execute(db, "DELETE FROM security_entries WHERE family=?", (family,))
 
+    def _invalidate_subject(self, db, subject: str) -> None:
+        self.execute(db, """INSERT INTO security_subject_epochs (subject,epoch) VALUES (?,1)
+            ON CONFLICT (subject) DO UPDATE SET epoch=security_subject_epochs.epoch+1""", (subject,))
+        families = self.execute(db, "SELECT DISTINCT family FROM security_entries WHERE subject=? AND family<>''", (subject,)).fetchall()
+        for row in families:
+            self.execute(db, "INSERT INTO security_revocations (family,expires) VALUES (?,?) ON CONFLICT (family) DO UPDATE SET expires=EXCLUDED.expires",
+                         (row[0], time.time() + 31 * 86400))
+        self.execute(db, "DELETE FROM security_entries WHERE subject=?", (subject,))
+
     def revoke_subject(self, subject: str) -> None:
         with self.connection() as db:
-            families = self.execute(db, "SELECT DISTINCT family FROM security_entries WHERE subject=? AND family<>''", (subject,)).fetchall()
-            for row in families:
-                self.execute(db, "INSERT INTO security_revocations (family,expires) VALUES (?,?) ON CONFLICT (family) DO UPDATE SET expires=EXCLUDED.expires",
-                             (row[0], time.time() + 31 * 86400))
-            self.execute(db, "DELETE FROM security_entries WHERE subject=?", (subject,))
+            self._lock(db, "subject", subject)
+            self._invalidate_subject(db, subject)
 
     def provision(self, *, issuer: str, provider_subject: str, email: str, domain: str,
                   roles: list[str], slack_team_id: str = "", slack_user_id: str = "", google_subject: str = "") -> str:
@@ -116,10 +173,10 @@ class SecurityStore:
                    "domain": domain, "roles": titles, "slack_team_id": slack_team_id,
                    "slack_user_id": slack_user_id, "google_subject": google_subject}
         with self.connection() as db:
+            self._lock(db, "subject", subject)
             self.execute(db, "INSERT INTO security_memberships (subject,domain,payload) VALUES (?,?,?) ON CONFLICT (subject,domain) DO UPDATE SET payload=EXCLUDED.payload",
                          (subject, domain, encrypt_token(json.dumps(payload))))
-        # Reprovisioning narrows future access immediately, including old grants.
-        self.revoke_subject(subject)
+            self._invalidate_subject(db, subject)
         return subject
 
     def membership(self, subject: str, domain: str | None = None) -> dict | None:
@@ -132,8 +189,9 @@ class SecurityStore:
 
     def remove_member(self, subject: str) -> None:
         with self.connection() as db:
+            self._lock(db, "subject", subject)
             self.execute(db, "DELETE FROM security_memberships WHERE subject=?", (subject,))
-        self.revoke_subject(subject)
+            self._invalidate_subject(db, subject)
 
     def sweep(self) -> None:
         with self.connection() as db:

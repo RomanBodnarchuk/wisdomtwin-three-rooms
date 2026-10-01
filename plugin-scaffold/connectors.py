@@ -3,18 +3,47 @@
 from __future__ import annotations
 
 import json
+import math
 import os
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from email.utils import parseaddr
+from email.utils import parseaddr, parsedate_to_datetime
 from pathlib import Path
 
 FIXTURE_PATH = Path(__file__).resolve().parent / "fixtures" / "slack" / "messages.json"
+MAX_RATE_LIMIT_WAIT_SECONDS = 2
+SLACK_UNAVAILABLE_ERRORS = frozenset({"message_not_found", "thread_not_found", "channel_not_found",
+    "not_in_channel", "token_revoked", "account_inactive", "invalid_auth", "missing_scope", "access_denied"})
 
 
 class SourceUnavailable(RuntimeError):
     """Source was deleted or the current user no longer has access."""
+
+
+class SourceRateLimited(RuntimeError):
+    """A bounded request could not complete within the provider's retry window."""
+
+    def __init__(self, retry_after_seconds: float | None) -> None:
+        self.retry_after_seconds = retry_after_seconds
+        super().__init__("Source provider is rate limited")
+
+
+def _retry_after_seconds(value: str | None) -> float | None:
+    if not value:
+        return None
+    try:
+        delay = float(value)
+    except ValueError:
+        try:
+            retry_at = parsedate_to_datetime(value)
+            if retry_at.tzinfo is None:
+                return None
+            delay = retry_at.timestamp() - time.time()
+        except (TypeError, ValueError, OverflowError):
+            return None
+    return max(0.0, delay) if math.isfinite(delay) and delay >= 0 else None
 
 
 def use_fixtures() -> bool:
@@ -38,13 +67,21 @@ def _request_json(url: str, token: str) -> dict:
         url,
         headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
     )
-    try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        if exc.code in {401, 403, 404}:
-            raise SourceUnavailable("Source access is unavailable") from None
-        raise RuntimeError(f"Connector request failed with status {exc.code}") from None
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                delay = _retry_after_seconds(exc.headers.get("Retry-After") if exc.headers else None)
+                exc.close()
+                if attempt == 0 and delay is not None and delay <= MAX_RATE_LIMIT_WAIT_SECONDS:
+                    time.sleep(delay)
+                    continue
+                raise SourceRateLimited(delay) from None
+            if exc.code in {401, 403, 404}:
+                raise SourceUnavailable("Source access is unavailable") from None
+            raise RuntimeError(f"Connector request failed with status {exc.code}") from None
 
 
 def fetch_slack(token: str, query: str, max_items: int) -> list[dict[str, str]]:
@@ -97,7 +134,7 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
         params = urllib.parse.urlencode({"channel": channel, "ts": thread_ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
     body = _request_json("https://slack.com/api/" + ("conversations.replies?" if thread_ts else "conversations.history?") + params, token)
     if body.get("ok") is not True:
-        if body.get("error") in {"message_not_found", "channel_not_found", "not_in_channel", "token_revoked", "account_inactive", "invalid_auth", "missing_scope", "access_denied"}:
+        if body.get("error") in SLACK_UNAVAILABLE_ERRORS:
             return None
         raise RuntimeError("Source access was rejected")
     for message in body.get("messages", []):
@@ -106,10 +143,13 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
     if not thread_ts:
         params = urllib.parse.urlencode({"channel": channel, "ts": ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
         body = _request_json("https://slack.com/api/conversations.replies?" + params, token)
-        if body.get("ok") is True:
-            for message in body.get("messages", []):
-                if message.get("ts") == ts and message.get("text") and message.get("user"):
-                    return {"uri": uri, "text": message["text"], "author_provider_id": message["user"]}
+        if body.get("ok") is not True:
+            if body.get("error") in SLACK_UNAVAILABLE_ERRORS:
+                return None
+            raise RuntimeError("Source access was rejected")
+        for message in body.get("messages", []):
+            if message.get("ts") == ts and message.get("text") and message.get("user"):
+                return {"uri": uri, "text": message["text"], "author_provider_id": message["user"]}
     return None
 
 

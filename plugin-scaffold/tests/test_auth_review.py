@@ -235,6 +235,7 @@ def grant(provider, subject):
     transaction = parse_qs(urlsplit(run(provider.authorize, client, params)).query)["txn"][0]
     provider.db.put("session", "synthetic-race-session", {
         "transaction": transaction, "subject": subject, "email": "alice@example-corp.com", "csrf": "synthetic-csrf",
+        "subject_epoch": provider.db.subject_epoch(subject),
     }, 300, subject=subject)
     callback = provider.approve(transaction, session_key="synthetic-race-session", csrf="synthetic-csrf")
     code = run(provider.load_authorization_code, client, parse_qs(urlsplit(callback).query)["code"][0])
@@ -265,10 +266,11 @@ def test_revocation_during_refresh_cannot_leave_successors_valid(monkeypatch, re
             run(provider.revoke_token, revoke_target)
         finally:
             continue_issue.set()
-        rotated = future.result(timeout=5)
+        with pytest.raises(TokenError) as caught:
+            future.result(timeout=5)
+        assert caught.value.error == "invalid_grant"
     assert run(provider.load_access_token, initial.access_token) is None
-    assert run(provider.load_access_token, rotated.access_token) is None
-    assert run(provider.load_refresh_token, client, rotated.refresh_token) is None
+    assert run(provider.load_refresh_token, client, initial.refresh_token) is None
 
 
 @pytest.mark.parametrize("grant_type", ["code", "refresh"])
@@ -294,8 +296,15 @@ def test_one_use_grants_allow_only_one_concurrent_exchange(grant_type):
     with ThreadPoolExecutor(max_workers=2) as executor:
         futures = [executor.submit(competing_exchange) for _ in range(2)]
         results = [future.result(timeout=10) for future in futures]
-    assert sum(isinstance(result, TokenError) for result in results) == 1
-    assert sum(hasattr(result, "access_token") for result in results) == 1
+    successes = [result for result in results if hasattr(result, "access_token")]
+    assert len(successes) <= 1
+    assert any(isinstance(result, TokenError) for result in results)
+    if grant_type == "code":
+        assert len(successes) == 1
+    else:
+        for result in successes:
+            assert run(provider.load_access_token, result.access_token) is None
+            assert run(provider.load_refresh_token, client, result.refresh_token) is None
 
 
 @pytest.fixture

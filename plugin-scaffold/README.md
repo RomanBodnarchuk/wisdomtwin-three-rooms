@@ -6,6 +6,8 @@ The indexed MVP writes vectors, source URIs, chunk hashes, hashed keywords, role
 
 Corporate OIDC sign-in verifies signed issuer, subject and email. An operator must provision the business domain, allowed roles and exact Slack workspace/user or Google subject. Typing a domain and title does not confer access. Production OAuth state and source credentials use encrypted durable Postgres storage; SQLite and memory adapters are for explicit local tests.
 
+Consent and grants carry a durable membership generation. Revocation, removal or reprovisioning invalidates exchanges already in progress; issuance commits the complete pair atomically with revocation. Reusing a consumed refresh token revokes its family, including successors. A new verified sign-in remains available. Earlier grants without a generation fail closed and require sign-in again. See [review follow-up evidence](REVIEW_FOLLOWUP.md).
+
 Slack adapter code exists, but real activation requires operator setup and the necessary Slack/Salesforce authorization for the intended commercial use. Gmail and Drive remain disabled. Google code reads Gmail snippets/metadata and Drive file names/descriptions; full email bodies and document ingestion are incomplete. Verification and flags alone do not complete those adapters.
 
 ## Local verification
@@ -67,19 +69,21 @@ A local fixture flow calls `connect_business_account` with `service=slack`, `dom
 
 Run `celery -A ingest.celery_app worker --loglevel=info` for queued ingestion and `celery -A ingest.celery_app beat --loglevel=info` for the daily retention task. The 30-day inactivity cutoff makes indexes eligible for cleanup; actual execution depends on a healthy scheduler and worker. Verify deployment logs and deletion behavior before promising a deadline. User-requested deletion uses authenticated `DELETE /roles/{role_id}`; queued-job status uses authenticated `GET /jobs/{job_id}`. Neither route adds an MCP tool. Deletion clears role data and source credentials, jobs and pending connection state, and revokes MCP grants. Operator-provisioned membership is managed separately; minimal audit events have a separate 30-day retention limit. The trusted operator CLI in `admin.py` supports private membership provisioning/removal, role deletion and retention. Its verified membership input stays outside Git and the ZIP.
 
-The current provider adapters fetch one page, up to 100 items; `max_items` is an upper bound rather than a completeness promise. Slack uses a PKCE code exchange without a client secret and needs an already PKCE-enabled app. Enabling that irreversible app setting requires separate approval; no live settings were changed. Multiple open tenures in a legacy database cause the new uniqueness check to fail until an operator reconciles them; the migration does not silently change officeholder history.
+The current provider adapters fetch one page, up to 100 items; `max_items` is an upper bound rather than a completeness promise. Deleted Slack threads withhold that source while allowing other verified sources. Provider outages return a coded failure. HTTP 429 permits one retry only when the provider's delay is at most two seconds; longer or repeated limits return retry guidance without evidence. Slack's applicable commercial rate class still needs live validation. Slack uses a PKCE code exchange without a client secret and needs an already PKCE-enabled app. Enabling that irreversible app setting requires separate approval; no live settings were changed. Multiple open tenures in a legacy database cause the new uniqueness check to fail until an operator reconciles them; the migration does not silently change officeholder history.
 
 The isolated database and queue checks run without source grants or model API calls:
 
 ```bash
 WISDOMTWIN_TEST_DATABASE_URL=postgresql://postgres@127.0.0.1:55432/wisdomtwin_test \
-  python3 -m pytest -q tests/test_mvp.py tests/test_worker_concurrency.py tests/test_database.py
+  python3 -m pytest -q tests/test_mvp.py tests/test_worker_concurrency.py tests/test_database.py tests/test_revocation_followup.py
 WISDOMTWIN_TEST_DATABASE_URL=postgresql://postgres@127.0.0.1:55432/wisdomtwin_test \
 WISDOMTWIN_TEST_REDIS_URL=redis://127.0.0.1:56379/9 \
   python3 scripts/verify_local_worker.py
 ```
 
 These commands reset the explicitly isolated test database. The worker smoke script also requires loopback service URLs and a database name ending in `_test`. CI uses its own disposable Postgres and Redis services. `deploy.sh --check` validates names/configuration without publishing; `--deploy` is for a separately authorized, linked Railway service.
+
+[PRODUCTION_LAYOUT.md](PRODUCTION_LAYOUT.md) records the service layout, variable names and remaining deployment gates. It contains no credentials and does not establish a deployment.
 
 ## Build the review candidate
 

@@ -372,7 +372,7 @@ def build_indexed_chunks(role_id: str, tenure_id: str, author_person_id: str, se
 
 def hydrate_sources(records: list[ChunkRecord]) -> list[ChunkRecord]:
     """Re-fetch text with the current user's token and discard changed/inaccessible sources."""
-    from connectors import refetch_slack, refetch_google, SourceUnavailable
+    from connectors import refetch_slack, refetch_google, SourceUnavailable, SourceRateLimited
     from errors import CONNECTOR_FAILED
 
     hydrated = []
@@ -390,6 +390,13 @@ def hydrate_sources(records: list[ChunkRecord]) -> list[ChunkRecord]:
                 cache[key] = refetch_slack(token, record.source_uri) if record.service == "slack" else refetch_google(token, record.service, record.source_uri)
             except SourceUnavailable:
                 cache[key] = None
+            except SourceRateLimited as exc:
+                import math
+
+                _audit("query_twin", error_code=CONNECTOR_FAILED, role_id=record.role_id)
+                guidance = (f"Retry after at least {math.ceil(exc.retry_after_seconds)} seconds."
+                            if exc.retry_after_seconds is not None else "Retry after the provider's rate limit clears.")
+                raise CodedToolError(CONNECTOR_FAILED, f"Source provider is rate limited. {guidance}") from None
             except Exception:
                 _audit("query_twin", error_code=CONNECTOR_FAILED, role_id=record.role_id)
                 raise CodedToolError(CONNECTOR_FAILED, "Source revalidation failed. Retry after the provider recovers.") from None

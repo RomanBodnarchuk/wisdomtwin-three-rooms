@@ -102,6 +102,7 @@ def finish_login(state: str, code: str, browser: str) -> tuple[str, str]:
     claims = verify_id_token(tokens["id_token"], issuer=issuer, client_id=client_id, nonce=pending["nonce"],
                              jwks=request_json(metadata["jwks_uri"]))
     subject = stable_subject(issuer, claims["sub"])
+    subject_epoch = db.subject_epoch(subject)
     member = db.membership(subject)
     email = claims["email"].strip().lower()
     if not member or member["email"] != email or email.rsplit("@", 1)[-1] != member["domain"]:
@@ -109,7 +110,8 @@ def finish_login(state: str, code: str, browser: str) -> tuple[str, str]:
     if not db.get("pending", pending["transaction"]):
         raise ValueError("Expired MCP authorization request")
     session, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
-    db.put("session", session, {"subject": subject, "email": email, "csrf": csrf,
-                               "transaction": pending["transaction"]}, LOGIN_TTL, subject=subject)
+    db.put_subject_entry("session", session, {"subject": subject, "email": email, "csrf": csrf,
+                         "transaction": pending["transaction"], "subject_epoch": subject_epoch},
+                         LOGIN_TTL, subject=subject, expected_epoch=subject_epoch)
     # Provider tokens and the ID token are discarded; only the verified binding remains.
     return pending["transaction"], session

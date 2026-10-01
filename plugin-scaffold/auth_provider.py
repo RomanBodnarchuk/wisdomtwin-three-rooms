@@ -16,7 +16,7 @@ from mcp.shared.auth import OAuthClientInformationFull, OAuthToken
 
 from oauth_connectors import public_base_url
 from runtime import flag, local_test_mode
-from security_store import SecurityStore, security_store
+from security_store import GrantInvalidated, SecurityStore, security_store
 
 MCP_SCOPE = "twin:read"
 CODE_TTL_SECONDS = 300
@@ -73,7 +73,8 @@ class WisdomTwinAuthProvider:
         if not session or session["transaction"] != transaction or not secrets.compare_digest(session["csrf"], csrf):
             raise AuthorizeError(error="access_denied", error_description="Verified login and consent are required")
         member = self.db.membership(session["subject"])
-        if not member or member["email"] != session["email"]:
+        epoch = session.get("subject_epoch")
+        if not member or member["email"] != session["email"] or type(epoch) is not int or epoch != self.db.subject_epoch(session["subject"]):
             raise AuthorizeError(error="access_denied", error_description="Corporate membership was revoked")
         pending = self.db.get("pending", transaction, consume=True)
         if not pending:
@@ -86,7 +87,12 @@ class WisdomTwinAuthProvider:
             redirect_uri_provided_explicitly=pending["redirect_uri_provided_explicitly"],
             resource=pending["resource"], subject=session["subject"],
         )
-        self.db.put("code", code, authorization.model_dump(mode="json"), CODE_TTL_SECONDS, subject=session["subject"])
+        payload = {**authorization.model_dump(mode="json"), "subject_epoch": epoch}
+        try:
+            self.db.put_subject_entry("code", code, payload, CODE_TTL_SECONDS,
+                                      subject=session["subject"], expected_epoch=epoch)
+        except GrantInvalidated:
+            raise AuthorizeError(error="access_denied", error_description="Corporate membership was revoked") from None
         url = urlsplit(pending["redirect_uri"])
         query = list(parse_qsl(url.query)) + [("code", code)]
         if pending["state"]:
@@ -95,7 +101,7 @@ class WisdomTwinAuthProvider:
 
     async def load_authorization_code(self, client: OAuthClientInformationFull, authorization_code: str) -> AuthorizationCode | None:
         payload = self.db.get("code", authorization_code)
-        if not payload or payload["client_id"] != client.client_id or not self.db.membership(payload["subject"]):
+        if not payload or payload["client_id"] != client.client_id or not self._current_subject(payload["subject"], payload.get("subject_epoch")):
             return None
         return AuthorizationCode.model_validate(payload)
 
@@ -103,46 +109,67 @@ class WisdomTwinAuthProvider:
         if authorization_code.client_id != client.client_id:
             raise TokenError(error="invalid_grant", error_description="Invalid authorization code")
         payload = self.db.get("code", authorization_code.code, consume=True)
-        if not payload or payload != authorization_code.model_dump(mode="json") or not self.db.membership(payload["subject"]):
+        if not payload or {key: value for key, value in payload.items() if key != "subject_epoch"} != authorization_code.model_dump(mode="json") or not self._current_subject(payload["subject"], payload.get("subject_epoch")):
             raise TokenError(error="invalid_grant", error_description="Authorization code expired or used")
-        return self._issue(client.client_id, payload["subject"], payload["scopes"], payload["resource"], secrets.token_urlsafe(32))
+        return self._issue(client.client_id, payload["subject"], payload["scopes"], payload["resource"],
+                           secrets.token_urlsafe(32), payload["subject_epoch"])
 
-    def _issue(self, client_id: str, subject: str, scopes: list[str], resource: str, family: str) -> OAuthToken:
+    def _current_subject(self, subject: str, epoch: int | None) -> bool:
+        return type(epoch) is int and epoch == self.db.subject_epoch(subject) and self.db.membership(subject) is not None
+
+    def _issue(self, client_id: str, subject: str, scopes: list[str], resource: str, family: str, subject_epoch: int) -> OAuthToken:
         access, refresh = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
         now = int(time.time())
         at = AccessToken(token=access, client_id=client_id, scopes=scopes,
                          expires_at=now + ACCESS_TTL_SECONDS, resource=resource, subject=subject)
         rt = RefreshToken(token=refresh, client_id=client_id, scopes=scopes,
                           expires_at=now + REFRESH_TTL_SECONDS, resource=resource, subject=subject)
+        entries = []
         for kind, key, token, ttl in (("access", access, at, ACCESS_TTL_SECONDS), ("refresh", refresh, rt, REFRESH_TTL_SECONDS)):
-            self.db.put(kind, key, {"token": token.model_dump(mode="json"), "family": family}, ttl, subject=subject, family=family)
-            self.db.put("family", key, {"family": family}, REFRESH_TTL_SECONDS, subject=subject, family=family)
+            entries.append((kind, key, {"token": token.model_dump(mode="json"), "family": family,
+                                       "subject_epoch": subject_epoch}, ttl))
+            entries.append(("family", key, {"family": family, "kind": kind, "client_id": client_id}, REFRESH_TTL_SECONDS))
+        try:
+            self.db.issue_grants(subject, subject_epoch, family, entries)
+        except GrantInvalidated:
+            raise TokenError(error="invalid_grant", error_description="Corporate consent or token family was revoked") from None
         return OAuthToken(access_token=access, token_type="Bearer", expires_in=ACCESS_TTL_SECONDS,
                           scope=" ".join(scopes), refresh_token=refresh)
 
     async def load_refresh_token(self, client: OAuthClientInformationFull, refresh_token: str) -> RefreshToken | None:
         payload = self.db.get("refresh", refresh_token)
-        if not payload or payload["token"]["client_id"] != client.client_id or not self.db.membership(payload["token"]["subject"]):
+        if not payload:
+            self._revoke_replayed_refresh(client.client_id, refresh_token)
+            return None
+        if payload["token"]["client_id"] != client.client_id or not self._current_subject(payload["token"]["subject"], payload.get("subject_epoch")):
             return None
         return RefreshToken.model_validate(payload["token"])
+
+    def _revoke_replayed_refresh(self, client_id: str, token: str) -> None:
+        # Unknown strings, access tokens and another client's tokens cannot revoke a family.
+        relationship = self.db.get("family", token)
+        if relationship and relationship.get("kind") == "refresh" and relationship.get("client_id") == client_id:
+            self.db.revoke_family(relationship["family"])
 
     async def exchange_refresh_token(self, client: OAuthClientInformationFull, refresh_token: RefreshToken, scopes: list[str]) -> OAuthToken:
         if refresh_token.client_id != client.client_id or not set(scopes or refresh_token.scopes) <= set(refresh_token.scopes):
             raise TokenError(error="invalid_grant", error_description="Invalid client or scope")
         payload = self.db.get("refresh", refresh_token.token, consume=True)
-        if not payload or payload["token"] != refresh_token.model_dump(mode="json") or not self.db.membership(refresh_token.subject):
+        if not payload:
+            self._revoke_replayed_refresh(client.client_id, refresh_token.token)
+            raise TokenError(error="invalid_grant", error_description="Refresh token expired or used")
+        if payload["token"] != refresh_token.model_dump(mode="json") or not self._current_subject(refresh_token.subject, payload.get("subject_epoch")):
             raise TokenError(error="invalid_grant", error_description="Refresh token expired or used")
         return self._issue(client.client_id, refresh_token.subject, scopes or refresh_token.scopes,
-                           refresh_token.resource, payload["family"])
+                           refresh_token.resource, payload["family"], payload["subject_epoch"])
 
     async def load_access_token(self, token: str) -> AccessToken | None:
         payload = self.db.get("access", token)
-        if not payload or not self.db.membership(payload["token"]["subject"]):
+        if not payload or not self._current_subject(payload["token"]["subject"], payload.get("subject_epoch")):
             return None
         return AccessToken.model_validate(payload["token"])
 
     async def revoke_token(self, token: AccessToken | RefreshToken) -> None:
-        kind = "access" if isinstance(token, AccessToken) else "refresh"
         payload = self.db.get("family", token.token)
         if payload:
             self.db.revoke_family(payload["family"])
