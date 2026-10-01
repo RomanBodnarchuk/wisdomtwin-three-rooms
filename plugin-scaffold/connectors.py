@@ -108,6 +108,9 @@ def _request_json(url: str, token: str) -> dict:
     if rate:
         from security_store import security_store
 
+        # Capture before the database reservation; this expiry estimate must
+        # never outlast the actual reservation if storage takes time.
+        reservation_deadline = time.time() + rate[1]
         delay = security_store().reserve_provider_request(*rate)
         if delay:
             raise SourceRateLimited(delay)
@@ -130,6 +133,12 @@ def _request_json(url: str, token: str) -> dict:
                     security_store().extend_provider_cooldown(rate[0], delay)
                 if attempt == 0 and delay is not None and delay <= MAX_RATE_LIMIT_WAIT_SECONDS:
                     time.sleep(delay)
+                    if rate and time.time() >= reservation_deadline:
+                        # A competing user may have claimed the expired slot
+                        # while this request waited. Admit the retry atomically.
+                        remaining = security_store().reserve_provider_request(*rate)
+                        if remaining:
+                            raise SourceRateLimited(remaining) from None
                     continue
                 if rate:
                     remaining = security_store().reserve_provider_request(*rate)

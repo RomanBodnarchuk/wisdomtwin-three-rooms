@@ -2,6 +2,8 @@
 
 This continues the existing branch and draft PR [15](https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms/pull/15) from `187a25f1eb4bb9f9ff8f344d18839709ab2ab2b2`. The baseline reproduced **147 passed, 14 skipped** before these changes. Earlier checkpoint artifacts remain immutable. The new exact commit, test outputs, source archive, diff and CI evidence belong in the separate `review-round2` artifact directory. Exactly four MCP tools and two packaged skills remain.
 
+This records the historical `c244479` checkpoint. The subsequent narrow Tier 3 retry-admission fix is documented separately in [SLACK_RETRY_FOLLOWUP.md](SLACK_RETRY_FOLLOWUP.md).
+
 The supplied report was independently checked against code, synthetic regressions and primary documentation. Claimed Claude corroboration has no verified review artifact. No callable authenticated Claude, Z.ai or Grok reviewer has been established in this cloud session; the parent coordinates those reviews. Local test results must not be described as results from those services.
 
 ## Confirmed fixes and report corrections
