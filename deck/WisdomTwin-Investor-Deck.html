@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>WisdomTwin.ai - Investor Deck - We Sell Speed</title>
+<style>
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: block;
+    src: url("../public/assets/inter-latin-wght-normal-Dx4kXJAl.woff2") format("woff2");
+  }
+
+  :root {
+    --navy: #0B1F3A;
+    --navy-deep: #0A1A2F;
+    --ink: #0F2236;
+    --paper: #F4F6FA;
+    --card: #FFFFFF;
+    --teal: #4FD1C5;
+    --teal-ink: #0F766E;
+    --gold: #C8A45D;
+    --muted-dark: #A9B7C6;
+    --muted-light: #5B6B7C;
+    --line-dark: rgba(255, 255, 255, 0.10);
+    --line-light: rgba(11, 31, 58, 0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page { size: 1440px 810px; margin: 0; }
+
+  html, body {
+    background: #000;
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .slide {
+    position: relative;
+    width: 1440px;
+    height: 810px;
+    padding: 72px 72px 64px;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+
+  .dark { background: var(--navy-deep); color: #F5F8FC; }
+  .light { background: var(--paper); color: var(--ink); }
+
+  .kicker {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin-bottom: 34px;
+  }
+  .dark .kicker { color: var(--teal); }
+  .light .kicker { color: var(--teal-ink); }
+
+  h1 {
+    font-weight: 700;
+    font-size: 66px;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    max-width: 1240px;
+  }
+  h1 .accent { display: block; }
+  .dark h1 .accent { color: var(--teal); }
+  .light h1 .accent { color: var(--teal-ink); }
+
+  .hero { font-size: 128px; line-height: 0.98; letter-spacing: -0.035em; }
+
+  .lede {
+    margin-top: 30px;
+    font-size: 27px;
+    line-height: 1.4;
+    max-width: 1120px;
+    font-weight: 400;
+  }
+  .dark .lede { color: #D6DEE8; }
+  .light .lede { color: #2B3A4B; }
+
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+  h1 + .body { margin-top: 28px; }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    white-space: nowrap;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding-top: 22px;
+  }
+  .dark .footer { color: var(--muted-dark); border-top: 1px solid var(--line-dark); }
+  .light .footer { color: var(--muted-light); border-top: 1px solid var(--line-light); }
+
+  .note {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .dark .note { color: var(--muted-dark); }
+  .light .note { color: var(--muted-light); }
+
+  /* Stat blocks */
+  .stats { display: flex; gap: 40px; }
+  .stat { flex: 1; }
+  .stat .n {
+    font-weight: 800;
+    font-size: 118px;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+  .stat .n.md { font-size: 84px; }
+  .dark .stat .n { color: var(--teal); }
+  .light .stat .n { color: var(--teal-ink); }
+  .stat .l {
+    margin-top: 16px;
+    font-size: 23px;
+    line-height: 1.35;
+    max-width: 480px;
+  }
+  .dark .stat .l { color: #D6DEE8; }
+  .light .stat .l { color: #2B3A4B; }
+  .stat .src { display: block; margin-top: 8px; font-size: 15px; }
+  .dark .stat .src { color: var(--muted-dark); }
+  .light .stat .src { color: var(--muted-light); }
+
+  .punch {
+    font-size: 30px;
+    line-height: 1.35;
+    font-weight: 600;
+    max-width: 1160px;
+  }
+  .dark .punch { color: #F5F8FC; }
+  .light .punch { color: var(--ink); }
+  .punch em { font-style: normal; }
+  .dark .punch em { color: var(--teal); }
+  .light .punch em { color: var(--teal-ink); }
+
+  /* Chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .dark .chip { background: rgba(79, 209, 197, 0.14); color: var(--teal); }
+  .light .chip { background: rgba(15, 118, 110, 0.10); color: var(--teal-ink); }
+  .chip.big { font-size: 22px; padding: 18px 28px; }
+  .dark .chip.solid { background: var(--teal); color: var(--navy-deep); }
+  .light .chip.solid { background: var(--teal-ink); color: #fff; }
+
+  /* Cards */
+  .cards { display: grid; gap: 24px; }
+  .cards.three { grid-template-columns: repeat(3, 1fr); }
+  .cards.two { grid-template-columns: repeat(2, 1fr); }
+  .card { border-radius: 20px; padding: 32px; }
+  .dark .card { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line-dark); }
+  .light .card { background: var(--card); border: 1px solid var(--line-light); }
+  .card .num {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .dark .card .num { color: var(--teal); }
+  .light .card .num { color: var(--teal-ink); }
+  .card h3 { font-size: 30px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.15; margin-bottom: 14px; }
+  .card p { font-size: 20px; line-height: 1.4; }
+  .dark .card p { color: #C9D3DF; }
+  .light .card p { color: #3B4A5B; }
+
+  /* Steps */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; align-items: stretch; }
+  .step { position: relative; padding: 0 40px 0 0; }
+  .step + .step { padding-left: 40px; }
+  .light .step + .step { border-left: 1px solid var(--line-light); }
+  .dark .step + .step { border-left: 1px solid var(--line-dark); }
+  .step .num {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; margin-bottom: 18px;
+  }
+  .light .step .num { background: var(--teal-ink); color: #fff; }
+  .dark .step .num { background: var(--teal); color: var(--navy-deep); }
+  .step p { font-size: 24px; line-height: 1.35; }
+  .light .step p { color: #2B3A4B; }
+  .dark .step p { color: #D6DEE8; }
+  .step p strong { font-weight: 700; }
+  .light .step p strong { color: var(--ink); }
+  .dark .step p strong { color: #fff; }
+
+  /* Grid of governance items */
+  .grid6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 40px; }
+  .g { padding: 22px 0 0; border-top: 2px solid var(--teal); }
+  .g h3 { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .g p { font-size: 19px; line-height: 1.35; color: #C9D3DF; }
+
+  .bar {
+    border-radius: 16px;
+    padding: 24px 32px;
+    font-size: 22px;
+    line-height: 1.35;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .dark .bar { background: rgba(79, 209, 197, 0.10); border: 1px solid rgba(79, 209, 197, 0.30); color: #F5F8FC; }
+  .light .bar { background: var(--navy); color: #F5F8FC; }
+  .bar .tag {
+    flex: none;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+    background: var(--teal); color: var(--navy-deep);
+  }
+
+  /* Table */
+  table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 18px; overflow: hidden; }
+  .light table { background: var(--card); border: 1px solid var(--line-light); }
+  th, td { padding: 22px 26px; text-align: left; font-size: 21px; line-height: 1.3; vertical-align: middle; white-space: nowrap; }
+  th { background: var(--navy); color: #fff; font-weight: 700; font-size: 19px; }
+  td { border-top: 1px solid var(--line-light); color: #2B3A4B; }
+  td:first-child { font-weight: 600; color: var(--ink); width: 44%; white-space: normal; }
+  td.no { color: #B42318; font-weight: 800; letter-spacing: 0.04em; }
+  td.meh { color: #5B6B7C; font-weight: 600; }
+  td.yes { color: var(--teal-ink); font-weight: 800; letter-spacing: 0.04em; }
+  th.us, td.us { background: rgba(15, 118, 110, 0.07); }
+  th.us { background: var(--teal-ink); }
+
+  /* Quadrant */
+  .quad-wrap { display: flex; gap: 48px; align-items: center; }
+  .quad-wrap > :first-child { flex: 1; min-width: 0; }
+  .quad {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 14px;
+    position: relative;
+  }
+  .q { border-radius: 16px; padding: 22px 24px; background: rgba(255,255,255,0.05); border: 1px solid var(--line-dark); }
+  .q h4 { font-size: 21px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+  .q p { font-size: 17px; line-height: 1.35; color: #B9C5D2; }
+  .q.us { background: rgba(79, 209, 197, 0.14); border-color: rgba(79, 209, 197, 0.6); }
+  .q.us h4 { color: var(--teal); }
+  .q.us p { color: #E6F7F5; }
+  .axis {
+    display: flex; justify-content: space-between;
+    font-size: 13px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted-dark);
+    margin-top: 14px;
+  }
+  .quad-side { width: 400px; flex: none; display: flex; flex-direction: column; justify-content: center; }
+  .quad-side .punch { font-size: 34px; }
+  .quad-side .note { margin-top: 20px; font-size: 17px; line-height: 1.4; }
+
+  /* Loop */
+  .loop { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .loop .node {
+    flex: 1;
+    text-align: center;
+    padding: 26px 8px;
+    border-radius: 16px;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .light .loop .node { background: var(--card); border: 1px solid var(--line-light); color: var(--ink); }
+  .light .loop .node.hot { background: var(--teal-ink); color: #fff; border-color: var(--teal-ink); }
+  .loop .arrow { font-size: 28px; font-weight: 300; color: var(--teal-ink); flex: none; }
+
+  /* Ladder */
+  .ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: end; }
+  .rung { border-radius: 18px; padding: 28px 26px; background: var(--card); border: 1px solid var(--line-light); }
+  .rung .stage { font-size: 14px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-ink); margin-bottom: 12px; }
+  .rung .price { font-size: 46px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); line-height: 1; }
+  .rung .meta { margin-top: 12px; font-size: 18px; color: #3B4A5B; line-height: 1.35; }
+  .rung.r1 { min-height: 190px; }
+  .rung.r2 { min-height: 220px; }
+  .rung.r3 { min-height: 250px; }
+  .rung.r4 { min-height: 280px; background: var(--navy); border-color: var(--navy); }
+  .rung.r4 .stage { color: var(--teal); }
+  .rung.r4 .price { color: #fff; }
+  .rung.r4 .meta { color: #C9D3DF; }
+
+  /* Timeline */
+  .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; position: relative; }
+  .timeline::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: rgba(79, 209, 197, 0.35);
+  }
+  .tl { position: relative; padding-top: 40px; }
+  .tl::before {
+    content: ""; position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--teal); box-shadow: 0 0 0 6px var(--navy-deep);
+  }
+  .tl .when { font-size: 15px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .tl h3 { font-size: 28px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 10px; }
+  .tl p { font-size: 20px; line-height: 1.4; color: #C9D3DF; }
+
+  /* Team */
+  .person h3 { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; color: var(--ink); }
+  .person .role { font-size: 18px; font-weight: 700; color: var(--teal-ink); letter-spacing: 0.02em; margin-bottom: 18px; }
+  .person p { font-size: 20px; line-height: 1.4; color: #3B4A5B; }
+  .person p + p { margin-top: 10px; }
+  .quote { margin-top: 18px; font-size: 21px; font-style: italic; color: var(--ink); font-weight: 500; }
+
+  .two-col { display: flex; gap: 48px; align-items: center; }
+  .two-col > * { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide dark">
+  <div class="kicker">The Judgment Platform for Regulated Enterprises</div>
+  <div class="body">
+    <h1 class="hero">We sell speed.</h1>
+    <p class="lede">One press opens a live audio huddle with your management team, 24/7/365. Wisdom twins trained on decades of executive judgment move the decision forward in minutes, with a full audit trail.</p>
+  </div>
+  <div class="footer">
+    <span>WISDOMTWIN.AI · DEMO: WISDOMTWIN.AI/DEMO</span>
+    <span>PRE-SEED | $1M USD SAFE</span>
+  </div>
+</section>
+
+<!-- 2 · PROBLEM: JUDGMENT WALKS OUT -->
+<section class="slide light">
+  <div class="kicker">Problem</div>
+  <h1>Companies don't lose documents when people leave.<span class="accent">They lose judgment.</span></h1>
+  <div class="body">
+    <div class="two-col">
+      <div class="stat">
+        <div class="n">10,000</div>
+        <div class="l">Americans turn 65 every day. The judgment walks out with them.<span class="src">US Census</span></div>
+      </div>
+      <p class="punch">Policies record <em>what</em> was decided. Never <em>why</em>. The principles, exceptions, thresholds, and escalation rules live in heads.</p>
+    </div>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>02</span></div>
+</section>
+
+<!-- 3 · PROBLEM: SPEED -->
+<section class="slide dark">
+  <div class="kicker">Problem</div>
+  <h1>Decisions that should take minutes<span class="accent">wait days.</span></h1>
+  <div class="body">
+    <div class="stats">
+      <div class="stat">
+        <div class="n">275</div>
+        <div class="l">interruptions per employee per day<span class="src">Microsoft Work Trend Index 2025</span></div>
+      </div>
+      <div class="stat">
+        <div class="n">57%</div>
+        <div class="l">of the workday spent communicating about work, not doing it<span class="src">Microsoft Work Trend Index 2023</span></div>
+      </div>
+      <div class="stat" style="flex: 1.3;">
+        <p class="punch">Regulated teams cannot paste consequential work into a public chatbot. <em>So the meeting stays the bottleneck.</em></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>03</span></div>
+</section>
+
+<!-- 4 · MISSION -->
+<section class="slide light">
+  <div class="kicker">Mission</div>
+  <h1>Expand human working memory<span class="accent">from 7 items to 1 million.</span></h1>
+  <div class="body">
+    <div class="stats">
+      <div class="stat">
+        <div class="n">7 → 1M</div>
+        <div class="l">items in working memory, per role, with a wisdom twin holding a million-token context of that role's decisions</div>
+      </div>
+      <div class="stat">
+        <div class="n md" style="white-space: nowrap; padding-top: 18px;">40h → 120h</div>
+        <div class="l">of executive judgment available per week. The 9-to-5 bottleneck opens to 24/7.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>DESIGN TARGETS, NOT MEASURED PILOT METRICS</span><span>04</span></div>
+</section>
+
+<!-- 5 · CATEGORY -->
+<section class="slide dark">
+  <div class="kicker">Category Creation · Asynchronous Management</div>
+  <div class="body">
+    <h1 class="hero">NO MEETINGS.</h1>
+    <p class="lede" style="font-size: 34px; font-weight: 600; color: var(--teal); margin-top: 22px;">Your twin attends so you don't have to.</p>
+    <p class="lede" style="margin-top: 40px;">Salesforce said <strong>NO SOFTWARE</strong> and created SaaS. We say <strong>NO MEETINGS</strong> and create asynchronous management.</p>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>05</span></div>
+</section>
+
+<!-- 6 · WHY NOW -->
+<section class="slide light">
+  <div class="kicker">Why Now</div>
+  <h1>Models run 24/7.<span class="accent">Leadership still runs 9-to-5.</span></h1>
+  <div class="body">
+    <div class="cards three">
+      <div class="card">
+        <div class="num">Curve 01</div>
+        <h3>Models reason over decades</h3>
+        <p>Temporal, conditional, contested judgment is now computable. Not chunk retrieval.</p>
+      </div>
+      <div class="card">
+        <div class="num">Curve 02</div>
+        <h3>Regulators accept the pattern</h3>
+        <p>Explainability + human override + audit trail is now a recognized governance model.</p>
+      </div>
+      <div class="card">
+        <div class="num">Curve 03</div>
+        <h3>Private inference is practical</h3>
+        <p>On-prem and air-gapped deployment, model-agnostic. Sovereign-ready.</p>
+      </div>
+    </div>
+    <p class="punch" style="margin-top: 36px;">Three curves crossed. <em>The gap between model speed and leadership latency is the opportunity.</em></p>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>06</span></div>
+</section>
+
+<!-- 7 · PRODUCT -->
+<section class="slide dark">
+  <div class="kicker">Product · The Judgment Platform</div>
+  <h1>One press<span class="accent">moves the decision forward.</span></h1>
+  <div class="body">
+    <div class="cards three">
+      <div class="card">
+        <div class="num">01 · Visceral proof</div>
+        <h3>One-Press Huddle</h3>
+        <p>Live audio huddle with your management team, 24/7/365. No links. No calendar lag.</p>
+      </div>
+      <div class="card">
+        <div class="num">02 · Callable judgment</div>
+        <h3>Wisdom Twin</h3>
+        <p>Role-specific judgment, not a cloned person. Trained on 10-20 years of that role's calls, docs, and decisions.</p>
+      </div>
+      <div class="card">
+        <div class="num">03 · Why regulators say yes</div>
+        <h3>Trust Layer</h3>
+        <p>Cited evidence, policy gates, named human sign-off, safe decline, full audit. Private VPC, on-prem, air-gapped.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>07</span></div>
+</section>
+
+<!-- 8 · DEMO / WEDGE -->
+<section class="slide light">
+  <div class="kicker">The Wedge · Synthetic Scenario, Labeled</div>
+  <h1>The Sales Director can't attend.<span class="accent">His twin does.</span></h1>
+  <div class="body">
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <p><strong>CEO presses once.</strong> A 60-page government RFP is due this week. No proposal team available.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <p><strong>The twin joins instantly.</strong> Trained on 20 years of RFPs, compliance calls, and email.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <p><strong>With citations:</strong> "We can do this. I can win this, this week." Policy-gated. Transcribed. Audited.</p>
+      </div>
+    </div>
+    <div class="chips" style="margin-top: 44px;">
+      <span class="chip big solid">Watch it: wisdomtwin.ai/demo</span>
+      <span class="chip big">1-4 minute audio huddles</span>
+    </div>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>08</span></div>
+</section>
+
+<!-- 9 · TRUST LAYER -->
+<section class="slide dark">
+  <div class="kicker">Trust Layer</div>
+  <h1>Governance is not a feature.<span class="accent">It is the product.</span></h1>
+  <div class="body">
+    <div class="grid6">
+      <div class="g"><h3>Cited evidence</h3><p>Every answer traces to authorized sources.</p></div>
+      <div class="g"><h3>Policy checks</h3><p>Gated against policy version and approval state.</p></div>
+      <div class="g"><h3>Named validation</h3><p>A human expert signs off. Accountability has a name.</p></div>
+      <div class="g"><h3>Confidence decomposition</h3><p>The reasoning behind the confidence, not one score.</p></div>
+      <div class="g"><h3>Safe decline</h3><p>Unsupported judgment? "I will get the human."</p></div>
+      <div class="g"><h3>Source-level permissions</h3><p>Access follows the evidence, not the model.</p></div>
+    </div>
+    <div class="bar" style="margin-top: 36px;">
+      <span class="tag">Enforced in code</span>
+      <span>Deterministic enforcement outside the model. The model cannot self-approve a restricted action. Private cloud · On-prem · Air-gapped · Model-agnostic.</span>
+    </div>
+  </div>
+  <div class="footer"><span>BANKING · INSURANCE · HEALTHCARE · LEGAL · GOVERNMENT · CROWN CORPORATIONS</span><span>09</span></div>
+</section>
+
+<!-- 10 · COMPETITION -->
+<section class="slide light">
+  <div class="kicker">Competition</div>
+  <h1>Everyone else retrieves.<span class="accent">We govern judgment.</span></h1>
+  <div class="body">
+    <table>
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>MS Copilot</th>
+          <th>ServiceNow</th>
+          <th>Palantir / Glean</th>
+          <th class="us">WisdomTwin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Captures <strong>why</strong> a decision was made, not just what</td>
+          <td class="no">NO</td>
+          <td class="no">NO</td>
+          <td class="meh">PARTIAL</td>
+          <td class="yes us">YES</td>
+        </tr>
+        <tr>
+          <td>Policy and permissions enforced <strong>outside the model</strong></td>
+          <td class="meh">PROMPT</td>
+          <td class="meh">WORKFLOW</td>
+          <td class="meh">CUSTOM CODE</td>
+          <td class="yes us">CODE</td>
+        </tr>
+        <tr>
+          <td><strong>Attends the meeting</strong> instead of a human, with cited judgment</td>
+          <td class="meh">Summarizes</td>
+          <td class="meh">Routes</td>
+          <td class="meh">Analyzes</td>
+          <td class="yes us">ATTENDS + GOVERNS</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>10</span></div>
+</section>
+
+<!-- 11 · CATEGORY MAP -->
+<section class="slide dark">
+  <div class="kicker">Category Map</div>
+  <h1>Everyone sells async communication.<span class="accent">We sell async decisioning.</span></h1>
+  <div class="body">
+    <div class="quad-wrap">
+      <div>
+        <div class="quad">
+          <div class="q">
+            <h4>Async comms tools</h4>
+            <p>Loom, Twist, Yac, Slack clips. They cut meetings. They don't make decisions.</p>
+          </div>
+          <div class="q us">
+            <h4>WisdomTwin — alone here</h4>
+            <p>Async decisioning as SaaS. Twins join a 2 AM huddle with audit trails, named validation, human override. Air-gapped deployable.</p>
+          </div>
+          <div class="q">
+            <h4>Creator &amp; industrial twins</h4>
+            <p>Siemens, NVIDIA, Dassault. Factories, cities, supply chains. Zero leadership decision authority.</p>
+          </div>
+          <div class="q">
+            <h4>Internal exec-twin experiments</h4>
+            <p>Uber "Dara AI", Toyota "AI Akio", Simile ($200M), Viven ($35M). Locked inside. Not for sale.</p>
+          </div>
+        </div>
+        <div class="axis"><span>← Async communication</span><span>Async decisioning →</span></div>
+      </div>
+      <div class="quad-side">
+        <p class="punch">Nobody owns async decisions. <em>That quadrant is ours.</em></p>
+        <p class="note">Skype proved video calls. Zoom killed friction and owned the category.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>WISDOMTWIN.AI</span><span>11</span></div>
+</section>
+
+<!-- 12 · MOAT -->
+<section class="slide light">
+  <div class="kicker">Moat</div>
+  <h1>Every governed decision<span class="accent">makes the twin smarter and the company faster.</span></h1>
+  <div class="body">
+    <div class="loop">
+      <div class="node">Ingest</div><span class="arrow">→</span>
+      <div class="node">Twin</div><span class="arrow">→</span>
+      <div class="node">Huddle</div><span class="arrow">→</span>
+      <div class="node">Decision</div><span class="arrow">→</span>
+      <div class="node">Audit</div><span class="arrow">→</span>
+      <div class="node hot">Smarter Twin</div>
+    </div>
+    <p class="punch" style="margin-top: 48px;">A competitor can ship the interface in a quarter. <em>They cannot ship years of validated judgment.</em> The moat is the customer-specific evaluation dataset plus the governance runtime.</p>
+  </div>
+  <div class="footer"><span>NO PATENTS CLAIMED · NO EXCLUSIVE DATA CLAIMED · THE DATASET IS UNBUYABLE WITHOUT THE CUSTOMER</span><span>12</span></div>
+</section>
+
+<!-- 13 · MARKET -->
+<section class="slide dark">
+  <div class="kicker">Market · 2026 vs 2030</div>
+  <h1>$8-12B serviceable today.<span class="accent">$50B+ as retirements peak.</span></h1>
+  <div class="body">
+    <div class="stats">
+      <div class="stat">
+        <div class="n md">20-30k</div>
+        <div class="l">mid-market and enterprise firms with 10+ executive roles, regulated bias, NA + EU</div>
+      </div>
+      <div class="stat">
+        <div class="n md">× ~$300k</div>
+        <div class="l">average ARR on the locked ladder: $250k pilot to $500k+/yr commercial</div>
+      </div>
+      <div class="stat">
+        <div class="n md">= $8-12B</div>
+        <div class="l">2026 serviceable market. Regulated sectors pay 2-3x for governance.</div>
+      </div>
+    </div>
+    <p class="punch" style="margin-top: 44px;">Beachhead: <em>Toronto</em>, the densest concentration of regulated buyers and AI talent in North America. Expansion: <em>MENA via Dubai</em>.</p>
+  </div>
+  <div class="footer"><span>INTERNAL MODEL · $100M ARR PER 200 ORGANIZATIONS AT THE $500K/YR TIER · 18% OF THE US IS 65+ BY 2030 (US CENSUS)</span><span>13</span></div>
+</section>
+
+<!-- 14 · BUSINESS MODEL -->
+<section class="slide light">
+  <div class="kicker">Business Model · Tier Sheet v1.0 Locked</div>
+  <h1>One price per stage.<span class="accent">One unit: the role.</span></h1>
+  <div class="body">
+    <div class="ladder">
+      <div class="rung r1">
+        <div class="stage">Judgment Assessment</div>
+        <div class="price">$0</div>
+        <div class="meta">Entry scoping</div>
+      </div>
+      <div class="rung r2">
+        <div class="stage">Concept Validation</div>
+        <div class="price">$50k</div>
+        <div class="meta">2 months · 10 roles</div>
+      </div>
+      <div class="rung r3">
+        <div class="stage">Structured Pilot</div>
+        <div class="price">$250k</div>
+        <div class="meta">6 months · 50 roles</div>
+      </div>
+      <div class="rung r4">
+        <div class="stage">Commercial</div>
+        <div class="price">$500k+/yr</div>
+        <div class="meta">Annual · 500 roles</div>
+      </div>
+    </div>
+    <p class="punch" style="margin-top: 36px;"><em>No tokens. No meters.</em> You pay for judgment capacity deployed, never per question asked.</p>
+  </div>
+  <div class="footer"><span>ONTARIO COJG/OJAP CAN REIMBURSE THE CLIENT UP TO $250K · NET PILOT COST $50-90K · BILLING IN USD</span><span>14</span></div>
+</section>
+
+<!-- 15 · TRACTION -->
+<section class="slide dark">
+  <div class="kicker">Traction · Honesty Builds Credibility</div>
+  <h1>Working demos. Pre-revenue.<span class="accent">Stated plainly.</span></h1>
+  <div class="body">
+    <div class="stats">
+      <div class="stat">
+        <div class="n md">$0</div>
+        <div class="l">product revenue</div>
+      </div>
+      <div class="stat">
+        <div class="n md">0</div>
+        <div class="l">paying customers</div>
+      </div>
+      <div class="stat">
+        <div class="n md">5</div>
+        <div class="l">industry demo scenarios, founder-built end to end, live at wisdomtwin.ai/demo</div>
+      </div>
+    </div>
+    <div class="bar" style="margin-top: 44px;">
+      <span class="tag">Client outcome</span>
+      <span>We used our own twin to win a government RFP for Talent Lab. Its CEO said on our podcast the win generated <strong>$5.5M</strong> in 2025 revenue for her company. Client revenue, on the record. Never presented as product revenue.</span>
+    </div>
+  </div>
+  <div class="footer"><span>NEXT MILESTONE: LIGHTHOUSE PILOTS · ONE ORGANIZATION · ONE CRITICAL ROLE · ONE NAMED SUCCESS GATE</span><span>15</span></div>
+</section>
+
+<!-- 16 · TEAM -->
+<section class="slide light">
+  <div class="kicker">Team · Builder + Compliance Architect</div>
+  <h1>Roman builds the twin.<span class="accent">Stella makes it deployable.</span></h1>
+  <div class="body">
+    <div class="cards two">
+      <div class="card person">
+        <h3>Roman Bodnarchuk</h3>
+        <div class="role">Co-Founder &amp; CEO · SF-Toronto · full-time, writes the code</div>
+        <p>28 years turning executive judgment into systems. Founded N5R in 1998; P&amp;G digital agency of record for 6 years; scale-up operator across 15 countries.</p>
+        <p>Personally built every WisdomTwin demo end to end. Leads product, fundraising, and founder-led sales.</p>
+      </div>
+      <div class="card person">
+        <h3>Stella Cabrera</h3>
+        <div class="role">Co-Founder, Governance &amp; Institutional Trust · Dubai-Toronto</div>
+        <p>20+ years with banks, fintechs, and regulators. Chairman &amp; Past President, RMA Toronto. Co-author, RMA x OSFI operational resilience guidance. Senior Advisor &amp; MENA Lead, EDM Association.</p>
+        <p class="quote">"We understand the risk committee because I already chair one."</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>INCOMING CFO POST-FINANCING: DEBORAH KAPLAN, FORMER CRO, SAP SUSTAINABILITY</span><span>WE ARE ASYNC MANAGEMENT: 24/7 ACROSS SF-TORONTO + DUBAI-TORONTO</span></div>
+</section>
+
+<!-- 17 · PLAN -->
+<section class="slide dark">
+  <div class="kicker">What $1M Buys · 18-Month Plan</div>
+  <h1>The raise is a sales plan with dates.<span class="accent">The seed gate is named in advance.</span></h1>
+  <div class="body">
+    <div class="timeline">
+      <div class="tl">
+        <div class="when">M0</div>
+        <h3>Close</h3>
+        <p>$1M SAFE closes. Stella converts to full-time. Governance hardening and source connectors begin.</p>
+      </div>
+      <div class="tl">
+        <div class="when">M1-3</div>
+        <h3>First validations</h3>
+        <p>First 5 Concept Validations signed in Toronto. Founder-led, grant-assisted.</p>
+      </div>
+      <div class="tl">
+        <div class="when">M4-9</div>
+        <h3>Scale validations</h3>
+        <p>15-20 Concept Validations at $50k. Lighthouse pilots run against named success gates.</p>
+      </div>
+      <div class="tl">
+        <div class="when">M10-18</div>
+        <h3>Convert</h3>
+        <p>Validations convert to $250k Structured Pilots and the first $500k/yr Commercial cohort. MENA opens via Dubai.</p>
+      </div>
+    </div>
+    <div class="bar" style="margin-top: 40px;">
+      <span class="tag">Seed gate</span>
+      <span>3 lighthouse pilots passing held-out fidelity evaluation + $500k contracted. When validations convert to $250k pilots, the seed prices itself.</span>
+    </div>
+  </div>
+  <div class="footer"><span>FORWARD-LOOKING PLAN, NOT A PROJECTION OF MEASURED RESULTS · $1M = 18 MONTHS OF FOUNDER-LED RUNWAY</span><span>17</span></div>
+</section>
+
+<!-- 18 · THE ASK -->
+<section class="slide dark">
+  <div class="kicker">The Ask</div>
+  <div class="body">
+    <h1 class="hero" style="font-size: 104px;">$1M pre-seed SAFE.</h1>
+    <p class="lede" style="font-size: 32px; font-weight: 600; color: var(--teal); margin-top: 22px;">The raise and the first revenue stage are the same number: 20 validations × $50k.</p>
+    <div class="chips" style="margin-top: 40px;">
+      <span class="chip">Governance + audit infrastructure</span>
+      <span class="chip">Source connectors + evaluation dataset</span>
+      <span class="chip">Private VPC / on-prem / air-gapped</span>
+      <span class="chip">Founder-led GTM: Toronto + MENA</span>
+    </div>
+    <p class="punch" style="margin-top: 48px;">WisdomTwin preserves institutional judgment. <em>Every employee, backed by a Wisdom Twin.</em></p>
+  </div>
+  <div class="footer">
+    <span>roman@wisdomtwin.ai · calendly.com/romanbodnarchuk/20min · 416 220 5314</span>
+    <span>WISDOMTWIN.AI/DEMO</span>
+  </div>
+</section>
+
+</body>
+</html>
