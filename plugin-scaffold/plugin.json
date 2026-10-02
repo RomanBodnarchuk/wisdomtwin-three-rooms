@@ -1,0 +1,106 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "wisdomtwin",
+  "version": "1.0.0",
+  "description": "A private prototype for role-scoped business questions and cited source evidence. Slack adapter code is available; production connection is unverified. Gmail and Google Drive remain gated.",
+  "author": {
+    "name": "ROMAN GREGORY BODNARCHUK",
+    "url": "https://wisdomtwin.ai"
+  },
+  "homepage": "https://wisdomtwin.ai",
+  "repository": "https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms",
+  "keywords": [
+    "role",
+    "twin",
+    "slack",
+    "citations",
+    "business"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "WisdomTwin",
+        "shortDescription": "Cited answers for one role",
+        "longDescription": "Answer business questions from the source-backed index for your assigned role, cite supporting snippets, and show connection status. Queries use evidence currently accessible to your connected business account. Updating the index requires your instruction. Slack support needs operator activation; Gmail and Google Drive are unavailable.",
+        "developerName": "ROMAN GREGORY BODNARCHUK",
+        "category": "Productivity",
+        "capabilities": [
+          "Query an assigned role index with source citations",
+          "Show role connection status",
+          "Update the role index on request"
+        ],
+        "websiteURL": "https://wisdomtwin.ai",
+        "supportURL": "https://REPLACE_WITH_RAILWAY_PUBLIC_URL/support",
+        "privacyPolicyURL": "https://REPLACE_WITH_RAILWAY_PUBLIC_URL/privacy",
+        "termsOfServiceURL": "https://REPLACE_WITH_RAILWAY_PUBLIC_URL/terms",
+        "defaultPrompt": [
+          "Show the status of my role twin.",
+          "What does my role record say about Acme? Cite the evidence.",
+          "Help me choose a Slack query before updating my role index."
+        ],
+        "brandColor": "#1F3A5F",
+        "brandColorDark": "#8CB4FF",
+        "composerIcon": "./assets/logo.svg",
+        "composerIconDark": "./assets/logo.svg",
+        "logo": "./assets/logo.svg",
+        "logoDark": "./assets/logo.svg"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Connect a business domain with a role title",
+              "prompt": "Connect Slack for example-corp.com with the role title CRO.",
+              "tools_triggered": "connect_business_account",
+              "expected_behavior": "After verified corporate sign-in and operator-provisioned entitlement to this domain and role, create or reuse the role and open tenure and return a read-only Slack authorization URL. Reject unassigned identities."
+            },
+            {
+              "description": "Reuse the same role title",
+              "prompt": "Connect Slack for example-corp.com as CRO again.",
+              "tools_triggered": "connect_business_account",
+              "expected_behavior": "For the same verified caller, reuse the role id and the single open tenure. A different caller cannot acquire this role by typing its title or domain."
+            },
+            {
+              "description": "Ingest Slack into the role",
+              "prompt": "Ingest Slack messages about the pipeline for this role, up to 10 items.",
+              "tools_triggered": "ingest_data",
+              "expected_behavior": "With the source grant, operator activation and embedding API opt-in configured, return the ingestion job id and progress. Production processing is queued. Store vectors and source metadata under the protected role; do not persist source text."
+            },
+            {
+              "description": "Answer with a citation",
+              "prompt": "What is the Acme pipeline stage?",
+              "tools_triggered": "query_twin",
+              "expected_behavior": "Return only supported role evidence, with uri and snippet citations. Re-fetch current source access and verify provenance before citing it. Return the empty-context response when nothing remains accessible and current."
+            },
+            {
+              "description": "Show status",
+              "prompt": "What role twins are connected?",
+              "tools_triggered": "list_twins_status",
+              "expected_behavior": "Return one object per visible connection with exactly service, role_title, ingested_chunks, last_update and domain."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Reject a consumer email domain",
+              "prompt": "Connect Slack for gmail.com as CRO.",
+              "expected_behavior": "Refuse with DOMAIN_REJECTED and do not create an organization."
+            },
+            {
+              "description": "Empty index",
+              "prompt": "What did the board decide about pricing before anything is ingested?",
+              "expected_behavior": "Reply with exactly: I have nothing ingested on that."
+            },
+            {
+              "description": "Gmail while the connector is gated",
+              "prompt": "Ingest my Gmail about the budget.",
+              "expected_behavior": "Refuse with OAUTH_PENDING while Gmail is disabled. Google adapter code currently supports snippets or metadata only, not full message or document ingestion."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This plugin does not sell products, promote subscriptions, or process payments."
+      },
+      "onboardingSkill": "./skills/query-twin/SKILL.md"
+    }
+  }
+}
