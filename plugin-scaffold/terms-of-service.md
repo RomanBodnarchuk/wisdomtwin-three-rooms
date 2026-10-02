@@ -1,4 +1,4 @@
-# WisdomTwin hosted-plugin terms — draft
+# WisdomTwin hosted-plugin terms: draft
 
 **Status: draft, not adopted or effective.** These proposed terms cover only the hosted WisdomTwin plugin and its MCP service. They do not amend the existing website's terms, on-premises policies, signed customer agreements or other engagements. No public launch or acceptance of these terms is established by this candidate.
 

@@ -115,9 +115,10 @@ def test_deleted_slack_thread_alone_abstains_exactly(monkeypatch, thread_referen
 def test_reply_provider_outage_is_a_coded_failure_without_partial_evidence(monkeypatch, thread_reference):
     failed = {"uri": deleted_uri(thread_reference), "text": "Acme pipeline unavailable thread data",
         "author_provider_id": "AUTHOR_DELETED"}
-    # Valid evidence is hydrated first; a later outage must not return it as a
-    # partial answer or classify the unavailable thread as permanently deleted.
-    indexed_sources(monkeypatch, [VALID_SOURCE, failed])
+    # The outage ranks first, before any evidence verified: it must stay a coded
+    # failure, not a deleted thread. Evidence verified before an outage is kept
+    # as a partial answer; tests/test_hardening_grants.py covers that order.
+    indexed_sources(monkeypatch, [failed, VALID_SOURCE])
     requested = []
     monkeypatch.setattr(connectors, "_request_json", thread_response("internal_error", requested))
     monkeypatch.setattr(service, "answer_from_context", lambda *args: pytest.fail("Outage must prevent evidence output"))
@@ -127,6 +128,7 @@ def test_reply_provider_outage_is_a_coded_failure_without_partial_evidence(monke
     assert VALID_SOURCE["text"] not in str(caught.value)
     assert "unavailable thread data" not in str(caught.value)
     assert ("CDELETED", "/api/conversations.replies") in requested
+    assert all(channel != "CVALID" for channel, _ in requested)
 
 
 def rate_limited(retry_after):
@@ -205,7 +207,9 @@ def test_rate_limit_failure_has_safe_guidance_and_returns_no_evidence(monkeypatc
     retry_headers, expected_delay, expected_waits):
     failed = {"uri": deleted_uri(True), "text": "Acme pipeline rate-limited thread data",
         "author_provider_id": "AUTHOR_DELETED"}
-    store, role, records = indexed_sources(monkeypatch, [VALID_SOURCE, failed])
+    # The limit ranks first, before any evidence verified; tests/test_hardening_grants.py
+    # covers a limit after verified evidence, which now returns a partial answer.
+    store, role, records = indexed_sources(monkeypatch, [failed, VALID_SOURCE])
     pending = [rate_limited(header) for header in retry_headers]
     requested = []
 
@@ -226,6 +230,6 @@ def test_rate_limit_failure_has_safe_guidance_and_returns_no_evidence(monkeypatc
     assert "retry" in error and str(expected_delay) in error
     assert VALID_SOURCE["text"].lower() not in error
     assert failed["text"].lower() not in error
-    assert requested[0] == "CVALID" and len(requested) == 1 + len(retry_headers)
+    assert requested == ["CDELETED"] * len(retry_headers)
     assert offline_clock_and_requests == expected_waits
     assert all(record.excerpt == "" for record in store.chunks_for_role(role.id))

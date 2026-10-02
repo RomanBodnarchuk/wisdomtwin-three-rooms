@@ -1,4 +1,4 @@
-# Google test users — no accounts recorded
+# Google test users: no accounts recorded
 
 No Google test account has been invented or added by this repository. Roman should add permitted managed business accounts privately in the Google Cloud consent-screen configuration and record access/review evidence securely outside Git. Provider testing restrictions must be checked in the current console.
 

@@ -73,7 +73,14 @@ def bind_google(pending: dict, member: dict, body: dict) -> None:
 
 
 def _save(pending: dict, *, body: dict, token: str, binding: dict) -> None:
-    expires = max(1, min(int(body.get("expires_in", 86400)), 86400))
+    # Only the provider's own lifetime is stored. Slack user tokens without
+    # rotation carry no expires_in and stay valid until revoked; None records that.
+    expires_at = None
+    if body.get("expires_in") is not None:
+        try:
+            expires_at = time.time() + max(1, int(body["expires_in"]))
+        except (TypeError, ValueError, OverflowError):
+            raise ValueError("The provider returned an invalid grant lifetime") from None
     payload = {"access_token": token, "subject": pending["subject"], "role_id": pending["role_id"],
-               "service": pending["service"], "expires_at": time.time() + expires, **binding}
+               "service": pending["service"], "expires_at": expires_at, **binding}
     current_store().save_credential(pending["role_id"], pending["service"], encrypt_token(json.dumps(payload)))

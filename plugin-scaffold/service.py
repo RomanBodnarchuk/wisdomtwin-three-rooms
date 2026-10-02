@@ -10,8 +10,11 @@ import hashlib
 from dataclasses import replace
 import uuid
 import contextvars
+from collections import Counter
 from functools import wraps
 from datetime import date, datetime, timezone
+
+from cryptography.fernet import InvalidToken
 
 from chunking import chunk_text
 from connectors import fetch_drive, fetch_gmail, fetch_slack, use_fixtures
@@ -36,11 +39,33 @@ from errors import (
 from generation import EMPTY_CONTEXT, NON_BUSINESS_REFUSAL, answer_from_context, is_non_business
 from oauth_connectors import google_authorize_url, new_pkce, slack_authorize_url, public_base_url
 from retrieval import _terms, hybrid_search
+from runtime import max_source_fetches
 from store import ChunkRecord, actor_subject, current_actor, current_store, retention_cutoff
-from tokens import decrypt_token
-from safety import unsafe_text
+from tokens import decrypt_token, keyword_hash
+from safety import identifier_or_injection, restricted_topic, skip_reason, unsafe_text
 
 _call_audited = contextvars.ContextVar("wisdomtwin_call_audited", default=False)
+
+# query_twin never cites more than this many chunks, so it never verifies more.
+MAX_CITED_CHUNKS = 3
+_SERVICE_NAMES = {"slack": "Slack", "gmail": "Gmail", "drive": "Google Drive"}
+
+
+class GrantUnavailable(Exception):
+    """The caller has no current source grant: missing, expired or bound to another identity."""
+
+    def __init__(self, service: str) -> None:
+        self.service = service
+        super().__init__(f"No current {service} grant")
+
+
+def _service_names(services: list[str]) -> str:
+    names = list(dict.fromkeys(_SERVICE_NAMES.get(service, service) for service in services))
+    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def reconnect_error(services: list[str], purpose: str) -> CodedToolError:
+    return CodedToolError(OAUTH_PENDING, f"Reconnect {_service_names(services)} with connect_business_account {purpose}.")
 
 
 def audited_tool(function):
@@ -160,8 +185,11 @@ def _require_active_role():
 def ingest_data(service: str, query: str, max_items: int = 1000) -> dict:
     bind_actor()
     store = current_store()
-    if not query.strip() or len(query) > 1024 or unsafe_text(query):
+    if not query.strip() or len(query) > 1024 or identifier_or_injection(query):
         raise ToolError("Use a short business search query without secrets or restricted identifiers.")
+    if restricted_topic(query):
+        raise ToolError("This search query names a restricted topic (for example patient or credit card); "
+                        "items on these topics are not indexed.")
     if service in {"gmail", "drive"} and not connector_enabled(service):
         _audit("ingest_data", error_code=OAUTH_PENDING)
         raise CodedToolError(OAUTH_PENDING, COMING_SOON[service])
@@ -185,6 +213,13 @@ def ingest_data(service: str, query: str, max_items: int = 1000) -> dict:
             QUOTA_EXCEEDED,
             f"max_items exceeds the free-tier monthly quota of {MONTHLY_CHUNK_QUOTA} chunks.",
         )
+    # Queued job status carries no error code, so a lapsed grant is reported
+    # here; the worker re-checks it in case the grant lapses while queued.
+    try:
+        connector_token(role.id, service)
+    except GrantUnavailable:
+        _audit("ingest_data", error_code=OAUTH_PENDING, organization_id=role.organization_id, role_id=role.id)
+        raise reconnect_error([service], "before ingesting again") from None
     job = store.create_job(role.id, service, query, max_items)
     _audit("ingest_data", organization_id=role.organization_id, role_id=role.id)
     if os.environ.get("REDIS_URL", "").strip():
@@ -228,15 +263,28 @@ def query_twin(question: str, max_results: int = 10, max_tokens: int = 512) -> d
     ranked = hybrid_search(store, role_id=role.id, question=question, embedding=embedding,
                            limit=max(1, min(max_results, 10)))
     chunks = [item.chunk for item in ranked]
-    if not use_fixtures():
-        chunks = hydrate_sources(chunks)
     question_terms = set(_terms(question))
-    supporting = [chunk for chunk in chunks if question_terms & set(_terms(chunk.excerpt)) and not unsafe_text(chunk.excerpt)]
-    chunks = supporting
+
+    def supports(chunk: ChunkRecord) -> bool:
+        return bool(question_terms & set(_terms(chunk.excerpt))) and not unsafe_text(chunk.excerpt)
+
+    if use_fixtures():
+        chunks = [chunk for chunk in chunks if supports(chunk)]
+    else:
+        # A chunk whose stored keyword hashes share no question term cannot pass
+        # `supports`, so it must not spend the per-query fetch budget first.
+        # Demote, do not drop: rows hashed under another key still verify.
+        # Bare SHA-256 hashes are pre-HMAC rows awaiting re-indexing.
+        wanted = ({keyword_hash(term) for term in question_terms}
+                  | {hashlib.sha256(term.encode()).hexdigest() for term in question_terms})
+        # sorted is stable, so rank order is kept within each group.
+        chunks = sorted(chunks, key=lambda chunk: not (wanted & set(chunk.keyword_hashes)))
+        # Verify lazily in that order and stop once enough support exists to cite.
+        chunks = hydrate_sources(chunks, keep=supports, limit=MAX_CITED_CHUNKS)
     if not chunks:
         _audit("query_twin", organization_id=organization_id, role_id=role.id)
         return {"answer": EMPTY_CONTEXT, "citations": []}
-    chunks = chunks[:3]
+    chunks = chunks[:MAX_CITED_CHUNKS]
     # Return exact source excerpts; ChatGPT performs synthesis in the conversation.
     # Citation snippets contain every returned excerpt, including chunk offsets.
     answer = answer_from_context(question, chunks, max(32, min(max_tokens, 2048)))
@@ -315,28 +363,55 @@ def sweep_expired(now: datetime | None = None) -> int:
 
 
 def connector_token(role_id: str, service: str) -> str:
+    """Return the caller's current grant, or raise GrantUnavailable so callers can ask for a reconnect.
+
+    Fixture Slack needs no token and returns an empty string.
+    """
     if use_fixtures() and service == "slack":
         return ""
     ciphertext = current_store().get_credential(role_id, service)
     if not ciphertext:
-        return ""
-    payload = json.loads(decrypt_token(ciphertext))
-    if payload.get("subject") != current_actor() or payload.get("role_id") != role_id or payload.get("service") != service or payload.get("expires_at", 0) <= time.time():
-        return ""
+        raise GrantUnavailable(service)
+    # A grant stored under a rotated CONNECTOR_TOKEN_KEY, or a corrupted one, needs a
+    # reconnect, which overwrites it under the current key. A malformed key still fails loudly.
+    try:
+        plaintext = decrypt_token(ciphertext)
+    except (InvalidToken, UnicodeDecodeError):
+        raise GrantUnavailable(service) from None
+    try:
+        payload = json.loads(plaintext)
+    except ValueError:
+        raise GrantUnavailable(service) from None
+    if not isinstance(payload, dict):
+        raise GrantUnavailable(service)
+    # None means the provider set no lifetime; a missing key fails closed.
+    expires_at = payload.get("expires_at", 0)
+    if payload.get("subject") != current_actor() or payload.get("role_id") != role_id or payload.get("service") != service or (expires_at is not None and expires_at <= time.time()):
+        raise GrantUnavailable(service)
     from security_store import require_membership
     role = current_store().get_role(role_id)
+    if role is None:
+        raise CodedToolError(AUTHORIZATION_REQUIRED, "Role access is not authorized.")
     org = current_store().get_organization(role.organization_id)
     member = require_membership(current_actor(), org.domain, role.title)
     if service == "slack" and (payload.get("team_id") != member["slack_team_id"] or payload.get("user_id") != member["slack_user_id"]):
-        return ""
+        raise GrantUnavailable(service)
     if service in {"gmail", "drive"} and payload.get("provider_subject") != member["google_subject"]:
-        return ""
+        raise GrantUnavailable(service)
+    if not payload.get("access_token"):
+        raise GrantUnavailable(service)
     return payload["access_token"]
 
 
 def build_indexed_chunks(role_id: str, tenure_id: str, author_person_id: str, service: str,
                          items: list[dict[str, str]], *, metadata_only: bool | None = None,
-                         remaining_chunks: int | None = None) -> list[ChunkRecord]:
+                         remaining_chunks: int | None = None, skipped: Counter | None = None) -> list[ChunkRecord]:
+    """Embed and hash source items for the role index.
+
+    Items with restricted identifiers, instruction injection or restricted topic
+    words are not indexed. ``skipped`` counts them by fixed reason label; their
+    text is never kept.
+    """
     metadata_only = not use_fixtures() if metadata_only is None else metadata_only
     store = current_store()
     role = store.get_role(role_id)
@@ -344,7 +419,10 @@ def build_indexed_chunks(role_id: str, tenure_id: str, author_person_id: str, se
         raise CodedToolError(AUTHORIZATION_REQUIRED, "Role access is not authorized.")
     pieces = []
     for item in items:
-        if unsafe_text(item["text"]):
+        reason = skip_reason(item["text"])
+        if reason:
+            if skipped is not None:
+                skipped[reason] += 1
             continue
         provider_author = item.get("author_provider_id", "")
         if metadata_only and not provider_author:
@@ -365,32 +443,70 @@ def build_indexed_chunks(role_id: str, tenure_id: str, author_person_id: str, se
             service=service, uri=uri if index == 0 else f"{uri}#chunk-{index + 1}",
             excerpt="" if metadata_only else excerpt, embedding=vector, created_at=created,
             source_uri=uri, source_hash=hashlib.sha256(excerpt.encode()).hexdigest(), chunk_index=index,
-            keyword_hashes=sorted({hashlib.sha256(term.encode()).hexdigest() for term in _terms(excerpt)}),
+            keyword_hashes=sorted({keyword_hash(term) for term in _terms(excerpt)}),
         ))
     return records
 
 
-def hydrate_sources(records: list[ChunkRecord]) -> list[ChunkRecord]:
-    """Re-fetch text with the current user's token and discard changed/inaccessible sources."""
-    from connectors import refetch_slack, refetch_google, SourceUnavailable, SourceRateLimited
+def hydrate_sources(records: list[ChunkRecord], *, keep=None, limit: int | None = None) -> list[ChunkRecord]:
+    """Re-fetch text with the current user's token and discard changed/inaccessible sources.
+
+    Records are verified lazily in the given order. Fetching stops once ``limit``
+    verified chunks pass ``keep``, and at most WISDOMTWIN_MAX_SOURCE_FETCHES
+    distinct sources are requested per call. A rate limit or provider failure
+    after some evidence verified stops fetching and keeps that evidence; with
+    nothing verified it is a coded failure. If nothing verified and a service
+    grant was missing, expired or rejected by the provider, the caller is asked
+    to reconnect. If nothing verified while the budget left sources unchecked,
+    it is a coded failure too, never the empty-context answer.
+    """
+    from connectors import refetch_slack, refetch_google, GrantRevoked, SourceUnavailable, SourceRateLimited
     from errors import CONNECTOR_FAILED
 
     hydrated = []
     cache: dict[tuple[str, str], dict | None] = {}
+    grants: dict[str, str] = {}
+    missing_grants: list[str] = []
+    budget = max_source_fetches()
+    fetched = 0
+    unchecked = False
     for record in records:
+        if limit is not None and len(hydrated) >= limit:
+            break
         # Legacy records containing raw excerpts are never returned in production.
         if record.excerpt or not record.source_uri or not record.source_hash or not connector_enabled(record.service):
             continue
+        if record.service in missing_grants:
+            continue
         key = (record.service, record.source_uri)
         if key not in cache:
-            token = connector_token(record.role_id, record.service)
+            # Resolved once per service, before the budget check. connector_token makes
+            # no provider call, so a lapsed grant is still reported after the budget is spent.
+            if record.service not in grants:
+                try:
+                    grants[record.service] = connector_token(record.role_id, record.service)
+                except GrantUnavailable:
+                    grants[record.service] = ""
+            token = grants[record.service]
             if not token:
+                missing_grants.append(record.service)
                 continue
+            if fetched >= budget:
+                unchecked = True
+                continue
+            fetched += 1
             try:
                 cache[key] = refetch_slack(token, record.source_uri) if record.service == "slack" else refetch_google(token, record.service, record.source_uri)
             except SourceUnavailable:
                 cache[key] = None
+            except GrantRevoked:
+                # The provider rejected the grant itself, so every source of this service is unreadable.
+                missing_grants.append(record.service)
+                continue
             except SourceRateLimited as exc:
+                if hydrated:
+                    budget = fetched  # Keep the verified evidence and stop fetching.
+                    continue
                 import math
 
                 _audit("query_twin", error_code=CONNECTOR_FAILED, role_id=record.role_id)
@@ -398,6 +514,9 @@ def hydrate_sources(records: list[ChunkRecord]) -> list[ChunkRecord]:
                             if exc.retry_after_seconds is not None else "Retry after the provider's rate limit clears.")
                 raise CodedToolError(CONNECTOR_FAILED, f"Source provider is rate limited. {guidance}") from None
             except Exception:
+                if hydrated:
+                    budget = fetched  # Keep the verified evidence and stop fetching.
+                    continue
                 _audit("query_twin", error_code=CONNECTOR_FAILED, role_id=record.role_id)
                 raise CodedToolError(CONNECTOR_FAILED, "Source revalidation failed. Retry after the provider recovers.") from None
         source = cache.get(key)
@@ -415,5 +534,16 @@ def hydrate_sources(records: list[ChunkRecord]) -> list[ChunkRecord]:
         excerpt = excerpts[record.chunk_index]
         if hashlib.sha256(excerpt.encode()).hexdigest() != record.source_hash:
             continue
-        hydrated.append(replace(record, excerpt=excerpt))
+        verified = replace(record, excerpt=excerpt)
+        if keep is None or keep(verified):
+            hydrated.append(verified)
+    if not hydrated and missing_grants:
+        # The index is intact; only the grant lapsed, so "nothing ingested" would be false.
+        _audit("query_twin", error_code=OAUTH_PENDING, role_id=records[0].role_id)
+        raise reconnect_error(missing_grants, "to restore cited answers")
+    if not hydrated and unchecked:
+        # Candidates remain that were never fetched, so "nothing ingested" would be false too.
+        _audit("query_twin", error_code=CONNECTOR_FAILED, role_id=records[0].role_id)
+        raise CodedToolError(CONNECTOR_FAILED, "No supporting source verified within this query's source-check limit. "
+                             "Ask a narrower question or retry.")
     return hydrated

@@ -8,7 +8,6 @@ import math
 import os
 import uuid
 import threading
-import hashlib
 from functools import wraps
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -459,13 +458,16 @@ class MemoryStore:
         return scoped[:limit]
 
     def keyword_search(self, role_id: str, terms: list[str], limit: int) -> list[ChunkRecord]:
+        from tokens import keyword_hash
+
         scoped = self.chunks_for_role(role_id)
         if not terms:
             return []
+        hashed = {term: keyword_hash(term) for term in terms}
 
         def score(chunk: ChunkRecord) -> int:
             excerpt = chunk.excerpt.lower()
-            return sum(1 for term in terms if term in excerpt or hashlib.sha256(term.encode()).hexdigest() in chunk.keyword_hashes)
+            return sum(1 for term in terms if term in excerpt or hashed[term] in chunk.keyword_hashes)
 
         ranked = [chunk for chunk in scoped if score(chunk) > 0]
         ranked.sort(key=score, reverse=True)
@@ -1042,8 +1044,10 @@ class PostgresStore:
         _require_role(self, role_id)
         if not terms:
             return []
+        from tokens import keyword_hash
+
         clauses = " OR ".join(["excerpt ILIKE %s" for _ in terms])
-        params: list = [role_id, *[f"%{term}%" for term in terms], [hashlib.sha256(term.encode()).hexdigest() for term in terms], limit]
+        params: list = [role_id, *[f"%{term}%" for term in terms], [keyword_hash(term) for term in terms], limit]
         with self._connect() as connection:
             rows = connection.execute(
                 f"""

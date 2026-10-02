@@ -1,4 +1,4 @@
-# Google consent-screen preparation — not submitted
+# Google consent-screen preparation: not submitted
 
 Gmail and Drive remain disabled and unverified. The current code reads Gmail snippets/metadata and Drive names/descriptions, not full email/document bodies. Do not describe full-content indexing as complete in a review form or enable a connector simply because this preparation file exists.
 

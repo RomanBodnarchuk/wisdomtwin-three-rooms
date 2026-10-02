@@ -14,12 +14,27 @@ from pathlib import Path
 
 FIXTURE_PATH = Path(__file__).resolve().parent / "fixtures" / "slack" / "messages.json"
 MAX_RATE_LIMIT_WAIT_SECONDS = 2
+# Errors about one source: it was deleted or this user cannot read it.
 SLACK_UNAVAILABLE_ERRORS = frozenset({"message_not_found", "thread_not_found", "channel_not_found",
-    "not_in_channel", "token_revoked", "account_inactive", "invalid_auth", "missing_scope", "access_denied"})
+    "not_in_channel", "missing_scope", "access_denied"})
+# Errors about the grant itself: every source is unreadable until the user reconnects.
+SLACK_GRANT_ERRORS = frozenset({"token_revoked", "invalid_auth", "account_inactive", "token_expired", "not_authed"})
 
 
 class SourceUnavailable(RuntimeError):
     """Source was deleted or the current user no longer has access."""
+
+
+class GrantRevoked(RuntimeError):
+    """The provider rejected the user's grant itself (revoked, expired or deactivated); the user must reconnect."""
+
+    def __init__(self, service: str) -> None:
+        self.service = service
+        super().__init__(f"The provider rejected the {service} grant")
+
+
+class _GrantRejected(SourceUnavailable):
+    """HTTP 401. Google callers turn it into GrantRevoked for their service."""
 
 
 class SourceRateLimited(RuntimeError):
@@ -79,9 +94,24 @@ def _request_json(url: str, token: str) -> dict:
                     time.sleep(delay)
                     continue
                 raise SourceRateLimited(delay) from None
-            if exc.code in {401, 403, 404}:
+            if exc.code == 401:
+                raise _GrantRejected("Source access is unavailable") from None
+            if exc.code in {403, 404}:
                 raise SourceUnavailable("Source access is unavailable") from None
             raise RuntimeError(f"Connector request failed with status {exc.code}") from None
+
+
+def _google_json(service: str, url: str, token: str) -> dict:
+    """A Google API request where HTTP 401 means the grant was revoked or expired, not one missing source."""
+    try:
+        return _request_json(url, token)
+    except _GrantRejected:
+        raise GrantRevoked(service) from None
+
+
+def _check_slack_grant(body: dict) -> None:
+    if body.get("error") in SLACK_GRANT_ERRORS:
+        raise GrantRevoked("slack")
 
 
 def fetch_slack(token: str, query: str, max_items: int) -> list[dict[str, str]]:
@@ -92,6 +122,7 @@ def fetch_slack(token: str, query: str, max_items: int) -> list[dict[str, str]]:
     params = urllib.parse.urlencode({"query": query or "in:#general", "count": min(max_items, 100)})
     body = _request_json(f"https://slack.com/api/search.messages?{params}", token)
     if body.get("ok") is not True:
+        _check_slack_grant(body)
         raise RuntimeError("Slack search was rejected")
     matches = body.get("messages", {}).get("matches", [])
     items: list[dict[str, str]] = []
@@ -134,6 +165,7 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
         params = urllib.parse.urlencode({"channel": channel, "ts": thread_ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
     body = _request_json("https://slack.com/api/" + ("conversations.replies?" if thread_ts else "conversations.history?") + params, token)
     if body.get("ok") is not True:
+        _check_slack_grant(body)
         if body.get("error") in SLACK_UNAVAILABLE_ERRORS:
             return None
         raise RuntimeError("Source access was rejected")
@@ -144,6 +176,7 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
         params = urllib.parse.urlencode({"channel": channel, "ts": ts, "oldest": ts, "latest": ts, "inclusive": "true", "limit": 1})
         body = _request_json("https://slack.com/api/conversations.replies?" + params, token)
         if body.get("ok") is not True:
+            _check_slack_grant(body)
             if body.get("error") in SLACK_UNAVAILABLE_ERRORS:
                 return None
             raise RuntimeError("Source access was rejected")
@@ -154,14 +187,16 @@ def refetch_slack(token: str, uri: str) -> dict[str, str] | None:
 
 
 def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:
-    listed = _request_json(
+    listed = _google_json(
+        "gmail",
         "https://gmail.googleapis.com/gmail/v1/users/me/messages?"
         + urllib.parse.urlencode({"q": query, "maxResults": min(max_items, 100)}),
         token,
     )
     items: list[dict[str, str]] = []
     for message in listed.get("messages", [])[:max_items]:
-        detail = _request_json(
+        detail = _google_json(
+            "gmail",
             f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{message['id']}?format=metadata",
             token,
         )
@@ -172,7 +207,8 @@ def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:
             continue
         items.append(
             {
-                "uri": f"https://mail.google.com/mail/u/0/#inbox/{message['id']}",
+                # Omit the /u/0/ account index, which always meant the first signed-in mailbox.
+                "uri": f"https://mail.google.com/mail/#all/{message['id']}",
                 "text": snippet,
                 "author_provider_id": _gmail_author(detail),
             }
@@ -183,7 +219,8 @@ def fetch_gmail(token: str, query: str, max_items: int) -> list[dict[str, str]]:
 def fetch_drive(token: str, query: str, max_items: int) -> list[dict[str, str]]:
     safe_query = query.replace("\\", "\\\\").replace("'", "\\'")
     drive_query = f"trashed = false and fullText contains '{safe_query}'" if query else "trashed = false"
-    listed = _request_json(
+    listed = _google_json(
+        "drive",
         "https://www.googleapis.com/drive/v3/files?"
         + urllib.parse.urlencode(
             {
@@ -220,10 +257,11 @@ def refetch_google(token: str, service: str, uri: str) -> dict[str, str] | None:
     import re
 
     if service == "gmail":
-        match = re.fullmatch(r"https://mail\.google\.com/mail/u/0/#inbox/([a-zA-Z0-9_-]+)", uri)
+        # Current rows use #all/<id>; legacy rows used u/0/#inbox/<id>.
+        match = re.fullmatch(r"https://mail\.google\.com/mail/(?:#all|u/0/#inbox)/([a-zA-Z0-9_-]+)", uri)
         if not match:
             raise ValueError("Invalid Gmail reference")
-        detail = _request_json(f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{match[1]}?format=metadata", token)
+        detail = _google_json("gmail", f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{match[1]}?format=metadata", token)
         if "TRASH" in detail.get("labelIds", []):
             return None
         return {"uri": uri, "text": detail.get("snippet", ""), "author_provider_id": _gmail_author(detail)}
@@ -231,7 +269,7 @@ def refetch_google(token: str, service: str, uri: str) -> dict[str, str] | None:
         match = re.fullmatch(r"https://drive\.google\.com/file/d/([a-zA-Z0-9_-]+)/view", uri)
         if not match:
             raise ValueError("Invalid Drive reference")
-        detail = _request_json(f"https://www.googleapis.com/drive/v3/files/{match[1]}?fields=id,name,description,trashed,lastModifyingUser(permissionId)", token)
+        detail = _google_json("drive", f"https://www.googleapis.com/drive/v3/files/{match[1]}?fields=id,name,description,trashed,lastModifyingUser(permissionId)", token)
         if detail.get("trashed") is True:
             return None
         text = " ".join(part for part in (detail.get("name"), detail.get("description")) if part)

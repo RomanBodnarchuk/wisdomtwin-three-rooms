@@ -1,4 +1,4 @@
-# Tested hardening checkpoint — October 1, 2026
+# Tested hardening checkpoint: October 1, 2026
 
 This is a tested private candidate for PR [15](https://github.com/RomanBodnarchuk/wisdomtwin-three-rooms/pull/15), branch `cursor/wisdomtwin-mcp-plugin-8d09`. It is not a completed public deployment, provider approval, legal adoption or directory submission.
 

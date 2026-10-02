@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import math
 import re
-import hashlib
 from dataclasses import dataclass
 
 from store import ChunkRecord, Store
+from tokens import keyword_hash
 
 
 _STOPWORDS = {
@@ -84,13 +84,14 @@ def hybrid_search(
         scores[chunk.id] = scores.get(chunk.id, 0.0) + 1.0 / (60 + rank)
 
     question_terms = set(_terms(question))
+    term_hashes = {term: keyword_hash(term) for term in question_terms}
     ranked: list[RankedChunk] = []
     for chunk_id, fused in scores.items():
         chunk = chunks[chunk_id]
         overlap = 0.0
         if question_terms:
             excerpt_terms = set(_terms(chunk.excerpt))
-            matched = {term for term in question_terms if term in excerpt_terms or hashlib.sha256(term.encode()).hexdigest() in chunk.keyword_hashes}
+            matched = {term for term in question_terms if term in excerpt_terms or term_hashes[term] in chunk.keyword_hashes}
             overlap = len(matched) / len(question_terms)
         vector_score = _cosine(embedding, chunk.embedding)
         rerank = (0.5 * fused) + (0.3 * vector_score) + (0.2 * overlap)

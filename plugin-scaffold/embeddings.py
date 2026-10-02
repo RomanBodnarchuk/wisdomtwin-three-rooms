@@ -24,7 +24,42 @@ def _local_vector(text: str) -> list[float]:
     return [value / norm for value in vector]
 
 
+# OpenAI caps one embeddings request at 2,048 inputs and 300,000 tokens; stay well inside both.
+MAX_BATCH_INPUTS = 256
+MAX_BATCH_TOKENS = 250_000
+
+
+def estimated_tokens(text: str) -> int:
+    """Words times 1.4, rounded up, in integer arithmetic; no tokenizer dependency."""
+    return (len(text.split()) * 14 + 9) // 10
+
+
+def batches(texts: list[str]) -> list[list[str]]:
+    """Split texts, in order, into requests of at most MAX_BATCH_INPUTS inputs and
+    MAX_BATCH_TOKENS estimated tokens. A single larger input travels alone."""
+    groups: list[list[str]] = []
+    current: list[str] = []
+    tokens = 0
+    for text in texts:
+        size = estimated_tokens(text)
+        if current and (len(current) >= MAX_BATCH_INPUTS or tokens + size > MAX_BATCH_TOKENS):
+            groups.append(current)
+            current, tokens = [], 0
+        current.append(text)
+        tokens += size
+    if current:
+        groups.append(current)
+    return groups
+
+
 def _openai_vectors(texts: list[str]) -> list[list[float]]:
+    vectors: list[list[float]] = []
+    for batch in batches(texts):
+        vectors.extend(_openai_batch(batch))
+    return vectors
+
+
+def _openai_batch(texts: list[str]) -> list[list[float]]:
     payload = json.dumps(
         {
             "model": os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"),

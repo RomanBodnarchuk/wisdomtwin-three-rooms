@@ -109,8 +109,9 @@ def test_missing_current_grant_never_refetches_or_uses_cached_evidence(monkeypat
     enable_mock_source_queries(monkeypatch)
     monkeypatch.setattr(service, "connector_token", lambda *args: "")
     monkeypatch.setattr(connectors, "refetch_slack", lambda *args: pytest.fail("No valid grant"))
-    assert service.query_twin("Acme pipeline stage") == {
-        "answer": "I have nothing ingested on that.", "citations": []}
+    # The index is intact, so a lapsed grant asks for a reconnect instead of claiming nothing was ingested.
+    with pytest.raises(CodedToolError, match="OAUTH_PENDING"):
+        service.query_twin("Acme pipeline stage")
 
 
 def test_legacy_raw_excerpt_is_not_returned_in_real_source_mode(monkeypatch):
@@ -140,7 +141,9 @@ def test_chunks_of_one_source_are_refetched_once(monkeypatch):
     assert all(record.excerpt == "" for record in store.chunks_for_role(role.id))
 
 
-@pytest.mark.parametrize("provider_error", ["channel_not_found", "not_in_channel", "access_denied", "token_revoked"])
+# token_revoked rejects the grant itself, not one source, so it now asks for a
+# reconnect; tests/test_hardening_grants.py covers every Slack grant error.
+@pytest.mark.parametrize("provider_error", ["channel_not_found", "not_in_channel", "access_denied"])
 def test_slack_source_denial_is_absent_evidence(monkeypatch, provider_error):
     indexed_source()
     enable_mock_source_queries(monkeypatch)

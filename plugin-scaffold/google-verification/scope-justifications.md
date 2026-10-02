@@ -1,4 +1,4 @@
-# Scope review notes — current adapter limitations
+# Scope review notes: current adapter limitations
 
 These are preparation notes, not approved or ready-to-paste full-product justifications. Roman must reconcile scopes with the completed implementation, least-privilege requirements, hosted privacy disclosure and Google's actual review process.
 

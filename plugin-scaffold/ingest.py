@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
+import logging
 import os
+from collections import Counter
 
 from celery import Celery
 
-from connectors import fetch_drive, fetch_gmail, fetch_slack
+from connectors import GrantRevoked, fetch_drive, fetch_gmail, fetch_slack
 from errors import JOB_NOT_FOUND, CodedToolError
 from mcp.server.mcpserver.exceptions import ToolError
+from safety import IDENTIFIER_OR_INJECTION, RESTRICTED_TOPIC
+
+logger = logging.getLogger("wisdomtwin")
 
 celery_app = Celery(
     "wisdomtwin",
@@ -44,7 +49,7 @@ def run_job(job_id: str, subject: str | None = None):
 
 
 def _run_claimed_job(store, job):
-    from service import build_indexed_chunks, connector_token
+    from service import GrantUnavailable, build_indexed_chunks, connector_token, reconnect_error
     from domain import connector_enabled, MONTHLY_CHUNK_QUOTA
     from errors import OAUTH_PENDING, CONNECTOR_FAILED
 
@@ -56,15 +61,28 @@ def _run_claimed_job(store, job):
         if not connector_enabled(job.service):
             raise CodedToolError(OAUTH_PENDING, "The source connector is unavailable.")
         store.update_job(job.id, status="running", progress=10, chunks_ingested=0)
-        token = connector_token(role.id, job.service)
+        try:
+            token = connector_token(role.id, job.service)
+        except GrantUnavailable:
+            # A lapsed grant needs the user, not a retry: OAUTH_PENDING is never retried below.
+            raise reconnect_error([job.service], "before ingesting again") from None
         fetcher = {"slack": fetch_slack, "gmail": fetch_gmail, "drive": fetch_drive}.get(job.service)
         if fetcher is None:
             raise CodedToolError(CONNECTOR_FAILED, "Unsupported source provider.")
-        items = fetcher(token, job.query, job.max_items)
+        try:
+            items = fetcher(token, job.query, job.max_items)
+        except GrantRevoked:
+            # The provider revoked or expired the grant itself: like a lapsed grant, never retried.
+            raise reconnect_error([job.service], "before ingesting again") from None
         store.update_job(job.id, status="running", progress=40, chunks_ingested=0)
         remaining = MONTHLY_CHUNK_QUOTA - store.monthly_chunk_count(role.organization_id)
+        skipped = Counter()
         records = build_indexed_chunks(role.id, tenure.id, tenure.person_id, job.service,
-                                       items[:job.max_items], remaining_chunks=remaining)
+                                       items[:job.max_items], remaining_chunks=remaining, skipped=skipped)
+        if skipped:
+            # Counts only: skipped text is never stored or logged, and tool outputs are unchanged.
+            logger.info("Ingestion job %s skipped %d source items: %d restricted topic, %d identifier or injection",
+                        job.id, sum(skipped.values()), skipped[RESTRICTED_TOPIC], skipped[IDENTIFIER_OR_INJECTION])
         store.update_job(job.id, status="running", progress=70, chunks_ingested=0)
         written = store.upsert_chunks(records, job_id=job.id)
         store.touch_role(role.id)

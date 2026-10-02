@@ -12,16 +12,18 @@ import urllib.request
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AnyHttpUrl
+import anyio.to_thread
+
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse
 
 from sdk_compat import WisdomTwinMCPServer
 from mcp.server.auth.settings import AuthSettings, RevocationOptions
+from mcp.server.transport_security import TransportSecuritySettings
 from mcp.types import CallToolResult, EmbeddedResource, TextContent, TextResourceContents, ToolAnnotations
 
 import service as twin_service
-from auth_provider import MCP_SCOPE, WisdomTwinAuthProvider, auth_is_required
+from auth_provider import MCP_SCOPE, WisdomTwinAuthProvider, auth_is_required, authorization_issuer
 from domain import ROLE_TITLES, connector_enabled
 from oauth_connectors import public_base_url
 from runtime import validate_runtime, local_test_mode
@@ -33,6 +35,8 @@ validate_runtime()
 logger = logging.getLogger("wisdomtwin")
 
 PICKLIST = ", ".join(ROLE_TITLES)
+# ChatGPT calls server to server without Origin; a browser Origin must be one of these or the service itself.
+CLIENT_ORIGINS = ("https://chatgpt.com", "https://chat.openai.com")
 SLACK_STATE = "live" if connector_enabled("slack") else "coming soon"
 GMAIL_STATE = "live" if connector_enabled("gmail") else "coming soon"
 DRIVE_STATE = "live" if connector_enabled("drive") else "coming soon"
@@ -53,8 +57,10 @@ _server_kwargs = {
 if auth_is_required():
     base = public_base_url()
     _server_kwargs["auth"] = AuthSettings(
-        issuer_url=AnyHttpUrl(base),
-        resource_server_url=AnyHttpUrl(f"{base}/mcp"),
+        # Strings, not AnyHttpUrl: AuthSettings preserves an empty path only for
+        # string input, so the issuer stays the bare origin with no trailing slash.
+        issuer_url=authorization_issuer(),
+        resource_server_url=f"{base}/mcp",
         required_scopes=[MCP_SCOPE],
         validate_token_resource=True,
         revocation_options=RevocationOptions(enabled=True),
@@ -152,7 +158,7 @@ async def oauth_consent(request: Request) -> HTMLResponse:
     session = _auth_provider.db.get("session", request.cookies.get(SESSION_COOKIE, ""))
     if not session or session["transaction"] != transaction:
         try:
-            target, browser = start_login(transaction)
+            target, browser = await anyio.to_thread.run_sync(start_login, transaction)
         except RuntimeError:
             return HTMLResponse("Corporate sign-in is not configured. Contact the workspace administrator.", status_code=503)
         except Exception:
@@ -175,7 +181,8 @@ async def oauth_consent(request: Request) -> HTMLResponse:
 @mcp.custom_route("/oauth/callback/identity", methods=["GET"])
 async def identity_callback(request: Request) -> HTMLResponse:
     try:
-        transaction, session = finish_login(request.query_params.get("state", ""), request.query_params.get("code", ""), request.cookies.get(LOGIN_COOKIE, ""))
+        transaction, session = await anyio.to_thread.run_sync(
+            finish_login, request.query_params.get("state", ""), request.query_params.get("code", ""), request.cookies.get(LOGIN_COOKIE, ""))
     except Exception:
         return HTMLResponse("Corporate authorization could not be verified.", status_code=400)
     response = RedirectResponse(f"{public_base_url()}/oauth/consent?txn={urllib.parse.quote(transaction)}", status_code=302)
@@ -206,12 +213,13 @@ async def slack_callback(request: Request) -> PlainTextResponse:
         code = request.query_params.get("code", "")
         if not code:
             raise ValueError("Missing code")
+        # Provider calls block, so they run in worker threads; the callback's actor context travels with them.
         with authorized_callback(request.query_params.get("state", ""), "slack") as (pending, member):
-            body = _exchange_code("https://slack.com/api/oauth.v2.access", {
+            body = await anyio.to_thread.run_sync(_exchange_code, "https://slack.com/api/oauth.v2.access", {
                 "client_id": os.environ.get("SLACK_CLIENT_ID", ""),
                 "code": code, "redirect_uri": f"{public_base_url()}/oauth/callback/slack", "code_verifier": pending["verifier"],
             })
-            bind_slack(pending, member, body)
+            await anyio.to_thread.run_sync(bind_slack, pending, member, body)
     except Exception:
         logger.info("Slack identity binding was rejected")
         return PlainTextResponse("Slack authorization could not be verified.", status_code=400)
@@ -225,11 +233,11 @@ async def google_callback(request: Request) -> PlainTextResponse:
         if not code:
             raise ValueError("Missing code")
         with authorized_callback(request.query_params.get("state", ""), {"gmail", "drive"}) as (pending, member):
-            body = _exchange_code("https://oauth2.googleapis.com/token", {
+            body = await anyio.to_thread.run_sync(_exchange_code, "https://oauth2.googleapis.com/token", {
                 "client_id": os.environ.get("GOOGLE_CLIENT_ID", ""), "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET", ""),
                 "code": code, "redirect_uri": f"{public_base_url()}/oauth/callback/google", "grant_type": "authorization_code", "code_verifier": pending["verifier"],
             })
-            bind_google(pending, member, body)
+            await anyio.to_thread.run_sync(bind_google, pending, member, body)
     except Exception:
         logger.info("Google identity binding was rejected")
         return PlainTextResponse("Google authorization could not be verified.", status_code=400)
@@ -335,17 +343,36 @@ def list_twins_status() -> list[dict]:
     return twin_service.list_twins_status()
 
 
+def transport_security() -> TransportSecuritySettings | None:
+    """Host and Origin validation for /mcp. Local mode keeps the SDK's loopback default."""
+    if local_test_mode():
+        return None
+    public = urllib.parse.urlsplit(public_base_url())
+    host = f"[{public.hostname}]" if ":" in public.hostname else public.hostname
+    port = "" if public.port in (None, {"https": 443, "http": 80}[public.scheme]) else f":{public.port}"
+    return TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=[host, f"{host}:*"],
+        allowed_origins=[f"{public.scheme}://{host}{port}", *CLIENT_ORIGINS],
+    )
+
+
+def _bind_host() -> str:
+    return os.environ.get("HOST", "127.0.0.1" if local_test_mode() else "0.0.0.0")
+
+
+def http_app():
+    """The streamable HTTP app main() serves; tests build it in-process without a socket."""
+    return mcp.streamable_http_app(json_response=True, stateless_http=True,
+                                   transport_security=transport_security(), host=_bind_host())
+
+
 def main() -> None:
+    import uvicorn
+
     port = int(os.environ.get("PORT", "8000"))
     validate_runtime()
-    host = os.environ.get("HOST", "127.0.0.1" if local_test_mode() else "0.0.0.0")
-    mcp.run(
-        transport="streamable-http",
-        host=host,
-        port=port,
-        json_response=True,
-        stateless_http=True,
-    )
+    uvicorn.run(http_app(), host=_bind_host(), port=port, log_level=mcp.settings.log_level.lower())
 
 
 if __name__ == "__main__":

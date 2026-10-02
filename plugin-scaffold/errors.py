@@ -23,8 +23,11 @@ STABLE_CODES = (
 class CodedToolError(ToolError):
     """Anticipated tool failure carrying a stable application error code.
 
-    The SDK turns ``ToolError`` into a tool result with ``is_error`` set and
-    the message in a text block. The code is the prefix of that message.
+    The exception text is "<CODE>: <message>". The pinned SDK re-raises every
+    ``ToolError`` with its own prefix and returns a tool result with
+    ``is_error`` set, so the client reads one text block:
+    "Error executing tool <name>: <CODE>: <message>". The stable code follows
+    that SDK prefix; it does not start the text.
     """
 
     def __init__(self, code: str, message: str) -> None:
