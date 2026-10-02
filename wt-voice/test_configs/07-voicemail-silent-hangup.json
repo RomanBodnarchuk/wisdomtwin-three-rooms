@@ -1,0 +1,26 @@
+{
+  "name": "WT07 Voicemail: hang up silently",
+  "type": "tool",
+  "dynamic_variables": {
+    "contact_name": "Dana",
+    "company": "Northshore Credit Union",
+    "callback_number": "one eight hundred, five five five, zero one zero zero",
+    "hubspot_contact_id": "12345"
+  },
+  "chat_history": [
+    {
+      "role": "user",
+      "message": "Hi, you've reached the voicemail of Dana at Northshore Credit Union. Please leave a message after the tone.",
+      "time_in_call_secs": 0
+    }
+  ],
+  "tool_call_parameters": {
+    "referenced_tool": {
+      "id": "end_call",
+      "type": "system"
+    },
+    "parameters": [],
+    "verify_absence": false
+  },
+  "check_any_tool_matches": true
+}
