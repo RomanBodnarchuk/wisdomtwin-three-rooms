@@ -1,0 +1,40 @@
+# ── MCP SERVERS ──────────────────────────────────────────────────
+
+[mcp_servers.hubspot]
+url = "https://mcp.hubspot.com/anthropic"
+# HubSpot OAuth is handled automatically on first use.
+# Read-only scopes: contacts, companies, deals, tickets,
+# engagements, owners, properties.
+startup_timeout_sec = 60
+tool_timeout_sec = 120
+
+[mcp_servers.firsttouch]
+url = "https://mcp.firsttouch.ai"
+# FirstTouch is SOC 2 Type II certified. It exposes 40 MCP tools
+# for prospect discovery, enrichment, and governed LinkedIn actions.
+# Human approval gate is enforced at the FirstTouch layer.
+startup_timeout_sec = 60
+tool_timeout_sec = 120
+
+# X monitoring: x-intel-mcp is stdio-only. Grok Build supports
+# stdio servers natively. Install it globally first:
+#   npm install -g @lkbaba/x-intel-mcp
+# Then uncomment the block below.
+#
+# [mcp_servers.x]
+# command = "npx"
+# args = ["-y", "x-intel-mcp"]
+# startup_timeout_sec = 30
+# tool_timeout_sec = 60
+
+# If you have a remote X MCP server (HTTPS), use this instead:
+# [mcp_servers.x]
+# url = "<your-remote-x-mcp-url>"
+# headers = { "Authorization" = "Bearer ${X_API_TOKEN}" }
+
+# ── SUBAGENTS ────────────────────────────────────────────────────
+
+[subagents]
+regulated-finder = "Reads ~/.grok/agents/regulated-finder.md"
+investor-tracker  = "Reads ~/.grok/agents/investor-tracker.md"
+profile-builder   = "Reads ~/.grok/agents/profile-builder.md"
