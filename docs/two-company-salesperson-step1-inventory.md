@@ -10,7 +10,7 @@ Step 1 is complete as an inventory. Later configuration is blocked.
 
 The first missing secret is `HUBSPOT_PRIVATE_APP_TOKEN`. It is required before Step 2. The connected HubSpot tool is OAuth. It is not a private app, and ElevenLabs documents a private app token (`pat-`) for its HubSpot integration. The same token is the documented way to read `dataHostingLocation`. Hosting region stays unknown until that read succeeds. Do not paste the token into chat.
 
-`TAVUS_API_KEY` is also absent. Tavus account entitlements stay unknown. That secret is not the next action.
+The Tavus API key authenticated on October 5, 2026. It is stored only in a mode-600 file outside this repository. It is not committed, and it is not printed here. Account plan and minute balance are still unknown because the documented API has no billing endpoint.
 
 ## Authenticated accounts
 
@@ -20,7 +20,7 @@ The first missing secret is `HUBSPOT_PRIVATE_APP_TOKEN`. It is required before S
 | HubSpot | Verified identity, hosting unknown | Portal `66868`, user `106421`, owner `20`, `roman@n5r.com`, Roman Bodnarchuk, Founder and CEO. Account type `STANDARD`. Portal name `N5R.ai`. UI domain `app.hubspot.com`. Time zone `America/New_York`. Currency USD plus CAD. Created `1278669541000`. Onboarding not completed. |
 | Calendly | Verified | User slug `romanbodnarchuk`. Scheduling page `https://calendly.com/romanbodnarchuk`. Organization kind `single`, plan `standard`, stage `paid`. |
 | Google Calendar | Verified | Primary calendar `roman@n5r.com`, time zone `America/Toronto`. A WellnessLiving calendar is also present and is unrelated. |
-| Tavus | Blocked | No Tavus MCP namespace. Composio search did not return a Tavus toolkit. Connected Composio apps do not include Tavus. Zapier catalog search for Tavus returned no apps. `TAVUS_API_KEY` is unset on this machine. |
+| Tavus | Authenticated reads, plan unknown | `GET /v2/pals`, `/v2/faces`, `/v2/voices`, `/v2/conversations`, `/v2/documents`, and `/v2/guardrails` returned HTTP 200 with header `x-api-key`. User-face count is 0. Conversations total 0. No billing endpoint exists (`/v2/account`, `/v2/billing`, `/v2/usage` return 404). |
 | Slack | Read verified, no alert channel | Member channels: `#general`, `#random`, `#condooutlet`, `#los_suenos`, `#park_central`. A search for an alert channel returned nothing. No message was sent. |
 | This repository | Verified gap | WisdomTwin Vite demo. No worker, no host, and no env file with the target secrets. `op` is not installed. The 1Password connector is in an error state and only exposes authentication. |
 
@@ -28,11 +28,12 @@ The first missing secret is `HUBSPOT_PRIVATE_APP_TOKEN`. It is required before S
 
 1. The required WisdomTwin booking URL exists, and its duration is 15 minutes, not 20. Slug `20min` does not prove duration. Name: `15-Min Intro: WisdomTwin.ai`. Booking URL: `https://calendly.com/romanbodnarchuk/20min`. Location kind: `google_conference`. Active, unpaid, instant booking. Updated `2026-10-05T00:49:16Z`.
 2. Live buyer-agent copy and the non-live salesperson branch still say a twenty-minute demo. The public demo site in this repository also describes a 20-minute booking. That is a copy mismatch with the live 15-minute event. Do not shorten the event and do not buy a Tavus upgrade from this finding.
-3. A Tavus 15-minute conversation cap is not established for this account. Public pricing checked today is not this account's plan. See the Tavus section.
-4. Calendly user time zone and the default Working hours schedule are `America/New_York` (Monday through Friday, 07:00 to 19:00, weekends closed). Google Calendar for `roman@n5r.com` is `America/Toronto`. The requested scheduling context is `America/Toronto`. The N5R agent prompt time zone field is `America/Toronto`. The event-type payload does not name the connected Google calendar. `google_conference` shows the location kind only.
-5. HubSpot data hosting location is unknown. `app.hubspot.com` and portal `66868` are not proof of `na1`. ElevenLabs still documents US-hosted HubSpot only and excludes tokens that start with `pat-eu1`.
-6. There is no WisdomTwin value on the deal property `brand_pipeline` or the contact property `lead_owned_by_company`.
-7. Neither salesperson branch has a phone number, a Calendly tool, or a HubSpot tool. The only workspace phone number is assigned to a different test agent.
+3. A Tavus 15-minute conversation cap is not established for this account. Public Builder pricing lists a 15-minute maximum conversation duration on secondary summaries of the official table, and Growth is the first card that says "No conversation duration limit." This API key's plan was not returned. Both live events are 15 minutes. A PAL that joins about one minute early can exceed a 15-minute cap before the scheduled end. Do not shorten either event and do not buy an upgrade from this finding.
+4. There is no trained Roman face on this Tavus account. `GET /v2/faces?face_type=user` returned `total_count` 0. Two existing PALs named for Roman use stock faces `Lee` (`r8495a788aa1`) and `Mateo` (`rbb3d627a705`), both Phoenix-4.5, training `completed`, and neither has a conferencing email or an ElevenLabs external voice. Face training is still required before a PAL can represent Roman.
+5. Calendly user time zone and the default Working hours schedule are `America/New_York` (Monday through Friday, 07:00 to 19:00, weekends closed). Google Calendar for `roman@n5r.com` is `America/Toronto`. The requested scheduling context is `America/Toronto`. The N5R agent prompt time zone field is `America/Toronto`. The event-type payload does not name the connected Google calendar. `google_conference` shows the location kind only.
+6. HubSpot data hosting location is unknown. `app.hubspot.com` and portal `66868` are not proof of `na1`. ElevenLabs still documents US-hosted HubSpot only and excludes tokens that start with `pat-eu1`.
+7. There is no WisdomTwin value on the deal property `brand_pipeline` or the contact property `lead_owned_by_company`.
+8. Neither salesperson branch has a phone number, a Calendly tool, or a HubSpot tool. The only workspace phone number is assigned to a different test agent. The approved Canadian JustCall number is not in the ElevenLabs phone list. Do not substitute the US Twilio number.
 
 ## Calendly event types
 
@@ -128,21 +129,47 @@ Teams returned: N5R (owner 20 only), Trevor David, Casaco, Sociable Living. Seat
 
 ## Tavus
 
-Account status: unknown. No replicas, PALs, faces, conferencing usernames, or webhook subscriptions were read, because there is no credential.
+Authenticated October 5, 2026. Base URL `https://tavusapi.com`. Header `x-api-key`. The key value is not recorded in this file.
 
-Public pricing page `https://www.tavus.io/pricing`, fetched October 5, 2026, is not this account. The page shows more than one plan table. In the developer cards visible on that fetch, Google Meet and Zoom configuration counts are separate from concurrent sessions. Examples on that page: Starter lists 1 configuration and 1 concurrent session; Builder lists 3 and 3; Growth lists 7 configurations and up to 10 concurrent sessions, plus the line "No conversation duration limit." A 15-minute per-conversation cap for this account was not verified. The WisdomTwin event is 15 minutes, so the specific conflict "20-minute event versus a 15-minute Tavus cap" is not established.
+| Check | Result |
+| --- | --- |
+| User faces | `total_count` 0. No Roman face is trained on this key. |
+| Stock faces referenced by the Roman-named PALs | `r8495a788aa1` Lee and `rbb3d627a705` Mateo. Both `status` completed, `finetune_status` completed, model `phoenix-4.5`. These are not Roman. |
+| PAL list | 38 PALs. Almost all are stock templates. None has a conferencing layer. |
+| Roman-named PALs | `pc304da53b20` "Roman Bodnerchuk", created `2026-10-03T14:15:54Z`, face Lee, TTS engine `tavus-auto`, empty external voice. Prompt is WisdomTwin enterprise sales and misspells the name. `pa5b0d4c5228` "Roman", created `2026-10-03T16:19:36Z`, face Mateo, same TTS shape. Prompt tries to close a WisdomTwin sale. Neither is an N5R PAL. Do not treat them as the two company PALs, and do not delete the shared stock faces. |
+| Voices | 40 returned, stock replica voices with null `voice_id`. The ElevenLabs voice `OtTgp0gIgmfhqSXfyakl` is not attached. Official TTS docs: a private ElevenLabs voice needs `tts_engine` `elevenlabs`, `external_voice_id`, and the ElevenLabs API key. The voice ID alone is not sufficient. |
+| Conversations | `total_count` 0. |
+| Guardrails | `gdb6968e32a97` `defer_pricing_and_quotes` and `g89a10ce17434` `defer_pricing`. Both defer price quotes. Neither states an approved price. |
+| Documents | At least 50, mostly uploaded October 3, 2026. Names include N5R website copy, WisdomTwin film ledger, an investor deck PDF `de-978dbb29748e` whose `display_status` is `ready`, and files whose names mention Ontario funds. Most other sampled documents are `disabled`. Do not attach the investor deck or grant-titled files to a buyer PAL. |
+| Billing | No documented account, billing, or usage endpoint. Plan, remaining minutes, and the actual conversation-duration cap are unknown. |
+
+Public pricing page `https://www.tavus.io/pricing`, fetched October 5, 2026, is not this account. Official cards on that fetch:
+
+- Builder, `$59/mo` plus overage: 175 conversational-video minutes, 3 custom face slots, up to 3 concurrent sessions, 3 Google Meet/Zoom configurations.
+- Growth, `$397/mo`: 1,300 minutes, up to 10 concurrent sessions, 7 conferencing configurations, and the explicit line "No conversation duration limit."
+
+Configuration count and concurrency are separate numbers. The official page has a "Maximum conversation duration" row. Its cell values did not survive extraction as a clean table. Do not treat a third-party restatement of a 15-minute Builder cap as this account's entitlement.
 
 Docs rechecked the same day:
 
-- PAL meetings: conferencing is a layer with `username`, allowlist, and an address at `tavusinvite.com`. Create conversation can also join with `meeting_url`. Auth header `x-api-key`. A PAL needs `default_face_id` when conferencing is set.
-- PAL TTS: `voice_id` or `external_voice_id`. ElevenLabs private voices need the provider API key. Public ElevenLabs voices do not. `voice_id` and `external_voice_id` are mutually exclusive.
-- Webhooks: `callback_url` on create conversation. Events include `system.pal_joined`, `system.shutdown` (including `max_call_duration reached`), `application.transcription_ready`, and `application.recording_ready`.
+- PAL meetings: conferencing is a layer with `username`, allowlist, and an address at `tavusinvite.com`. The PAL joins about one minute before a scheduled start. Create conversation can also join with `meeting_url`. A PAL needs `default_face_id` when conferencing is set.
+- PAL TTS: private ElevenLabs voices require the provider API key.
+- Webhooks: `callback_url` is set on `POST /v2/conversations`. Documented events include `system.pal_joined`, `system.shutdown` (including `max_call_duration reached`), and `application.transcription_ready`. The callback page does not document a signature header. Join and shutdown events do not prove the transcript is ready. The page does not say a calendar-created meeting inherits a `callback_url` from a manually created conversation.
 
 This repository has no worker to receive those callbacks. No host is invented.
 
+## Campaign mapping
+
+| Company | ElevenLabs agent | Calendly event | Tavus PAL |
+| --- | --- | --- | --- |
+| WisdomTwin | `agent_2501m34tx48gfa9v218pndv3gfwq`, live main branch is the SMS test, qualification work is on `vs-build-2026-10-03` at 0 percent traffic | `https://calendly.com/romanbodnarchuk/20min`, actual duration 15 minutes, Google Meet | None. Do not reuse `pc304da53b20` or `pa5b0d4c5228` until a trained Roman face exists. |
+| N5R | `agent_8401m3zh2kqret69d7f1s4w6b882`, live main has no booking tools, qualification work is on `vs-build-2026-10-03` at 0 percent traffic | `https://calendly.com/romanbodnarchuk/roman-bodnarchuk-n5r-ai-15-minute-business-call`, 15 minutes, Google Meet | None. |
+
+Owner-test HubSpot contact located by email `roman@n5r.com`: record `143893597452`. A second search hit, `223451166888`, is a HubSpot send-domain address and is not the owner contact. Phone on the owner contact matches the WisdomTwin callback spoken in the buyer-agent prompt. The N5R prompt's other callback number is not assigned as an ElevenLabs phone number.
+
 ## Documentation log
 
-Method for each row: public page fetch on October 5, 2026. No authenticated call was made to these vendor APIs from this machine.
+Method for each row: public page fetch on October 5, 2026. Tavus rows were also checked with authenticated GETs. HubSpot account-details was not called, because the private app token is absent.
 
 | Topic | URL | What was confirmed |
 | --- | --- | --- |
@@ -156,7 +183,9 @@ Method for each row: public page fetch on October 5, 2026. No authenticated call
 | Tavus meetings | `https://docs.tavus.io/sections/conversational-video-interface/pal/meetings` | Conferencing identity versus ad hoc `meeting_url`. |
 | Tavus TTS | `https://docs.tavus.io/sections/conversational-video-interface/pal/tts` | Tavus voice or external ElevenLabs voice. |
 | Tavus webhooks | `https://docs.tavus.io/sections/webhooks-and-callbacks` | Conversation, guardrail, objective, face, and video callbacks. |
-| Tavus pricing | `https://www.tavus.io/pricing` | Public cards only. Configuration count is not concurrency. Not this account. |
+| Tavus pricing | `https://www.tavus.io/pricing` | Public cards only. Builder lists 175 minutes, 3 conferencing configurations, and 3 concurrent sessions. Growth is the first card that states no conversation duration limit. Not this account. |
+| Tavus list PALs and faces | `https://docs.tavus.io/api-reference/pals/list-pals` and `https://docs.tavus.io/api-reference/faces/list-faces` | `GET /v2/pals` and `GET /v2/faces`. Auth `x-api-key`. `face_type=user` filters to faces created by the account. Called. |
+| Tavus authentication | `https://docs.tavus.io/api-reference/authentication` | Header `x-api-key`. Base `https://tavusapi.com`. |
 
 ## Single next action
 
@@ -164,6 +193,6 @@ Store `HUBSPOT_PRIVATE_APP_TOKEN` in 1Password or the Cursor secret store. Do no
 
 Create it in HubSpot under Development, Legacy apps, Private. Grant only the CRM read scopes needed for the first proof read. After the secret is available to this environment, call account details and record `dataHostingLocation`. If it is not a US location, stop before connecting ElevenLabs. ElevenLabs rejects EU private-app tokens.
 
-1Password is not usable from this run until its connector is authenticated. The `op` CLI is not installed. Env vars `HUBSPOT_PRIVATE_APP_TOKEN`, `ELEVENLABS_API_KEY`, `TAVUS_API_KEY`, and `CALENDLY_*` are unset.
+1Password is not usable from this run until its connector is authenticated. The `op` CLI is not installed. Env vars `HUBSPOT_PRIVATE_APP_TOKEN`, `ELEVENLABS_API_KEY`, and `CALENDLY_*` are unset. The Tavus key is present only as a local file outside the repo. Do not copy it into source, logs, or chat.
 
 Do not start prospect outreach. Do not buy a Tavus plan. Do not merge `vs-build-2026-10-03`.
