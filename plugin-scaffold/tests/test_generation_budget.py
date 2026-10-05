@@ -177,6 +177,10 @@ def test_completed_envelope_does_not_accept_unfinished_message(message_status, c
         pytest.param('{"claims": [{"text": "Acme pipeline stage qualified", "source_ids": [true]}]}', id="boolean-source-id"),
         pytest.param('{"claims": [{"text": "Acme pipeline stage qualified", "source_ids": [3]}]}', id="unknown-source-id"),
         pytest.param('{"claims": [{"text": "Acme invented forecast", "source_ids": [1]}]}', id="unsupported-fact"),
+        pytest.param('{"claims": [{"text": "No Acme pipeline stage qualified", "source_ids": [1]}]}', id="short-negation"),
+        pytest.param('{"claims": [{"text": "Acme pipeline stage qualified is 99", "source_ids": [1]}]}', id="short-number"),
+        pytest.param('{"claims": [{"text": "Acme pipeline stage qualified in Q3", "source_ids": [1]}]}', id="short-quarter"),
+        pytest.param('{"claims": [{"text": "Acme pipeline stage qualified by 5", "source_ids": [1]}]}', id="short-count"),
     ],
 )
 def test_completed_malformed_or_unsupported_claims_cannot_fall_back(text, chunks, transport):
@@ -258,6 +262,13 @@ def test_completed_supported_claims_keep_their_source_citations(chunks, transpor
     assert answer_from_context(QUESTION, chunks, max_tokens=512) == (
         "Acme pipeline stage qualified [1]\nZenith renewal approved [2]"
     )
+    assert len(requests) == 1
+
+
+def test_supported_number_that_appears_in_the_excerpt_is_kept(chunks, transport):
+    chunks[0].excerpt = "Acme pipeline stage 3"
+    requests = transport(response_body([{"text": "Acme pipeline stage 3", "source_ids": [1]}]))
+    assert answer_from_context(QUESTION, chunks, max_tokens=512) == "Acme pipeline stage 3 [1]"
     assert len(requests) == 1
 
 

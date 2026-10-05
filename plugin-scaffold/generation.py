@@ -5,6 +5,7 @@ from __future__ import annotations
 from store import ChunkRecord
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 from runtime import flag
@@ -18,6 +19,24 @@ _BUSINESS = ("customer", "revenue", "pipeline", "contract", "board", "forecast",
 
 class GenerationFailure(RuntimeError):
     """Safe diagnostics from explicitly enabled generation, without provider content."""
+
+
+# Retrieval drops short tokens so words such as "the" do not match every excerpt.
+# Provenance keeps numbers and negations, because those change the claim.
+_PROVENANCE_STOPWORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "what", "who", "how",
+    "why", "when", "where", "which", "are", "was", "were", "does", "did", "about",
+    "into", "over", "than", "then", "its", "been", "being", "is", "in", "by", "of",
+    "to", "on", "at", "or", "an", "as", "be", "it", "if", "do", "we", "he", "so",
+}
+
+
+def _provenance_terms(text: str) -> set[str]:
+    terms = set()
+    for token in re.findall(r"[a-z0-9]+", text.lower()):
+        if token.isdigit() or (len(token) > 1 and token not in _PROVENANCE_STOPWORDS):
+            terms.add(token)
+    return terms
 
 
 def is_non_business(question: str) -> bool:
@@ -115,9 +134,9 @@ def _responses_answer(question: str, chunks: list[ChunkRecord], max_tokens: int)
             text = claim["text"]
             if not isinstance(text, str) or not text or unsafe_text(text) or not isinstance(ids, list) or not ids or any(type(i) is not int or i < 1 or i > len(chunks) for i in ids):
                 raise ValueError("Invalid claim provenance")
-            from retrieval import _terms
-            supporting = set().union(*(set(_terms(chunks[i - 1].excerpt)) for i in ids))
-            if not set(_terms(text)) <= supporting:
+            supporting = set().union(*(_provenance_terms(chunks[i - 1].excerpt) for i in ids))
+            claim_terms = _provenance_terms(text)
+            if not claim_terms or not claim_terms <= supporting:
                 raise ValueError("Claim contains facts absent from the cited excerpts")
             formatted.append(text + " " + " ".join(f"[{i}]" for i in ids))
         return "\n".join(formatted)

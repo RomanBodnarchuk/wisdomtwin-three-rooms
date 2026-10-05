@@ -274,3 +274,27 @@ def test_pg_namespace_deletion_during_refresh_never_restores_credentials(pg_auth
     assert harness.store.get_role(harness.role.id) is None
     assert raw_credential(harness) is None
     assert harness.http.calls.count("/api/oauth.v2.access") == 1
+
+
+def test_session_locks_are_not_held_inside_an_open_transaction(pg_authority):
+    store = pg_authority.store
+    probe = store._psycopg.connect(store._database_url, autocommit=True)
+    try:
+        holders = (
+            store.job_lock("synthetic-job-lock"),
+            store.credential_lock(pg_authority.role.id, "slack"),
+        )
+        for holder in holders:
+            with holder as acquired:
+                assert acquired
+                rows = probe.execute(
+                    """
+                    SELECT state FROM pg_stat_activity
+                    WHERE application_name = 'wisdomtwin-session-lock'
+                      AND pid <> pg_backend_pid()
+                    """
+                ).fetchall()
+                assert rows
+                assert all(row[0] == "idle" for row in rows)
+    finally:
+        probe.close()

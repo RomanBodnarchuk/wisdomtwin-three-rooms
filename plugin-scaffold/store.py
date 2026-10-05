@@ -1199,16 +1199,39 @@ class PostgresStore:
         )
 
     @contextmanager
+    def _session_lock(self, key: str):
+        # Session advisory locks survive commit and connection close releases them.
+        # Autocommit keeps the session out of an open transaction while fetch or
+        # refresh work runs, so an idle-in-transaction timeout cannot drop the lock.
+        connection = self._psycopg.connect(
+            self._database_url,
+            autocommit=True,
+            application_name="wisdomtwin-session-lock",
+        )
+        acquired = False
+        try:
+            row = connection.execute(
+                "SELECT pg_try_advisory_lock(hashtextextended(%s, 0))",
+                (key,),
+            ).fetchone()
+            acquired = bool(row and row[0])
+            yield acquired
+        finally:
+            try:
+                if acquired:
+                    connection.execute(
+                        "SELECT pg_advisory_unlock(hashtextextended(%s, 0))",
+                        (key,),
+                    )
+            finally:
+                connection.close()
+
+    @contextmanager
     def job_lock(self, job_id: str):
         # Session advisory locks cover fetch/embed/commit across worker processes.
         # They release on connection close or worker death, so retries can resume.
-        with self._connect() as connection:
-            acquired = connection.execute("SELECT pg_try_advisory_lock(hashtextextended(%s,0))", (job_id,)).fetchone()[0]
-            try:
-                yield bool(acquired)
-            finally:
-                if acquired:
-                    connection.execute("SELECT pg_advisory_unlock(hashtextextended(%s,0))", (job_id,))
+        with self._session_lock(job_id) as acquired:
+            yield acquired
 
     def update_job(self, job_id: str, *, status: str, progress: int, chunks_ingested: int) -> JobRecord:
         if self.get_job(job_id) is None:
@@ -1292,14 +1315,8 @@ class PostgresStore:
 
     @contextmanager
     def credential_lock(self, role_id: str, service: str):
-        with self._connect() as connection:
-            key = f"connector:{role_id}:{service}"
-            acquired = connection.execute("SELECT pg_try_advisory_lock(hashtextextended(%s,0))", (key,)).fetchone()[0]
-            try:
-                yield bool(acquired)
-            finally:
-                if acquired:
-                    connection.execute("SELECT pg_advisory_unlock(hashtextextended(%s,0))", (key,))
+        with self._session_lock(f"connector:{role_id}:{service}") as acquired:
+            yield acquired
 
     def replace_credential(self, role_id: str, service: str, expected: str, replacement: str) -> bool:
         with self._connect() as connection:
