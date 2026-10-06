@@ -92,3 +92,28 @@ The Calendly avatar at the known CloudFront URL is a 200×200 JPEG. Phoenix-4.5 
 - Do not quote the unapproved WisdomTwin overage or the unapproved N5R floor. Roman follows up with approved terms.
 
 Pipeline movement: none.
+
+## One twin, and the October 6 canon pass
+
+Darren's room had two replicas of the same WisdomTwin PAL: an API `meeting_url` join and a calendar invite. `services/salesperson-worker/src/singleJoin.ts` now blocks the second path when the PAL is already a guest or when that Meet link already has a conversation. A meeting gets one path. WisdomTwin meetings use `wisdomtwin-roman@tavusinvite.com` only. N5R meetings use `n5r-roman`. Those two addresses are not invited to the same event.
+
+Live read after the script update on October 6, 2026:
+
+| PAL | Face at this read | Conferencing | Prompt |
+| --- | --- | --- | --- |
+| `p70d2aae706a` WisdomTwin | `rfeda02190f8` | `wisdomtwin-roman`, allowlist `roman@n5r.com` and `roman@wisdomtwin.ai` | Replaced from `docs/sales-ops/prompts/live/wisdomtwin-pal-prompt.md` |
+| `pce648b51455` N5R | `rfeda02190f8` | username `n5r-roman` restored, same allowlist. GET did not return `conferencing_email`. | Replaced from `docs/sales-ops/prompts/live/n5r-pal-prompt.md` |
+
+No other PAL has a conferencing username. No conversation was started.
+
+Sources read from Drive, modified inside the prior 90 days, and used for the spoken script:
+
+- WisdomTwin final investor pitch, September 21, 2026, slides file `1XzoCBpwMO82likDo7c3uqqb3CfMmdzJ-Nqoy0SHdjH4`.
+- `wisdomtwin-01` through `wisdomtwin-04` text files in the wisdomtwin folder.
+- `n5r-01` through `n5r-03` text files in the n5r folder.
+
+Those Drive files state the role ladder, including USD $5,000 setup and USD $500 per month beyond included roles, and state that N5R engagements start at USD $15,000. The spoken prompts quote those figures and no others. Investor CRM spreadsheets and a private agreement PDF were not uploaded.
+
+`https://www.n5r.ai`, `https://n5r.com`, and `https://wisdomtwin.ai/demo` answered. `n5r.ca` did not complete a TLS handshake from this environment, so the twin does not describe that domain.
+
+The sales behavior is need, impact, authority, budget, and timing, one question at a time, with urgency taken only from the guest's own delay. It is not a copied script from a named sales author. The twin books the next meeting with Roman. It does not close a contract or a SAFE. The private ElevenLabs voice is still not connected.
