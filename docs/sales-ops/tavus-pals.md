@@ -1,75 +1,77 @@
 # Tavus company PALs
 
-Checked Tuesday, October 6, 2026. A new Tavus API key was stored outside this repository with mode 600. This file does not contain the key. Official docs were rechecked the same day, before any create or update.
+Checked Tuesday, October 6, 2026. The Tavus API key stays outside this repository, mode 600. This file does not contain the key. No conversation was started.
 
-No personal face exists on this key. No WisdomTwin PAL and no N5R PAL were created. Stock faces were not used as a stand-in for Roman.
+A user face named Roman Bodnarchuk already existed when this pass created the N5R PAL. It was reused. A second face was not trained.
 
-## Identity check
+## Docs used before the N5R create
 
-Authenticated GET requests used header `x-api-key`. Base URL `https://tavusapi.com`.
+Auth for every call is header `x-api-key`. Base URL `https://tavusapi.com`.
 
-| Check | Result |
-| --- | --- |
-| User faces | `GET /v2/faces?verbose=true&face_type=user&limit=50` returned `total_count` 0. |
-| Personal face id | None. |
-| All faces | 145 faces. Every one is `face_type` `system`. No face name contains Roman or Bodnarchuk. |
-| PAL ids created today | None. |
-| Conferencing emails | None. |
-| Existing Roman-named PALs | Still present. Not deleted, not overwritten, and not reused. |
-
-`GET /v2/pals?limit=100` returned `total_count` 38. The two PALs below are the only ones whose names suggest Roman. The same ids were on the October 5 inventory, so this key reaches that account. Their faces are stock system faces, Lee and Mateo.
-
-| PAL id | PAL name | Face id | Face name | Face type | Training status | Finetune | Model |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `pc304da53b20` | Roman Bodnerchuk | `r8495a788aa1` | Lee | system | completed | completed | phoenix-4.5 |
-| `pa5b0d4c5228` | Roman | `rbb3d627a705` | Mateo | system | completed | completed | phoenix-4.5 |
-
-Both use `pipeline_mode` `full` and `tts_engine` `tavus-auto`. Neither has an external voice, document ids, document tags, or a conferencing layer. Created October 3, 2026.
-
-## Blocker
-
-Roman must finish Tavus face training with a consent video. A completed personal face (`face_type` `user`, `status` `completed`) is required before either company PAL can be created. A stock face such as Lee or Mateo must not be presented as Roman.
-
-## Voice
-
-`ELEVENLABS_API_KEY` is not available in this environment. Official TTS docs say a private ElevenLabs voice needs all three of `tts_engine` `elevenlabs`, `external_voice_id`, and the ElevenLabs API key. The intended voice id is `OtTgp0gIgmfhqSXfyakl`. It was not placed on a PAL by itself. Until that key exists, leave Tavus default TTS. Any PAL created later will not yet sound like the ElevenLabs clone.
-
-## Conferencing
-
-Not configured. Official meetings docs allow `layers.conferencing.allowlist` with exact emails, which can limit invites to `roman@n5r.com` and `roman@wisdomtwin.ai`. An empty allowlist would let any sender invite the PAL, including a public Calendly guest list. Public auto-join was not turned on.
-
-Username check was read only. Nothing was reserved.
-
-| Username | Available | Note |
+| Doc | Method and path | Required fields |
 | --- | --- | --- |
-| `wisdomtwin-roman` | false | Username is already taken. No email was returned, because no PAL was created. |
-| `n5r-roman` | true | Free at this check. Not assigned. |
+| Create Face | `POST /v2/faces` | `model_name` plus exactly one of `train_image_url` or `train_video_url`. Image training also needs `voice_name` or `default_voice_id`. `consent_video_url` is legacy and must not be sent. |
+| Choose a model | Same create call | Phoenix-4.5 for a chest-up photo or video. Video is one continuous take: 30 seconds speaking, then 30 seconds listening. |
+| Face overview | Rights | The account must have rights to the likeness. Stock faces are not a personal face. |
+| Create PAL | `POST /v2/pals` | `default_face_id` is required. `system_prompt` is required for `pipeline_mode` `full`. |
+| TTS | `layers.tts` on create or update | A private ElevenLabs voice needs `tts_engine` `elevenlabs`, `external_voice_id`, and the ElevenLabs API key. |
+| Meetings | `layers.conferencing` | `username` plus `allowlist`. An empty allowlist lets any sender invite the PAL. |
 
-## Still missing
+Phoenix-4.5 photo rules: JPG or PNG, at least 512×512, one adult, chest-up, centered, looking straight at the camera, face unobstructed. `auto_fix_training_image` can adjust framing. It cannot fix a covered face, a minor, or a non-human subject.
 
-- A completed personal face id for Roman, after consent-video training.
-- `ELEVENLABS_API_KEY`, then `tts_engine` `elevenlabs` plus `external_voice_id` `OtTgp0gIgmfhqSXfyakl`. Sound is not his clone until then.
-- Approved price language. Do not state the unapproved WisdomTwin overage (USD $5,000 setup and USD $500 per month) or the unapproved N5R floor (USD $15,000). If price comes up, Roman follows up with the approved terms.
-- Conferencing only after the face exists, and only with an allowlist limited to `roman@n5r.com` and `roman@wisdomtwin.ai`. `wisdomtwin-roman` is taken, so the WisdomTwin username has to be a different distinctive name. If the API cannot restrict senders to those two addresses, omit conferencing.
-- Do not attach the investor deck or grant-titled knowledge documents.
+## Face
 
-## What the two PALs will be, once a personal face exists
+| Field | Value |
+| --- | --- |
+| Face id | `rabe3912f421` |
+| Name | Roman Bodnarchuk |
+| Type | `user` |
+| Model | `phoenix-4.5` |
+| Status | `completed` (preview is usable) |
+| Finetune status | `training` |
+| Training progress | `20/100` |
+| Default voice id | none |
+| Error | none |
 
-Both use `pipeline_mode` `full`, `default_face_id` set to his trained face, and an introduction as Roman's AI twin for that company, not as Roman the human. Tavus default TTS until the ElevenLabs key exists.
+`GET /v2/faces/rabe3912f421?verbose=true` at this check. The thumbnail is a chest-up frame of Roman on a green background. Two other user faces with the same name failed and were not reused:
 
-WisdomTwin: Judgment Platform for regulated enterprises. Buyer outreach only. No fundraising, SAFE, valuation, or investor ask. Demo `https://www.wisdomtwin.ai/demo`. Truth baseline: pre-revenue, zero production users, zero paying customers, USD $0 product revenue, five synthetic demonstrations. Talent Lab only as a client outcome on the record (USD $5.5 million attributed to Talent Lab's CEO, not WisdomTwin revenue). Do not invent certifications.
+| Face id | Status | Progress | Error |
+| --- | --- | --- | --- |
+| `rbf68d68d1f0` | `error` | `0/100` | Training photo rejected because the face was largely covered. |
+| `rc3773cf9e1c` | `error` | `8/100` | Training video rejected because the required 30-second listening segment was not detected. |
 
-N5R: practical AI training at `https://n5r.ai`. Ontario businesses are the campaign. Do not reject a suitable business only because it is outside a regulated industry. No WisdomTwin branding and no fundraising. Never guarantee grants or funding. Defer pricing to Roman.
+## Company PALs on this face
 
-## Docs rechecked
+Both company PALs use `pipeline_mode` `full` and `default_face_id` `rabe3912f421`. Neither has document ids. The investor deck is not attached. Conferencing allowlists are the two exact addresses `roman@n5r.com` and `roman@wisdomtwin.ai`.
 
-October 6, 2026:
+| Company | PAL id | PAL name | Conferencing username | Address returned or derived | TTS |
+| --- | --- | --- | --- | --- | --- |
+| WisdomTwin | `p70d2aae706a` | WisdomTwin Roman Digital Twin | `wisdomtwin-roman` | Username is set. `GET` did not return `conferencing_email`. Docs render that username as `wisdomtwin-roman@tavusinvite.com`. | `tts_engine` `elevenlabs`, private `external_voice_id` set. The provider key field is present and is 8 characters, so it is not a usable ElevenLabs API key. |
+| N5R | `pce648b51455` | N5R Roman Digital Twin | `n5r-roman` | Create returned `n5r-roman@tavusinvite.com`. | `tts_engine` `tavus-auto`. No external voice and no provider key. |
 
-- `https://docs.tavus.io/api-reference/authentication`
-- `https://docs.tavus.io/api-reference/faces/list-faces`
-- `https://docs.tavus.io/api-reference/pals/create-pal`
-- `https://docs.tavus.io/api-reference/pals/list-pals`
-- `https://docs.tavus.io/sections/conversational-video-interface/pal/tts`
-- `https://docs.tavus.io/sections/conversational-video-interface/pal/meetings`
+N5R was created on this pass, `2026-10-06T17:41:10Z`. Username `n5r-roman` was available immediately before create. The first spoken line is "I'm Roman Bodnarchuk's AI twin for N5R, not Roman himself." `disclosure_type` is `always`. The prompt is buyer training at `https://n5r.ai`, with no WisdomTwin branding, no grant guarantee, and no quoted price.
 
-No conversation was started. No video minutes were spent.
+WisdomTwin was already on this face before the N5R create. Its greeting discloses an AI twin in the first sentence. Pricing is deferred. The prompt does not quote the unapproved WisdomTwin figures or an N5R price floor. Fundraising and SAFE are refused. Talent Lab stays a client outcome, not WisdomTwin revenue. WisdomTwin's truth line stays pre-revenue.
+
+The PAL will not sound like the private ElevenLabs voice `OtTgp0gIgmfhqSXfyakl` until a real ElevenLabs API key is stored. `ELEVENLABS_API_KEY` is not in this environment. The face was usable without that key. N5R uses Tavus default TTS on purpose. WisdomTwin names the private voice, but the stored provider key is too short to authenticate ElevenLabs.
+
+## Left unchanged
+
+These PALs were not edited on this pass. At the last read, both pointed at `rabe3912f421` rather than the earlier stock faces Lee and Mateo.
+
+| PAL id | Name |
+| --- | --- |
+| `pc304da53b20` | Roman Bodnerchuk |
+| `pa5b0d4c5228` | Roman |
+
+`p50395813bfa` ("Roman Bodnarchuk WisdomTwin ai Digital Twin Sales") still has an empty `default_face_id`. It was not edited and it is not one of the two company PALs.
+
+## Source media that was not submitted
+
+The Calendly avatar at the known CloudFront URL is a 200×200 JPEG. Phoenix-4.5 requires at least 512×512, so it was not uploaded. `Roman-bw.jpg` in Drive is 512×512 and looks away from the camera, off center. Drive files titled as a HeyGen look or a studio twin portrait are a different person and were not used. Podcast frames of Roman have a microphone over the mouth, which the photo rules reject.
+
+## Still open
+
+- Finetune is still `training` at `20/100`. The preview can be used. The unwatermarked tuned face replaces it when `finetune_status` is `completed`.
+- Store a real ElevenLabs API key, then set `tts_engine` `elevenlabs` and `external_voice_id` `OtTgp0gIgmfhqSXfyakl` on N5R as well. Until then, neither PAL sounds like that clone.
+- Do not quote the unapproved WisdomTwin overage or the unapproved N5R floor. Roman follows up with approved terms.
