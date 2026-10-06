@@ -732,9 +732,6 @@ export const Close: React.FC = () => {
         >
           24 hours. 7 days. Every channel.
         </Interactive.Div>
-        <div style={{ marginTop: 28, color: "rgba(247,243,234,0.55)", fontSize: 22, maxWidth: 900 }}>
-          Synthetic demonstration. Fictional names and figures. No customer deployment.
-        </div>
       </div>
     </AbsoluteFill>
   );

@@ -698,7 +698,7 @@ def slide_system(c):
 
 def slide_emily(c):
     interior(c)
-    eyebrow(c, "SYNTHETIC DEMONSTRATION", 88, 940)
+    eyebrow(c, "EMILY, ALWAYS ON", 88, 940)
     draw_lines(c, ["Emily, always on."], "Display", 60, 88, 840, 70, CREAM)
     lines = [
         "She answers on iMessage, WhatsApp, Telegram,",
@@ -708,9 +708,6 @@ def slide_emily(c):
     c.setFillColor(CREAM)
     c.setFont("Display", 32)
     c.drawString(88, y - 24, "24 hours. 7 days.")
-    c.setFillColor(DIM)
-    c.setFont("Inter", 16)
-    c.drawString(88, 520, "Synthetic demonstration. Fictional names and figures.")
 
     c.setFillColor(CREAM)
     c.setFont("InterMed", 22)
