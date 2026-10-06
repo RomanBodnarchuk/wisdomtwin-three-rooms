@@ -1,8 +1,8 @@
 # Tavus company PALs
 
-Checked Tuesday, October 6, 2026. The Tavus API key stays outside this repository, mode 600. This file does not contain the key. No conversation was started.
+Checked again at 2:25 PM America/Toronto on Tuesday, October 6, 2026. The Tavus API key stays outside this repository, mode 600. This file does not contain the key. No conversation was started. `POST /v2/conversations` was not called. The Lindsay Meet link was not changed, and `wisdomtwin-roman@tavusinvite.com` was not removed from that event.
 
-A user face named Roman Bodnarchuk already existed when this pass created the N5R PAL. It was reused. A second face was not trained.
+Lindsay's WisdomTwin PAL is on the Canva office portrait for the 3:45 PM call. The switch was already on the live PAL before 3:40 PM Toronto.
 
 ## Docs used before the N5R create
 
@@ -23,41 +23,54 @@ Phoenix-4.5 photo rules: JPG or PNG, at least 512×512, one adult, chest-up, cen
 
 | Field | Value |
 | --- | --- |
-| Face id | `rabe3912f421` |
+| Face id | `r0a149c5fd3f` |
 | Name | Roman Bodnarchuk |
 | Type | `user` |
 | Model | `phoenix-4.5` |
 | Status | `completed` (preview is usable) |
 | Finetune status | `training` |
 | Training progress | `20/100` |
-| Default voice id | none |
+| Default voice id | `v1f73c4a86a76` |
 | Error | none |
 
-`GET /v2/faces/rabe3912f421?verbose=true` at this check. The thumbnail is a chest-up frame of Roman on a green background. Two other user faces with the same name failed and were not reused:
+`GET /v2/faces/r0a149c5fd3f?verbose=true` at 2:25 PM Toronto. The thumbnail is Roman in the navy sweater, chest-up, in the beige office with floating shelves, plants, and framed photos. It matches the Canva still, not the carousel screenshot. `finetune_status` `training` means Lindsay's preview can still carry the Phoenix-4.5 watermark until tuning finishes. The face id does not change when tuning finishes.
+
+This face was created at `2026-10-06T18:23:28Z` from a crop of the Canva still, under the temporary name "Roman Canva Portrait Crop 2026 10 06". Status reached `completed` at `2026-10-06T18:24:27Z`. This pass renamed it to Roman Bodnarchuk and set `default_voice_id` to the existing user voice `v1f73c4a86a76` (also named Roman Bodnarchuk, `voice_type` `user`, status `completed`). `original_voice_id` stayed null. `consent_video_url` was not sent.
+
+The uncropped Canva still was already rejected and was not submitted again:
 
 | Face id | Status | Progress | Error |
 | --- | --- | --- | --- |
-| `rbf68d68d1f0` | `error` | `0/100` | Training photo rejected because the face was largely covered. |
-| `rc3773cf9e1c` | `error` | `8/100` | Training video rejected because the required 30-second listening segment was not detected. |
+| `r90acf2a16df` | `error` | `0/100` | Wide Canva still rejected. Tavus required a crop at or above the navel and hands at or below chest height. |
+
+Older ids `rabe3912f421`, `rbf68d68d1f0`, and `rc3773cf9e1c` now return 404. They were not retrained. `r03ae208f108` is a separate completed Phoenix-4.5 face of the same name, created `2026-10-06T18:03:53Z`, finetune `training` at `67/100`, with a close speaking crop and its own user voice. It is not the seated portrait, so the company PALs were not left on it.
+
+## Canva source
+
+Design `DAHFUgIBiUQ`, title "Roman Bodnarchuk Twin", one page, 2400×1339, no text overlay. The PNG export is the clean office portrait: one adult, navy sweater, wood desk, beige wall, floating shelves, plants, framed photos, face unobstructed. The carousel screenshot (black bars, "2 of 3") was not used. The 200×200 Calendly avatar was not used.
+
+The same design exports as MP4. That file is 5.0 seconds, 1926×1074, 30 fps, and has no audio stream. It does not meet the one-take rule (about 30 seconds speaking, then 30 seconds listening), so the video path was not used.
 
 ## Company PALs on this face
 
-Both company PALs use `pipeline_mode` `full` and `default_face_id` `rabe3912f421`. Neither has document ids. The investor deck is not attached. Conferencing allowlists are the two exact addresses `roman@n5r.com` and `roman@wisdomtwin.ai`.
+Both company PALs use `pipeline_mode` `full` and `default_face_id` `r0a149c5fd3f`. Neither has document ids. The investor deck is not attached. Conferencing allowlists are the two exact addresses `roman@n5r.com` and `roman@wisdomtwin.ai`.
+
+Lindsay's PAL was switched. `GET /v2/pals/p70d2aae706a` at 2:25 PM Toronto already had `default_face_id` `r0a149c5fd3f` (`updated_at` `2026-10-06T18:24:55Z`). A replace of that same value returned 304. N5R was patched on this pass at `2026-10-06T18:25:39Z`. Conferencing, prompts, and TTS were not edited.
 
 | Company | PAL id | PAL name | Conferencing username | Address returned or derived | TTS |
 | --- | --- | --- | --- | --- | --- |
 | WisdomTwin | `p70d2aae706a` | WisdomTwin Roman Digital Twin | `wisdomtwin-roman` | Username is set. `GET` did not return `conferencing_email`. Docs render that username as `wisdomtwin-roman@tavusinvite.com`. | `tts_engine` `elevenlabs`, private `external_voice_id` set. The provider key field is present and is 8 characters, so it is not a usable ElevenLabs API key. |
 | N5R | `pce648b51455` | N5R Roman Digital Twin | `n5r-roman` | Create returned `n5r-roman@tavusinvite.com`. | `tts_engine` `tavus-auto`. No external voice and no provider key. |
 
-N5R was created on this pass, `2026-10-06T17:41:10Z`. Username `n5r-roman` was available immediately before create. The first spoken line is "I'm Roman Bodnarchuk's AI twin for N5R, not Roman himself." `disclosure_type` is `always`. The prompt is buyer training at `https://n5r.ai`, with no WisdomTwin branding, no grant guarantee, and no quoted price.
+N5R was created earlier the same day, `2026-10-06T17:41:10Z`. Username `n5r-roman` was available immediately before create. The first spoken line is "I'm Roman Bodnarchuk's AI twin for N5R, not Roman himself." `disclosure_type` is `always`. The prompt is buyer training at `https://n5r.ai`, with no WisdomTwin branding, no grant guarantee, and no quoted price.
 
-WisdomTwin was already on this face before the N5R create. Its greeting discloses an AI twin in the first sentence. Pricing is deferred. The prompt does not quote the unapproved WisdomTwin figures or an N5R price floor. Fundraising and SAFE are refused. Talent Lab stays a client outcome, not WisdomTwin revenue. WisdomTwin's truth line stays pre-revenue.
+WisdomTwin was already on the earlier green-screen face before the N5R create, and is on the office portrait as of 2:25 PM Toronto. Its greeting discloses an AI twin in the first sentence. Pricing is deferred. The prompt does not quote the unapproved WisdomTwin figures or an N5R price floor. Fundraising and SAFE are refused. Talent Lab stays a client outcome, not WisdomTwin revenue. WisdomTwin's truth line stays pre-revenue.
 
 The PAL will not sound like the private ElevenLabs voice `OtTgp0gIgmfhqSXfyakl` until a real ElevenLabs API key is stored. `ELEVENLABS_API_KEY` is not in this environment. The face was usable without that key. N5R uses Tavus default TTS on purpose. WisdomTwin names the private voice, but the stored provider key is too short to authenticate ElevenLabs.
 
 ## Left unchanged
 
-These PALs were not edited on this pass. At the last read, both pointed at `rabe3912f421` rather than the earlier stock faces Lee and Mateo.
+These PALs were not edited on this pass. They are not the two company PALs.
 
 | PAL id | Name |
 | --- | --- |
@@ -72,6 +85,10 @@ The Calendly avatar at the known CloudFront URL is a 200×200 JPEG. Phoenix-4.5 
 
 ## Still open
 
-- Finetune is still `training` at `20/100`. The preview can be used. The unwatermarked tuned face replaces it when `finetune_status` is `completed`.
-- Store a real ElevenLabs API key, then set `tts_engine` `elevenlabs` and `external_voice_id` `OtTgp0gIgmfhqSXfyakl` on N5R as well. Until then, neither PAL sounds like that clone.
+- Lindsay's 3:45 PM PAL face was changed to `r0a149c5fd3f` before 3:40 PM Toronto. Finetune is still `training` at `20/100`, so the call uses the watermarked preview until `finetune_status` is `completed`. No second face switch is required when tuning finishes.
+- If Lindsay's Meet requires the host to admit guests, Roman still has to be in `https://meet.google.com/qwf-ojru-kwm` to let the PAL in. The invite address stays `wisdomtwin-roman@tavusinvite.com`.
+- WisdomTwin TTS is still `elevenlabs` with an 8-character provider key, so that PAL will not use the private ElevenLabs voice until a real key is stored. The face default voice `v1f73c4a86a76` is what N5R's `tavus-auto` can use. Do not invent an ElevenLabs key.
+- The Canva design is not a one-take training video. A later video face still needs about 30 seconds speaking, then 30 seconds listening, in one take. Do not resubmit the 5-second export or the uncropped wide still.
 - Do not quote the unapproved WisdomTwin overage or the unapproved N5R floor. Roman follows up with approved terms.
+
+Pipeline movement: none.

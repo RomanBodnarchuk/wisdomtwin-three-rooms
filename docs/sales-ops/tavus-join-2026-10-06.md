@@ -101,3 +101,7 @@ The calendar path is not dead. The same PAL, the same organizer, and the same in
 Admission risk: both Darren replicas joined while people were already speaking, so that room either admitted them or did not require a host click. This calendar payload does not show whether Lindsay's Meet requires the host to admit guests. If it does, and Roman is not in `https://meet.google.com/qwf-ojru-kwm`, the PAL can sit in the lobby with nobody to admit it. Roman is needed for that click. He is not required to accept the calendar invite again.
 
 HubSpot was not written. Pipeline movement: none.
+
+## Portrait face after this review
+
+At 2:25 PM America/Toronto the WisdomTwin PAL `p70d2aae706a` and the N5R PAL `pce648b51455` both had `default_face_id` `r0a149c5fd3f` (Roman Bodnarchuk, Phoenix-4.5, status `completed`, finetune `training`). That is the Canva office portrait. `rabe3912f421` still 404s and is no longer the live face. Conferencing, the Meet link, and `wisdomtwin-roman@tavusinvite.com` were not changed. Detail is in `docs/sales-ops/tavus-pals.md`.
