@@ -1,0 +1,9 @@
+{
+  "name": "salesperson-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test test/**/*.test.ts",
+    "owner-test": "node --experimental-strip-types src/cli.ts owner-test"
+  }
+}

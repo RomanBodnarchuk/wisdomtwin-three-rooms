@@ -1,2 +1,4 @@
 node_modules
 dist
+services/salesperson-worker/.env
+services/salesperson-worker/.env.local
