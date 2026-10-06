@@ -2,6 +2,8 @@
 
 Checked Monday, October 5, 2026. Read-only. No HubSpot records, ElevenLabs agents, Calendly events, Slack messages, or credentials were changed. Recent call counts below are owner tests. They are not sales traction.
 
+Status on October 6, 2026: Step 2 is in `docs/two-company-salesperson-step2-hubspot.md`. Step 3 Calendly booking is in `docs/two-company-salesperson-step3-calendly.md`. The notes below are the October 5 inventory.
+
 Rollback for this step: none. No external mutation was made.
 
 ## Verdict
@@ -188,6 +190,8 @@ Method for each row: public page fetch on October 5, 2026. Tavus rows were also 
 | Tavus authentication | `https://docs.tavus.io/api-reference/authentication` | Header `x-api-key`. Base `https://tavusapi.com`. |
 
 ## Single next action
+
+Superseded on October 6, 2026. The current next action is in `docs/two-company-salesperson-step3-calendly.md`. The HubSpot private app token was later stored outside this repository and proved in the Step 2 document. Do not paste either token into chat.
 
 Store `HUBSPOT_PRIVATE_APP_TOKEN` in 1Password or the Cursor secret store. Do not paste it into chat.
 
