@@ -14,7 +14,9 @@ Read `agent_9601m3zbep94f1rbt80q1298qed4` before any write. The live name was "O
 
 `agents_update` was called with that prompt and version description "Video review 2026-10-07: N5R grant fit, owner test, not dispatched." The tool rejected the prompt field: `Unexpected argument(s): prompt`. That call does not publish a prompt. No second schema was tried. The version description was not published. The live agent prompt is unchanged, including its owner-test header.
 
-The designated prompt is saved at `docs/sales-ops/prompts/live/n5r-grant-hook-voice.md`. It is not installed on the agent.
+The designated prompt is saved at `docs/sales-ops/prompts/live/n5r-grant-hook-voice.md`.
+
+A later call used `agents_update_prompt_settings`, which is the tool that accepts the prompt. It published version `agtvrsn_4201m4csse0metfv3h9jsxery7fs` on branch `agtbrch_7501m3zbep9ffbrvy1x9egrzr6e3`. The stored prompt matches that file. Existing tool id `tool_8901m4cd4x96ff5b4y25jdxpbd8j` remained attached. No call was placed. The agent still has its existing phone assignment. Outbound stays off.
 
 ## Tavus PAL
 
