@@ -266,10 +266,22 @@ export function DemoShell() {
           </div>
         )}
 
+        {/* Mid-roll nudge — one quiet ask landing on the 91 percent confidence beat */}
+        {live && timeMs >= 169_000 && timeMs < 177_000 && snapshot.scene !== 'end-card' && (
+          <div
+            className="pointer-events-none absolute right-3 bottom-14 z-30 hidden md:block md:right-[calc(40%+1rem)]"
+            data-testid="midroll-cta"
+          >
+            <p className="rounded-xl border border-white/10 bg-black/70 px-3 py-2 text-[11px] leading-snug text-[var(--cream)] backdrop-blur-md">
+              This is the Thursday you want. Book a Judgment Assessment below.
+            </p>
+          </div>
+        )}
+
         {/* Persistent booking CTA — one ask, always visible while live */}
         {live && snapshot.scene !== 'end-card' && (
           <a
-            href="https://calendly.com/romanbodnarchuk/20min"
+            href="https://calendly.com/romanbodnarchuk/20min?utm_source=wisdomtwin-demo&utm_medium=three-rooms-film&utm_campaign=demo_film&utm_content=live-cta"
             target="_blank"
             rel="noreferrer"
             data-testid="live-cta"

@@ -110,24 +110,25 @@ export function BuzzDevice({
 
             <ActiveSpeaker active={snapshot.activeSpeaker} />
             <SafeDeclineBanner active={snapshot.safeDeclineActive} />
-            <div className="hidden sm:block">
-              <ParticipantList participants={snapshot.participants} />
-            </div>
+            <ParticipantList participants={snapshot.participants} />
 
-            {latestEvidence && (
-              <div className="hidden sm:block">
+            {latestEvidence &&
+              (snapshot.room === 'dream' ||
+                snapshot.room === 'stress-test' ||
+                snapshot.focus === 'evidence') && (
                 <EvidenceCard card={latestEvidence} highlighted={snapshot.focus === 'evidence'} />
-              </div>
-            )}
+              )}
 
-            {snapshot.showBlockerRegister && Object.keys(snapshot.blockers).length > 0 && (
-              <div className="hidden sm:block">
-                <p className="mb-1.5 text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">
-                  Blocker register
-                </p>
-                <BlockerRegister blockers={snapshot.blockers} compact />
-              </div>
-            )}
+            {snapshot.showBlockerRegister &&
+              Object.keys(snapshot.blockers).length > 0 &&
+              (snapshot.room === 'build' || snapshot.focus === 'blockers') && (
+                <div>
+                  <p className="mb-1.5 text-[10px] tracking-[0.16em] text-[var(--cream-dim)] uppercase">
+                    Blocker register
+                  </p>
+                  <BlockerRegister blockers={snapshot.blockers} compact />
+                </div>
+              )}
 
             <EscalationCard
               activeIds={snapshot.escalations}

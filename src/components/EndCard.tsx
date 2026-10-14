@@ -59,7 +59,7 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
                 The compounding asset
               </p>
               <p className="mt-2 text-sm leading-relaxed text-[var(--cream)]">
-                Every governed decision strengthens the enterprise judgment layer.
+                Every governed decision compounds.
               </p>
               <ul className="mt-3 grid grid-cols-2 gap-2 text-xs text-[var(--cream-dim)]">
                 <li className="rounded-lg border border-white/8 px-2 py-2">Policy memory</li>
@@ -74,7 +74,7 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
         {endCard.stage >= 5 && (
           <div className="mx-auto mt-4 max-w-lg space-y-4">
             <a
-              href="https://calendly.com/romanbodnarchuk/20min"
+              href="https://calendly.com/romanbodnarchuk/20min?utm_source=wisdomtwin-demo&utm_medium=three-rooms-film&utm_campaign=demo_film&utm_content=end-cta"
               target="_blank"
               rel="noreferrer"
               data-testid="end-cta"

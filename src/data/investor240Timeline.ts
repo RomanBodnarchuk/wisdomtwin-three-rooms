@@ -60,7 +60,7 @@ const events: DemoEvent[] = [
   { id: 'room-dream', type: 'room-transition', startMs: 65800, room: 'dream', label: 'DREAM' },
   { id: 'music-dream', type: 'music', startMs: 65800, bed: 'dream' },
   { id: 'sc-engaged', type: 'scene', startMs: 65800, scene: 'kitchen-active', ceoPose: 'engaged', lighting: 'warm' },
-  { id: 'dlg-ceo-open', type: 'dialogue', startMs: 66200, endMs: 94296, speaker: 'ceo', text: "Morning. And... sorry to interrupt everyone's Sunday. My board packet locks tomorrow. If I walk in with the wrong AI strategy, I am going to spend the next year defending it. So I need you to be brutal. Here is the idea. We have two decades of prior-authorization decisions. What if we cut authorization time from fourteen days to one... and sell that speed to every payer we serve?" },
+  { id: 'dlg-ceo-open', type: 'dialogue', startMs: 66200, endMs: 89950, speaker: 'ceo', text: 'My board packet locks tomorrow. If I walk in with the wrong AI strategy, I am going to spend the next year defending it. So I need you to be brutal. Here is the idea. We have two decades of prior-authorization decisions. What if we cut authorization time from fourteen days to one... and sell that speed to every payer we serve?' },
 
   // ── STRESS-TEST: legal gate one, then the budget wall ────────────────────
   { id: 'sfx-stress-2', type: 'sound', startMs: 94600, soundId: 'stress-chime' },
@@ -118,7 +118,7 @@ const events: DemoEvent[] = [
   { id: 'art-5', type: 'artifact', startMs: 201700, artifactId: 'art_objections', action: 'ready', title: 'Three anticipated objections' },
   { id: 'art-6', type: 'artifact', startMs: 202900, artifactId: 'art_notes', action: 'ready', title: 'Speaking notes generated' },
   { id: 'art-7', type: 'artifact', startMs: 204100, artifactId: 'art_memo', action: 'ready', title: 'Board memo ready' },
-  { id: 'dlg-buzz-close', type: 'dialogue', startMs: 215400, endMs: 223434, speaker: 'buzz', text: 'Executive Huddle ended. Duration: eight minutes, forty-two seconds. Equivalent scheduling delay avoided: twenty-one days.' },
+  { id: 'dlg-buzz-close', type: 'dialogue', startMs: 215400, endMs: 219850, speaker: 'buzz', text: 'Executive Huddle ended. Duration: eight minutes, forty-two seconds.' },
   { id: 'sc-relieved', type: 'scene', startMs: 215400, scene: 'kitchen-resolved', ceoPose: 'relieved', lighting: 'resolve' },
   { id: 'sfx-close', type: 'sound', startMs: 223800, soundId: 'huddle-close' },
   { id: 'room-complete', type: 'room-transition', startMs: 223800, room: 'complete', label: 'COMPLETE' },
@@ -127,11 +127,11 @@ const events: DemoEvent[] = [
   // ── END CARDS: coordination tax -> governed outcome -> investor thesis ───
   { id: 'sc-end', type: 'scene', startMs: 224200, scene: 'end-card', ceoPose: 'relieved', lighting: 'resolve' },
   { id: 'focus-end', type: 'visual-focus', startMs: 224200, target: 'end-card' },
-  { id: 'end-1', type: 'end-card', startMs: 224600, endMs: 227600, stage: 1, lines: ['Three weeks to convene five senior officers.'] },
-  { id: 'end-2', type: 'end-card', startMs: 227600, endMs: 230600, stage: 2, lines: ['Three weeks to convene five senior officers.', 'Eight minutes, forty-two seconds to reach a governed decision.'] },
+  { id: 'end-1', type: 'end-card', startMs: 224600, endMs: 227600, stage: 1, lines: ['One Sunday night. Five executive judgments.'] },
+  { id: 'end-2', type: 'end-card', startMs: 227600, endMs: 230600, stage: 2, lines: ['One Sunday night. Five executive judgments.', 'Thursday morning, the CEO walks in with the board package.'] },
   { id: 'end-3', type: 'end-card', startMs: 230600, endMs: 233600, stage: 3, lines: ['Evidence attached.', 'Dissent preserved.', 'Human judgment protected.'] },
-  { id: 'end-4', type: 'end-card', startMs: 233600, endMs: 237400, stage: 4, lines: ['The product is speed.', 'The compounding asset is institutional judgment.'], showInvestorContrast: true },
-  { id: 'end-5', type: 'end-card', startMs: 237400, stage: 5, lines: ['WISDOMTWIN.AI', 'The Judgment Platform for regulated enterprises.', 'We sell speed at AI-native pace.'], showInvestorContrast: true },
+  { id: 'end-4', type: 'end-card', startMs: 233600, endMs: 237400, stage: 4, lines: ['Search finds documents.', 'Digital twins preserve people.', 'WisdomTwin preserves decisions.'], showInvestorContrast: true },
+  { id: 'end-5', type: 'end-card', startMs: 237400, stage: 5, lines: ['WISDOMTWIN.AI', 'The Judgment Platform for regulated enterprises.', 'Evidence attached. Dissent preserved. Human judgment protected.'], showInvestorContrast: true },
 ];
 
 export const INVESTOR_240_TIMELINE: TimelineConfig = {

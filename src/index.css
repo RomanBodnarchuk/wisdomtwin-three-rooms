@@ -40,3 +40,9 @@ mark {
     linear-gradient(90deg, rgba(0, 0, 0, 0.12) 40%, rgba(10, 11, 13, 0.72) 100%),
     radial-gradient(ellipse at 40% 45%, transparent 22%, rgba(0, 0, 0, 0.62) 100%);
 }
+
+/* Unified cool grade so the photo plate sits in the same tone family as the UI.
+   The safe-decline override above still wins during the governed refusal beat. */
+.kitchen-photo-bg {
+  filter: saturate(0.87) contrast(1.05) brightness(0.96);
+}

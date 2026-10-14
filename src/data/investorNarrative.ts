@@ -25,7 +25,7 @@ export const INVESTOR_CHAPTERS: InvestorChapter[] = [
   {
     id: 'coordination',
     eyebrow: '02 · Coordination tax',
-    headline: 'Three weeks of calendars become one button.',
+    headline: 'Five executive calendars. One governed room.',
     detail: 'Five role-specific Wisdom Twins convene with the policy, precedent, and context already attached.',
     metrics: [
       { label: 'Roles', value: 'Convened' },
@@ -77,10 +77,10 @@ export const INVESTOR_CHAPTERS: InvestorChapter[] = [
   {
     id: 'economics',
     eyebrow: '06 · Decision economics',
-    headline: 'WisdomTwin sells execution speed.',
-    detail: 'An illustrative executive delay compresses into one governed huddle with judgment intact.',
+    headline: 'Execution with judgment intact.',
+    detail: 'One governed huddle produces the board package, citations, dissent, and the audit record.',
     metrics: [
-      { label: 'Delay', value: 'Compressed' },
+      { label: 'Decision', value: 'Governed' },
       { label: 'Decision', value: 'Governed' },
       { label: 'Judgment', value: 'Preserved' },
     ],

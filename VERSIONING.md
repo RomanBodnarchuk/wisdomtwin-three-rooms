@@ -147,3 +147,36 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
 - Build: `npm ci && npm run build` → `dist/` (workflow deploys `dist/`).
 - gh CLI is authenticated as RomanBodnarchuk; commit with
   user.email RomanBodnarchuk@users.noreply.github.com (email privacy blocks other addresses).
+
+## v3.8 — claim-safety and conversion pass (2026-10-14)
+
+Growth review fixes applied to the 2:54 investor film. Story, VO voices, and
+runtime are unchanged; the banned time-compression claims are gone end to end.
+
+1. [x] **Hook re-edit.** `ceo-01.mp3` head trimmed (apology cut) — first spoken
+   and captioned line is now "My board packet locks tomorrow." Dialogue windows
+   re-locked to the trimmed masters in both timelines.
+2. [x] **Buzz close de-claimed.** `buzz-close.mp3` tail trimmed; "Equivalent
+   scheduling delay avoided: twenty-one days" removed from audio, captions,
+   both timelines, and `blockers.ts`.
+3. [x] **End cards rewritten.** No "We sell speed at AI-native pace.", no
+   "Three weeks vs 8:42" contrast; stage 4 now closes on the
+   documents/people/decisions triplet.
+4. [x] **Economics card → governed outcome card.** 8:42 huddle, 4 of 5 blockers
+   resolved, 1 named human escalation. No delay comparison.
+5. [x] **"enterprise judgment layer" phrasing cut** from the compounding-asset
+   card; full-cut end card no longer says "Institutional Judgment Layer".
+6. [x] **Proof rail chapters 02/06 rewritten** (no calendar-compression or
+   sells-speed claims); meta description and og:description de-compressed.
+7. [x] **One panel per beat.** Participants render as one compact chip row;
+   evidence card shows in DREAM/STRESS-TEST or on evidence focus; blocker
+   register shows at its beat and through BUILD. Mobile shows panels again.
+8. [x] **Hero proof numbers.** Evidence metrics render one large hero value
+   ($11M, 91%, $7.4M, 8 of 10) with the rest as compact rows.
+9. [x] **Mid-roll nudge.** One quiet caption at the 91% beat pointing at the
+   Judgment Assessment; live and end-card CTAs carry UTMs.
+10. [x] **Chapter markers.** Dream / Stress / Build / Package seek buttons on
+    the scrubber (desktop).
+11. [x] **Unified grade.** Photo plate runs saturate(0.87) contrast(1.05)
+    brightness(0.96) so the film sits in the UI tone family; safe-decline
+    override unchanged.

@@ -19,6 +19,13 @@ interface Props {
   onOpenTranscript: () => void;
 }
 
+const CHAPTERS = [
+  { ms: 65_800, label: 'Dream' },
+  { ms: 94_600, label: 'Stress' },
+  { ms: 135_200, label: 'Build' },
+  { ms: 196_000, label: 'Package' },
+];
+
 export function PlaybackControls({
   phase,
   timeMs,
@@ -48,6 +55,7 @@ export function PlaybackControls({
         timeMs={timeMs}
         durationMs={durationMs}
         startMs={timelineStartMs}
+        chapters={CHAPTERS}
         onSeek={onSeek}
         disabled={!started}
       />

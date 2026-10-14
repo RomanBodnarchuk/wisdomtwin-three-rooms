@@ -33,7 +33,7 @@ const events: DemoEvent[] = [
   { id: 'sfx-dream', type: 'sound', startMs: 34550, soundId: 'dream-chime' },
   { id: 'room-dream', type: 'room-transition', startMs: 34750, room: 'dream', label: 'DREAM' },
   { id: 'music-dream', type: 'music', startMs: 34750, bed: 'dream' },
-  { id: 'dlg-ceo-open', type: 'dialogue', startMs: 34932, endMs: 63028, speaker: 'ceo', text: "Morning. And... sorry to interrupt everyone's Sunday. My board packet locks tomorrow. If I walk in with the wrong AI strategy, I am going to spend the next year defending it. So I need you to be brutal. Here is the idea. We have two decades of prior-authorization decisions. What if we cut authorization time from fourteen days to one... and sell that speed to every payer we serve?" },
+  { id: 'dlg-ceo-open', type: 'dialogue', startMs: 34932, endMs: 58700, speaker: 'ceo', text: 'My board packet locks tomorrow. If I walk in with the wrong AI strategy, I am going to spend the next year defending it. So I need you to be brutal. Here is the idea. We have two decades of prior-authorization decisions. What if we cut authorization time from fourteen days to one... and sell that speed to every payer we serve?' },
   { id: 'sc-ceo-engaged', type: 'scene', startMs: 40000, scene: 'kitchen-active', ceoPose: 'engaged', lighting: 'warm' },
   { id: 'dlg-cro-1', type: 'dialogue', startMs: 63478, endMs: 81342, speaker: 'cro', text: "I reviewed five years of renewal calls, account plans, loss reviews, and executive escalations. Speed-to-decision is the number-one stated frustration in eight of our ten largest accounts. Priced as a premium service, the three-year revenue opportunity is nine figures." },
   { id: 'ev-cro', type: 'evidence', startMs: 64800, endMs: 83000, evidenceId: 'cro_speed', action: 'show' },
@@ -116,7 +116,7 @@ const events: DemoEvent[] = [
   { id: 'art-7', type: 'artifact', startMs: 438000, artifactId: 'art_memo', action: 'ready', title: 'Board memo ready' },
   { id: 'dlg-ceo-sleep', type: 'dialogue', startMs: 442595, endMs: 445474, speaker: 'ceo', text: 'I can actually sleep tonight. Thank you.' },
   { id: 'sc-relieved', type: 'scene', startMs: 442400, scene: 'kitchen-resolved', ceoPose: 'relieved', lighting: 'resolve' },
-  { id: 'dlg-buzz-close', type: 'dialogue', startMs: 445924, endMs: 453958, speaker: 'buzz', text: 'Executive Huddle ended. Duration: eight minutes, forty-two seconds. Equivalent scheduling delay avoided: twenty-one days.' },
+  { id: 'dlg-buzz-close', type: 'dialogue', startMs: 445924, endMs: 450400, speaker: 'buzz', text: 'Executive Huddle ended. Duration: eight minutes, forty-two seconds.' },
   { id: 'sfx-close', type: 'sound', startMs: 454100, soundId: 'huddle-close' },
   { id: 'room-complete', type: 'room-transition', startMs: 454200, room: 'complete', label: 'COMPLETE' },
   { id: 'music-lift', type: 'music', startMs: 454300, bed: 'lift', volume: 0.03 },
@@ -126,7 +126,7 @@ const events: DemoEvent[] = [
   { id: 'end-2', type: 'end-card', startMs: 461000, endMs: 466500, stage: 2, lines: ['The first generation of enterprise AI helped people find information.', 'The second preserved individual knowledge.'] },
   { id: 'end-3', type: 'end-card', startMs: 466500, endMs: 473000, stage: 3, lines: ['The first generation of enterprise AI helped people find information.', 'The second preserved individual knowledge.', 'WisdomTwin preserves institutional judgment.'] },
   { id: 'end-4', type: 'end-card', startMs: 473000, endMs: 481000, stage: 4, lines: ['Search finds documents.', 'Digital twins preserve people.', 'WisdomTwin preserves decisions.'], showInvestorContrast: true },
-  { id: 'end-5', type: 'end-card', startMs: 481000, stage: 5, lines: ['WISDOMTWIN.AI', 'The Institutional Judgment Layer', 'On-premise. Air-gapped. Human-governed.'], showInvestorContrast: true },
+  { id: 'end-5', type: 'end-card', startMs: 481000, stage: 5, lines: ['WISDOMTWIN.AI', 'The Judgment Platform for regulated enterprises.', 'Evidence attached. Dissent preserved. Human judgment protected.'], showInvestorContrast: true },
 ];
 
 export const FULL_TIMELINE: TimelineConfig = {
