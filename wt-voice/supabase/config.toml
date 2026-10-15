@@ -1,0 +1,3 @@
+# Only the function setting this package needs. Merge into the target project's config.toml.
+[functions.wt-voice]
+verify_jwt = false   # routes authenticate themselves (trigger secret, HMAC, Twilio signature, owned conversation)

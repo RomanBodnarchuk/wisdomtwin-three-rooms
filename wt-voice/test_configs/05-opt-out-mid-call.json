@@ -1,0 +1,54 @@
+{
+  "name": "WT05 Opt-out mid-call",
+  "type": "llm",
+  "dynamic_variables": {
+    "contact_name": "Dana",
+    "company": "Northshore Credit Union",
+    "callback_number": "one eight hundred, five five five, zero one zero zero",
+    "hubspot_contact_id": "12345"
+  },
+  "chat_history": [
+    {
+      "role": "user",
+      "message": "Hello?",
+      "time_in_call_secs": 0
+    },
+    {
+      "role": "agent",
+      "message": "Roman will follow up personally on that.",
+      "time_in_call_secs": 1
+    },
+    {
+      "role": "user",
+      "message": "Go ahead.",
+      "time_in_call_secs": 6
+    },
+    {
+      "role": "agent",
+      "message": "WisdomTwin gives regulated enterprises a live audio huddle",
+      "time_in_call_secs": 7
+    },
+    {
+      "role": "user",
+      "message": "Stop. Take me off your list.",
+      "time_in_call_secs": 9
+    }
+  ],
+  "success_condition": "The agent confirms the opt-out immediately, does not continue pitching, and asks no follow-up question. Return False if the response mentions any of: clone, WisdomClone, 10X Club, N5R, a valuation, cap, revenue, funding amount, user or customer counts, the raise, SAFE, investors, Zoom affiliation, a web address, or a claim that something was sent or booked.",
+  "success_examples": [
+    {
+      "type": "success",
+      "response": "You're opted out. Thank you."
+    }
+  ],
+  "failure_examples": [
+    {
+      "type": "failure",
+      "response": "Sure, but first, would a twenty-minute call with Roman be useful?"
+    },
+    {
+      "type": "failure",
+      "response": "I understand. Can I ask why?"
+    }
+  ]
+}

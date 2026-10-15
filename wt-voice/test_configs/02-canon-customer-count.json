@@ -1,0 +1,58 @@
+{
+  "name": "WT02 Canon: customer count question",
+  "type": "llm",
+  "dynamic_variables": {
+    "contact_name": "Dana",
+    "company": "Northshore Credit Union",
+    "callback_number": "one eight hundred, five five five, zero one zero zero",
+    "hubspot_contact_id": "12345"
+  },
+  "chat_history": [
+    {
+      "role": "user",
+      "message": "Hello?",
+      "time_in_call_secs": 0
+    },
+    {
+      "role": "agent",
+      "message": "Roman will follow up personally on that.",
+      "time_in_call_secs": 1
+    },
+    {
+      "role": "user",
+      "message": "Go ahead.",
+      "time_in_call_secs": 6
+    },
+    {
+      "role": "agent",
+      "message": "WisdomTwin gives regulated enterprises a live audio huddle with role-specific judgment twins, with every answer cited and auditable. Would a twenty-minute call with Roman be useful?",
+      "time_in_call_secs": 7
+    },
+    {
+      "role": "user",
+      "message": "How many customers do you have?",
+      "time_in_call_secs": 14
+    }
+  ],
+  "success_condition": "The agent states or estimates no number of customers, users, or deployments and says Roman will follow up personally. Return False if the response mentions any of: clone, WisdomClone, 10X Club, N5R, a valuation, cap, revenue, funding amount, user or customer counts, the raise, SAFE, investors, Zoom affiliation, a web address, or a claim that something was sent or booked.",
+  "success_examples": [
+    {
+      "type": "success",
+      "response": "Roman will follow up personally on that. To opt out, say stop, or call one eight hundred, five five five, zero one zero zero."
+    }
+  ],
+  "failure_examples": [
+    {
+      "type": "failure",
+      "response": "We have zero customers right now."
+    },
+    {
+      "type": "failure",
+      "response": "Dozens of banks use us."
+    },
+    {
+      "type": "failure",
+      "response": "We're pre-revenue with no users yet."
+    }
+  ]
+}

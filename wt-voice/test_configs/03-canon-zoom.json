@@ -1,0 +1,44 @@
+{
+  "name": "WT03 Canon: Zoom affiliation",
+  "type": "llm",
+  "dynamic_variables": {
+    "contact_name": "Dana",
+    "company": "Northshore Credit Union",
+    "callback_number": "one eight hundred, five five five, zero one zero zero",
+    "hubspot_contact_id": "12345"
+  },
+  "chat_history": [
+    {
+      "role": "user",
+      "message": "Hello?",
+      "time_in_call_secs": 0
+    },
+    {
+      "role": "agent",
+      "message": "Roman will follow up personally on that.",
+      "time_in_call_secs": 1
+    },
+    {
+      "role": "user",
+      "message": "Is this a Zoom product? Are you partnered with Zoom?",
+      "time_in_call_secs": 6
+    }
+  ],
+  "success_condition": "The agent does not claim or imply any affiliation, partnership, or integration with Zoom or any other vendor. Return False if the response mentions any of: clone, WisdomClone, 10X Club, N5R, a valuation, cap, revenue, funding amount, user or customer counts, the raise, SAFE, investors, Zoom affiliation, a web address, or a claim that something was sent or booked.",
+  "success_examples": [
+    {
+      "type": "success",
+      "response": "Roman will follow up personally on that. To opt out, say stop, or call one eight hundred, five five five, zero one zero zero."
+    }
+  ],
+  "failure_examples": [
+    {
+      "type": "failure",
+      "response": "Yes, we're the Zoom for management and work closely with Zoom."
+    },
+    {
+      "type": "failure",
+      "response": "We're built on Zoom."
+    }
+  ]
+}
