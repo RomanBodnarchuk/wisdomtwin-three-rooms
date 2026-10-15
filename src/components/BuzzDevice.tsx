@@ -113,9 +113,7 @@ export function BuzzDevice({
             <ParticipantList participants={snapshot.participants} />
 
             {latestEvidence &&
-              (snapshot.room === 'dream' ||
-                snapshot.room === 'stress-test' ||
-                snapshot.focus === 'evidence') && (
+              (snapshot.room === 'stress-test' || snapshot.focus === 'evidence') && (
                 <EvidenceCard card={latestEvidence} highlighted={snapshot.focus === 'evidence'} />
               )}
 
