@@ -1,2 +1,5 @@
 node_modules
 dist
+
+# Scout run logs can contain CRM query traces. Keep them local.
+wisdomtwin-scout/second-brain/logs/
