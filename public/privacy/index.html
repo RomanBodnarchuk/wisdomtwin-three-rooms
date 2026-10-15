@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WisdomTwin privacy policy</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 42rem; margin: 2.5rem auto; padding: 0 1.25rem; color: #1c2430; line-height: 1.55; }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.8rem; }
+  </style>
+</head>
+<body>
+  <h1>WisdomTwin privacy policy</h1>
+  <p>Effective date: September 30, 2026</p>
+  <h2>Who controls this service</h2>
+  <p>WisdomTwin Inc, a Delaware corporation, incorporated August 2026, is the controller of personal data processed by WisdomTwin. Contact <a href="mailto:privacy@wisdomtwin.ai">privacy@wisdomtwin.ai</a>.</p>
+  <h2>What WisdomTwin is</h2>
+  <p>WisdomTwin builds a private, business-only twin of one professional inside ChatGPT. The twin belongs to a role on the org chart and to the current officeholder of that role. Slack is the live connector. Gmail and Google Drive stay off until Google verification clears. The product noun is twin.</p>
+  <h2>Data we process</h2>
+  <p>We process the business domain you submit, the role title, the organization, the current officeholder, and the open tenure. During an ingestion job we fetch business communications you authorize. After embedding we keep vectors and the short excerpts required to cite a claim. Raw source payloads are not kept after the job. Each tool call writes an audit row with the tool name, outcome, organization, and role. Connector tokens are encrypted with a key that arrives only as an environment variable.</p>
+  <h2>How access works</h2>
+  <p>OAuth uses authorization-code grants with PKCE and read-only scopes. Slack is the production connector. Gmail uses gmail.readonly and Google Drive uses drive.readonly, both in testing mode until verification. WisdomTwin does not request write scopes. Consumer email domains are rejected at connect time, including gmail.com, googlemail.com, hotmail.com, outlook.com, yahoo.com, icloud.com, proton.me, protonmail.com, and aol.com. The accepted domain is stored on the organization.</p>
+  <h2>Model providers</h2>
+  <p>When an API key is configured, excerpts are sent to the configured embedding model and to the configured generation model so the role twin can answer. WisdomTwin does not train models on user data.</p>
+  <h2>Retention</h2>
+  <p>A role namespace is deleted 30 days after last activity, or when you request deletion, whichever comes first.</p>
+  <h2>Sharing</h2>
+  <p>WisdomTwin Inc does not sell personal data. Hosting, the database, and the configured model provider process data so the service can run.</p>
+  <h2>Security</h2>
+  <p>SOC 2 Type II is a roadmap item. WisdomTwin Inc does not claim that certification, or any other certification, today.</p>
+  <h2>Plans</h2>
+  <p>The free tier indexes 1,000 chunks per month. WisdomTwin Pro is USD 20 per month, billed by WisdomTwin Inc through WisdomTwin checkout.</p>
+  <h2>Your requests</h2>
+  <p>Email privacy@wisdomtwin.ai to request deletion of a role namespace.</p>
+</body>
+</html>

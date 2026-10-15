@@ -1,0 +1,59 @@
+{
+  "name": "WisdomTwin",
+  "description": "A private prototype for role-scoped business questions and cited source evidence. Slack adapter code is available; production connection is unverified. Gmail and Google Drive remain gated.",
+  "logo": "./assets/logo.svg",
+  "privacy_policy_url": "https://REPLACE_WITH_RAILWAY_PUBLIC_URL/privacy",
+  "contact": "privacy@wisdomtwin.ai",
+  "developer_organization": "ROMAN GREGORY BODNARCHUK",
+  "package_status": "private_candidate_not_for_submission",
+  "connectors": {
+    "slack": {
+      "status": "adapter_implemented_production_unverified",
+      "scopes": "read-only user scopes",
+      "availability": "Real use requires provisioned corporate identity, matched workspace/user grant and operator-confirmed provider authorization."
+    },
+    "gmail": {
+      "status": "gated",
+      "scopes": "openid email gmail.readonly",
+      "verification_confirmed": false,
+      "availability": "Disabled. Current adapter reads snippets or metadata only; full message ingestion is incomplete."
+    },
+    "drive": {
+      "status": "gated",
+      "scopes": "openid email drive.readonly",
+      "verification_confirmed": false,
+      "availability": "Disabled. Current adapter reads file names and descriptions only; document body ingestion is incomplete."
+    }
+  },
+  "tools": [
+    {
+      "name": "connect_business_account",
+      "access": "readWrite",
+      "description": "Bind an authorized business account to an operator-assigned role and return a read-only source authorization URL."
+    },
+    {
+      "name": "ingest_data",
+      "access": "readWrite",
+      "description": "On user instruction, fetch and embed accessible business evidence into the protected role index."
+    },
+    {
+      "name": "query_twin",
+      "access": "readOnly",
+      "description": "Retrieve role evidence, re-check current source access and return supported citations."
+    },
+    {
+      "name": "list_twins_status",
+      "access": "readOnly",
+      "description": "List only the caller's visible role connection status."
+    }
+  ],
+  "auth": {
+    "mcp": "Corporate OIDC sign-in and operator-provisioned role entitlements, followed by MCP authorization-code flow with PKCE S256 and resource validation.",
+    "storage": "Durable encrypted Postgres OAuth and source credentials in production. SQLite and fixtures are local test adapters.",
+    "connectors": {
+      "slack": "Read-only authorization grant bound to verified corporate identity and provisioned Slack workspace/user.",
+      "gmail": "Disabled; Google subject binding and verification gates remain required.",
+      "drive": "Disabled; Google subject binding and verification gates remain required."
+    }
+  }
+}
