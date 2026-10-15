@@ -1,2 +1,6 @@
 node_modules
 dist
+
+# Private scout notes. Never commit CRM, inbox, or investor-contact exports.
+wisdomtwin-scout/second-brain/private/**
+!wisdomtwin-scout/second-brain/private/.gitkeep
