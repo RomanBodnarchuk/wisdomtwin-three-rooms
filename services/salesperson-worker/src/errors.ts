@@ -84,6 +84,12 @@ export class EventTypeDriftError extends WorkerError {
   }
 }
 
+export class GrantClaimError extends WorkerError {
+  constructor(message: string) {
+    super("grant_claim", message);
+  }
+}
+
 /** Remove credential-shaped strings from text that might be logged. */
 export function redactSecrets(text: string): string {
   return text

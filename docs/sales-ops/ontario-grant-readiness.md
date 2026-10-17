@@ -38,6 +38,12 @@ CASL, CRTC unsolicited telecommunications rules and the National Do Not Call Lis
 
 Until that path is finished, outbound stays off.
 
+## Rechecked October 16, 2026
+
+The public Ontario page was updated on October 16, 2026. This national expansion does not copy that page onto other provinces. The claim gate is `services/salesperson-worker/src/grants.ts`, and the comparison is `docs/sales-ops/canada-provincial-grants.md`.
+
+The October 16 overview does not state that training cannot start before approval. The national gate does not speak that sentence. British Columbia's page says training may begin before a decision. The installed N5R meeting prompt still contains the older Ontario start-before-approval sentence and was not edited in this pass.
+
 ## Installed scripts
 
 Checked on October 8, 2026:

@@ -22,3 +22,5 @@ node --experimental-strip-types src/cli.ts owner-test --book-owner-test
 `owner-test` books one non-overlapping slot for each company for `roman@n5r.com`, checks that a duplicate request does not create a second appointment, checks the campaign guard, then cancels those owner-test appointments. Calendly sends the normal owner notification for that booking and cancellation.
 
 This worker is not attached to the live ElevenLabs branches.
+
+Canadian training grants are gated in `src/grants.ts`. Each province and territory has its own official sentence. Ontario's amounts are refused for every other region. `assertProspectDispatchAllowed` keeps prospect calls, texts, and email off. The national voice draft is not installed.
