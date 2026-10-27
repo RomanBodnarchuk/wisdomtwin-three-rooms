@@ -2,7 +2,8 @@ import { SyntheticDataDisclosure } from './SyntheticDataDisclosure';
 import { InvestorModeToggle } from './InvestorModeToggle';
 import { trackInvestorEvent } from '../lib/investorAnalytics';
 
-const JUDGMENT_ASSESSMENT_URL = 'https://calendly.com/romanbodnarchuk/20min';
+const JUDGMENT_ASSESSMENT_URL = 'https://calendly.com/romanbodnarchuk/15min';
+const TAVUS_LIVE_TWIN_URL = 'https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f';
 
 interface Props {
   investorMode: boolean;
@@ -100,7 +101,17 @@ export function StartExperience({
             onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'start' })}
             className="block w-full rounded-2xl bg-[var(--cream)] px-4 py-4 text-center text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
           >
-            Book Judgment Assessment
+            Book Judgment Assessment (15 min)
+          </a>
+          <a
+            href={TAVUS_LIVE_TWIN_URL}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="start-cta-live-twin"
+            onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'start-live-twin' })}
+            className="block w-full rounded-2xl border border-[var(--brand-gold)]/40 bg-[var(--brand-gold)]/10 px-4 py-3 text-center text-xs font-semibold tracking-[0.12em] text-[var(--cream)] uppercase transition hover:bg-[var(--brand-gold)]/20"
+          >
+            Speak Live with Roman&apos;s AI Digital Twin
           </a>
           <button
             type="button"

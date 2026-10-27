@@ -281,7 +281,7 @@ export function DemoShell() {
         {/* Persistent booking CTA — one ask, always visible while live */}
         {live && snapshot.scene !== 'end-card' && (
           <a
-            href="https://calendly.com/romanbodnarchuk/20min?utm_source=wisdomtwin-demo&utm_medium=three-rooms-film&utm_campaign=demo_film&utm_content=live-cta"
+            href="https://calendly.com/romanbodnarchuk/15min?utm_source=wisdomtwin-demo&utm_medium=three-rooms-film&utm_campaign=demo_film&utm_content=live-cta"
             target="_blank"
             rel="noreferrer"
             data-testid="live-cta"

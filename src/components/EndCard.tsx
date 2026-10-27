@@ -74,14 +74,24 @@ export function EndCard({ endCard, investorMode, onReplay, onRestart }: Props) {
         {endCard.stage >= 5 && (
           <div className="mx-auto mt-4 max-w-lg space-y-4">
             <a
-              href="https://calendly.com/romanbodnarchuk/20min?utm_source=wisdomtwin-demo&utm_medium=three-rooms-film&utm_campaign=demo_film&utm_content=end-cta"
+              href="https://calendly.com/romanbodnarchuk/15min?utm_source=wisdomtwin-demo&utm_medium=three-rooms-film&utm_campaign=demo_film&utm_content=end-cta"
               target="_blank"
               rel="noreferrer"
               data-testid="end-cta"
               onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'end-card' })}
               className="block w-full rounded-2xl bg-[var(--cream)] px-6 py-4 text-sm font-semibold tracking-[0.12em] text-[var(--ink)] uppercase transition hover:bg-white"
             >
-              Book Judgment Assessment
+              Book Judgment Assessment (15 min)
+            </a>
+            <a
+              href="https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f"
+              target="_blank"
+              rel="noreferrer"
+              data-testid="end-cta-live-twin"
+              onClick={() => trackInvestorEvent('investor_cta_click', { placement: 'end-live-twin' })}
+              className="block w-full rounded-2xl border border-[var(--brand-gold)]/40 bg-[var(--brand-gold)]/10 px-6 py-3 text-xs font-semibold tracking-[0.12em] text-[var(--cream)] uppercase transition hover:bg-[var(--brand-gold)]/20"
+            >
+              Speak Live with Roman&apos;s AI Digital Twin
             </a>
             <p className="text-xs tracking-[0.08em] text-[var(--cream-dim)]">
               wisdomtwin.ai · Text anytime with questions or to book:{' '}

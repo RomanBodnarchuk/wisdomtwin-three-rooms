@@ -1,4 +1,5 @@
-export const CALENDLY_URL = 'https://calendly.com/romanbodnarchuk/20min';
+export const CALENDLY_URL = 'https://calendly.com/romanbodnarchuk/15min';
+export const TAVUS_LIVE_TWIN_URL = 'https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f';
 export const FOUNDER_EMAIL = 'roman@wisdomtwin.ai';
 export const FOUNDER_PHONE_DISPLAY = '416 220 5314';
 export const FOUNDER_PHONE_TEL = '+14162205314';
@@ -73,7 +74,7 @@ export const TIERS: Tier[] = [
     amount: 2_500,
     summary: 'A longer founder briefing, still on unpublished terms.',
     detail:
-      'For people who want more than the public 20-minute booking before deciding whether a proposed SAFE is even the right conversation.',
+      'For people who want more than the public 15-minute booking before deciding whether a proposed SAFE is even the right conversation.',
     perks: [...BASE_PERKS, 'briefing'],
   },
   {
@@ -144,7 +145,7 @@ export const TIERS: Tier[] = [
 export const PERK_LABELS: Record<PerkId, string> = {
   updates: 'Written investor updates while the round is in discussion',
   demos: 'The public synthetic demonstrations',
-  booking: 'The public 20-minute founder booking',
+  booking: 'The public 15-minute founder booking',
   briefing: 'Extended founder briefing',
   session: 'Working session on one decision loop',
   quarterly: 'Quarterly small-group update for one year',
@@ -441,7 +442,7 @@ export const COMPANY_FAQS: FaqItem[] = [
   },
   {
     q: 'How do I follow the company without investing?',
-    a: 'Read wisdomtwin.ai, watch the synthetic huddle, and book 20 minutes. Investor updates described in the tiers are proposed for people in a documented round. They are not a newsletter you can buy on this page.',
+    a: 'Read wisdomtwin.ai, watch the synthetic huddle, and book 15 minutes. Investor updates described in the tiers are proposed for people in a documented round. They are not a newsletter you can buy on this page.',
   },
 ];
 

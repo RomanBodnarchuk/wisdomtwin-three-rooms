@@ -104,7 +104,7 @@ function Header() {
           ))}
         </nav>
         <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta !px-4 !py-2 text-sm" onClick={() => book('header')}>
-          Book 20 min
+          Book 15 min
         </a>
       </div>
       <nav className="flex gap-4 overflow-x-auto px-4 pb-3 lg:hidden" aria-label="Page">
@@ -156,7 +156,10 @@ function Hero({ tier, demoHref }: { tier: Tier; demoHref: string }) {
         </dl>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta" onClick={() => book('hero')}>
-            Book 20 min with Roman
+            Book 15 min with Roman
+          </a>
+          <a href="https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f" target="_blank" rel="noreferrer" className="raise-cta-ghost" onClick={() => book('hero-live-twin')}>
+            Speak with Roman&apos;s AI Twin
           </a>
           <a href={demoHref} className="raise-cta-ghost">
             Watch the synthetic huddle
@@ -473,7 +476,7 @@ function Participate({ selectedId, onSelect }: { selectedId: string; onSelect: (
                 className="raise-cta !py-2 text-sm"
                 onClick={() => book(`tier-${tier.id}`)}
               >
-                Book 20 min
+                Book 15 min
               </a>
             </div>
           </article>
@@ -483,7 +486,7 @@ function Participate({ selectedId, onSelect }: { selectedId: string; onSelect: (
         <article className="rounded-3xl border border-white/10 p-5">
           <h3 className="text-lg font-semibold">Angel path</h3>
           <p className="mt-2 text-sm leading-relaxed text-[var(--cream-dim)]">
-            A direct conversation toward the proposed post-money SAFE. Roman books 20 minutes at the link used across
+            A direct conversation toward the proposed post-money SAFE. Roman books 15 minutes at the link used across
             WisdomTwin. Larger checks can ask for the working sessions above. Nothing is funded in the meeting.
           </p>
         </article>
@@ -597,7 +600,7 @@ function Founder() {
         </p>
         <footer className="mt-6 text-sm text-[var(--brand-gold)]">Roman Bodnarchuk, Co-Founder and CEO</footer>
         <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta mt-6" onClick={() => book('founder')}>
-          Book 20 min
+          Book 15 min
         </a>
       </blockquote>
     </section>
@@ -730,7 +733,7 @@ function Close() {
         <p className="raise-kicker">WisdomTwin preserves institutional judgment.</p>
         <h2 className="raise-display mt-4 text-4xl md:text-5xl">Discuss the proposed round. Do not send money to this page.</h2>
         <p className="mx-auto mt-4 max-w-2xl text-[var(--cream-dim)] leading-relaxed">
-          Book twenty minutes. Bring the decision you would want governed, or the questions you would ask before a SAFE
+          Book fifteen minutes. Bring the decision you would want governed, or the questions you would ask before a SAFE
           exists. The public product story lives at{' '}
           <a href={SITE_URL} className="text-[var(--cream)] underline">
             wisdomtwin.ai
@@ -739,7 +742,7 @@ function Close() {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta" onClick={() => book('close')}>
-            Book 20 min
+            Book 15 min
           </a>
           <a href={INVESTOR_OVERVIEW_URL} className="raise-cta-ghost" target="_blank" rel="noreferrer">
             Read the investor overview
@@ -756,8 +759,8 @@ function Footer() {
       <div className="mx-auto max-w-6xl space-y-4 text-xs leading-relaxed text-[var(--cream-dim)]">
         <p className="text-sm text-[var(--cream)]">{TAGLINE}</p>
         <p>
-          WisdomTwin, Inc., a Delaware corporation, founder-built in Toronto. 90 Stadium Road, Suite 911, Toronto, ON
-          M5V 3W5, Canada. {FOUNDER_EMAIL}. Text {FOUNDER_PHONE_DISPLAY}.
+          WisdomTwin, Inc., a Delaware corporation, founder-built in Toronto. 99 Yorkville Ave, Unit 200, Toronto,
+          Ontario, Canada. {FOUNDER_EMAIL}. Text {FOUNDER_PHONE_DISPLAY}.
         </p>
         <p>
           This page is an informational briefing for prospective angels and for readers studying how a future exempt
@@ -786,7 +789,7 @@ function MobileBar() {
           <span className="block text-[var(--cream)]">Not open for funds</span>
         </p>
         <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta !py-2 text-sm" onClick={() => book('mobile-bar')}>
-          Book 20 min
+          Book 15 min
         </a>
       </div>
     </div>
