@@ -1,0 +1,300 @@
+openapi: 3.1.0
+info:
+  title: WisdomTwin
+  version: 3.8.0
+  description: >-
+    Ask role-specific digital twins about the judgment behind past decisions — why leaders
+    chose what they chose, what alternatives they rejected, and what counterfactual boundaries
+    or policy gates apply. Copilot answers from what you can see; WisdomTwin answers from what
+    the role knows.
+servers:
+  - url: https://api.wisdomtwin.ai
+    description: Production WisdomTwin Enterprise Judgment API (Azure Container Apps / Foundry)
+paths:
+  /twin/query:
+    post:
+      operationId: queryTwin
+      summary: Ask a role's digital twin a question about past decisions, precedent, and policy gates.
+      description: >-
+        Use this operation when the user asks about historical decisions, approval thresholds,
+        budget caps, legal gates, dissent notes, or precedent for a specific executive role
+        (CFO, CTO, CRO, CMO, LEGAL, CCO, CEO). Enforces the signed-in user's Microsoft Entra ID
+        ACL and Microsoft Purview sensitivity label rights via On-Behalf-Of (OBO) authentication.
+      x-openai-isConsequential: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryTwinRequest'
+      responses:
+        '200':
+          description: Governed precedent response with verbatim evidence, dissent notes, and Purview citations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryTwinResponse'
+  /twin/roles:
+    get:
+      operationId: listRoles
+      summary: List every executive role that has a Wisdom Twin built, with document count and date range covered.
+      description: >-
+        Use this operation when the user asks which role twins exist, how many years of history
+        are indexed for a role, or what non-negotiable "never-do" boundaries apply to each role.
+      x-openai-isConsequential: false
+      responses:
+        '200':
+          description: Array of active executive role twins and coverage metadata.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleSummary'
+  /twin/judgments/{judgmentId}:
+    get:
+      operationId: getJudgment
+      summary: Drill into a specific historical DecisionEpisode record, verbatim evidence, and dissent notes.
+      description: >-
+        Retrieves the full temporal context graph node for a specific judgmentId, including
+        verbatim quotes, vote tallies, preserved dissent, rejected alternatives, and threshold drift.
+      x-openai-isConsequential: false
+      parameters:
+        - name: judgmentId
+          in: path
+          required: true
+          description: Unique identifier of the DecisionEpisode (e.g., ep_cfo_cap_2026).
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Full DecisionEpisode record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JudgmentDetail'
+  /twin/huddle:
+    post:
+      operationId: startHuddle
+      summary: Convene multiple executive role twins in a live Audio Executive Huddle.
+      description: >-
+        Initializes a multi-role Audio Executive Huddle session (Dream -> Stress-Test -> Build)
+        across selected role twins (e.g., CFO, CTO, CRO, CMO, LEGAL) and returns a session handle
+        and join URL.
+      x-openai-isConsequential: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HuddleStartRequest'
+      responses:
+        '200':
+          description: Active Audio Executive Huddle session handle and join URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HuddleStartResponse'
+components:
+  securitySchemes:
+    EntraOBOAuth:
+      type: oauth2
+      description: Microsoft Entra ID On-Behalf-Of (OBO) OAuth 2.0 flow preserving user ACL and Purview rights.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+          tokenUrl: https://login.microsoftonline.com/common/oauth2/v2.0/token
+          scopes:
+            api://wisdomtwin.ai/Twin.Query: Query role-specific judgment graphs within user ACL boundaries
+  schemas:
+    RoleEnum:
+      type: string
+      enum: [CFO, CTO, CRO, CMO, LEGAL, CCO, CEO, BOARD]
+    TimeRangeEnum:
+      type: string
+      enum: [last_quarter, last_year, five_years, all_time]
+    QueryTwinRequest:
+      type: object
+      required: [question, role]
+      properties:
+        question:
+          type: string
+          description: The natural language question about past decisions, thresholds, or precedent.
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        time_range:
+          $ref: '#/components/schemas/TimeRangeEnum'
+          default: all_time
+        top_k:
+          type: integer
+          default: 5
+          minimum: 1
+          maximum: 20
+    JudgmentSummary:
+      type: object
+      properties:
+        judgment_id:
+          type: string
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        role_holder_name:
+          type: string
+        title:
+          type: string
+        decision:
+          type: string
+        reasoning:
+          type: string
+        alternatives_rejected:
+          type: array
+          items:
+            type: string
+        counterfactual_boundaries:
+          type: array
+          items:
+            type: string
+        dissent_notes:
+          type: string
+          nullable: true
+        decided_date:
+          type: string
+        confidence:
+          type: number
+        governance_action:
+          type: string
+          enum: [recommend, escalate, safe_decline]
+        source:
+          type: object
+          properties:
+            title:
+              type: string
+            type:
+              type: string
+            deep_link:
+              type: string
+    CitationRecord:
+      type: object
+      properties:
+        document_id:
+          type: string
+        title:
+          type: string
+        source_type:
+          type: string
+        deep_link_url:
+          type: string
+        sensitivity_label:
+          type: string
+        verbatim_excerpt:
+          type: string
+    QueryTwinResponse:
+      type: object
+      required: [answer, role, governance_action, confidence, judgments, citations, audit_log_id]
+      properties:
+        answer:
+          type: string
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        governance_action:
+          type: string
+          enum: [recommend, escalate, safe_decline]
+        confidence:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+        safe_decline_active:
+          type: boolean
+        escalation_reviewer:
+          type: string
+          nullable: true
+        estimated_review_minutes:
+          type: integer
+          nullable: true
+        judgments:
+          type: array
+          items:
+            $ref: '#/components/schemas/JudgmentSummary'
+        citations:
+          type: array
+          items:
+            $ref: '#/components/schemas/CitationRecord'
+        audit_log_id:
+          type: string
+    RoleSummary:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        label:
+          type: string
+        title:
+          type: string
+        role_holders_count:
+          type: integer
+        episode_count:
+          type: integer
+        document_count:
+          type: integer
+        date_range_covered:
+          type: string
+        never_do_rules:
+          type: array
+          items:
+            type: string
+    JudgmentDetail:
+      type: object
+      properties:
+        episode_id:
+          type: string
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        title:
+          type: string
+        question_asked:
+          type: string
+        decision_statement:
+          type: string
+        reasoning:
+          type: string
+        outcome:
+          type: string
+        confidence_score:
+          type: number
+        governance_action:
+          type: string
+    HuddleStartRequest:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleEnum'
+        topic:
+          type: string
+        voice_provider:
+          type: string
+          default: grok_voice_3
+    HuddleStartResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+        topic:
+          type: string
+        join_url:
+          type: string
+        voice_provider:
+          type: string
+        active_roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleEnum'
+        room_mode:
+          type: string
+        initial_confidence:
+          type: integer
+        status:
+          type: string
+security:
+  - EntraOBOAuth:
+      - api://wisdomtwin.ai/Twin.Query
