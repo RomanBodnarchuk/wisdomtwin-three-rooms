@@ -1,4 +1,5 @@
-export const CALENDLY_URL = 'https://calendly.com/romanbodnarchuk/20min';
+export const CALENDLY_URL = 'https://calendly.com/romanbodnarchuk/15min';
+export const TAVUS_LIVE_TWIN_URL = 'https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f';
 export const FOUNDER_EMAIL = 'roman@wisdomtwin.ai';
 export const FOUNDER_PHONE_DISPLAY = '416 220 5314';
 export const FOUNDER_PHONE_TEL = '+14162205314';
@@ -73,7 +74,7 @@ export const TIERS: Tier[] = [
     amount: 2_500,
     summary: 'A longer founder briefing, still on unpublished terms.',
     detail:
-      'For people who want more than the public 20-minute booking before deciding whether a proposed SAFE is even the right conversation.',
+      'For people who want more than the public 15-minute booking before deciding whether a proposed SAFE is even the right conversation.',
     perks: [...BASE_PERKS, 'briefing'],
   },
   {
@@ -144,7 +145,7 @@ export const TIERS: Tier[] = [
 export const PERK_LABELS: Record<PerkId, string> = {
   updates: 'Written investor updates while the round is in discussion',
   demos: 'The public synthetic demonstrations',
-  booking: 'The public 20-minute founder booking',
+  booking: 'The public 15-minute founder booking',
   briefing: 'Extended founder briefing',
   session: 'Working session on one decision loop',
   quarterly: 'Quarterly small-group update for one year',
@@ -441,7 +442,7 @@ export const COMPANY_FAQS: FaqItem[] = [
   },
   {
     q: 'How do I follow the company without investing?',
-    a: 'Read wisdomtwin.ai, watch the synthetic huddle, and book 20 minutes. Investor updates described in the tiers are proposed for people in a documented round. They are not a newsletter you can buy on this page.',
+    a: 'Read wisdomtwin.ai, watch the synthetic huddle, and book 15 minutes. Investor updates described in the tiers are proposed for people in a documented round. They are not a newsletter you can buy on this page.',
   },
 ];
 
@@ -465,6 +466,59 @@ export const SOURCES: Array<{ label: string; href: string; note: string }> = [
     label: 'Regulation Crowdfunding, 17 CFR Part 227',
     href: 'https://www.ecfr.gov/current/title-17/chapter-II/part-227',
     note: 'The rule set a future crowdfunding offering would have to follow. It is not in effect for this briefing.',
+  },
+];
+
+export interface PublishedBriefing {
+  wave: string;
+  scheduleLabel: string;
+  title: string;
+  summary: string;
+  category: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export const PUBLISHED_BRIEFINGS: PublishedBriefing[] = [
+  {
+    wave: 'Wave 1 · Thu Oct 29, 2026 · 9:00 AM EDT',
+    scheduleLabel: '12-Hour Cadence · Morning Edition',
+    title: 'Why Generic AI Prompts Fail (And How Ontario Employers Build Real Workflow ROI)',
+    summary:
+      'How leadership teams replace ad-hoc prompting with measured 12-week AI workflows tracked against a Week-1 baseline, and evaluate Canada-Ontario Job Grant (COJG) support up to CAD $10,000 per eligible trainee (subject to Ministry approval before training starts and employer contributions; funding is not guaranteed).',
+    category: 'N5R.AI & WisdomTwin',
+    ctaLabel: 'Book 15-min N5R Fit Check',
+    ctaHref: 'https://calendly.com/romanbodnarchuk/roman-bodnarchuk-n5r-ai-15-minute-business-call',
+  },
+  {
+    wave: 'Wave 2 · Thu Oct 29, 2026 · 9:00 PM EDT',
+    scheduleLabel: '12-Hour Cadence · Evening Edition',
+    title: 'Document Search Retrieves Files. AI Judgment Twins Preserve How Your Best Leaders Decide.',
+    summary:
+      'A regulated decision already has a name on it. Why standard document search loses the reasoning chain — and how WisdomTwin structures one critical role’s approved evidence, principles, thresholds, and escalation rules with a named human accountable.',
+    category: 'WisdomTwin Governance',
+    ctaLabel: 'Book 15-min Founder Briefing',
+    ctaHref: CALENDLY_URL,
+  },
+  {
+    wave: 'Wave 3 · Fri Oct 30, 2026 · 9:00 AM EDT',
+    scheduleLabel: '12-Hour Cadence · Morning Edition',
+    title: 'The 12-Week AI Workflow Baseline: How Ontario Teams Reclaim 2,500+ Hours a Year',
+    summary:
+      'When 40 employees have AI chat logins and only 2 know how to use them, work pools around the bottleneck. How reclaiming 1 verified hour per week across a 50-person team returns 2,500 hours per year.',
+    category: 'N5R.AI Practical AI',
+    ctaLabel: 'Book 15-min N5R Fit Check',
+    ctaHref: 'https://calendly.com/romanbodnarchuk/roman-bodnarchuk-n5r-ai-15-minute-business-call',
+  },
+  {
+    wave: 'Wave 4 · Fri Oct 30, 2026 · 9:00 PM EDT',
+    scheduleLabel: '12-Hour Cadence · Evening Edition',
+    title: 'One Role, One Evidence Set: Why Regulated Enterprises Cannot Use Public Chatbots for Exceptions',
+    summary:
+      'Why commercial credit exceptions, underwriting referrals, and procurement waivers require deterministic safe-decline and human sign-off outside the model.',
+    category: 'WisdomTwin Regulated',
+    ctaLabel: 'Watch 2:54 Synthetic Demo',
+    ctaHref: 'https://wisdomtwin.ai/demo#demo-named-call-title',
   },
 ];
 

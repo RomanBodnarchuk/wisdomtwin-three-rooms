@@ -19,7 +19,7 @@ Live site: https://romanbodnarchuk.github.io/wisdomtwin-three-rooms/
   $7.4M phase one, 38 minutes human review, 62→91% confidence.
 - NEVER cut the safe-decline beat. Move it earlier, never remove it.
 - Keep the synthetic-data disclosure small in the footer. Do not enlarge it.
-- One CTA only: https://calendly.com/romanbodnarchuk/20min (+ text 416 220 5314).
+- One CTA only: https://calendly.com/romanbodnarchuk/15min (+ text 416 220 5314) and live AI Twin at https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f.
 - Do not regress: 45s cut stays default; investor mode stays behind ?investor; single start button.
 
 ## Shipped
@@ -180,3 +180,11 @@ runtime are unchanged; the banned time-compression claims are gone end to end.
 11. [x] **Unified grade.** Photo plate runs saturate(0.87) contrast(1.05)
     brightness(0.96) so the film sits in the UI tone family; safe-decline
     override unchanged.
+
+## v3.9 — October 27, 2026 investor & buyer alignment pass
+
+1. [x] **Canonical 15-minute Calendly CTA.** Updated all booking links across `StartExperience`, `EndCard`, `DemoShell`, and `/invest/` (`RaisePage`, `raiseData`) from retired `/20min` to `https://calendly.com/romanbodnarchuk/15min`.
+2. [x] **Live Tavus AI Digital Twin CTA.** Added direct link to Roman's live AI Digital Twin (`https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f`) on Start screen, End card, and `/invest/` hero.
+3. [x] **Latest Investor Deck PDFs.** Replaced legacy August E4 deck in `public/` and `public/downloads/wisdomtwin-deck.pdf` with the October 2026 E11 claim-checked review deck (`WisdomTwin-E11-Review-Deck-2026-10-22.pdf`), alongside `WisdomTwin-E10-Final-Deck-2026-10-14.pdf` and `WisdomTwin-One-Page-Teaser-2026-10-26.pdf`.
+4. [x] **Corporate address alignment.** Updated `/invest/` footer to `99 Yorkville Ave, Unit 200, Toronto, Ontario, Canada`.
+

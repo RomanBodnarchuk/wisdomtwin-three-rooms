@@ -18,6 +18,7 @@ import {
   PERK_LABELS,
   PROBLEM_POINTS,
   PROCEEDS,
+  PUBLISHED_BRIEFINGS,
   RISKS,
   SITE_URL,
   SOURCES,
@@ -38,6 +39,7 @@ const NAV = [
   { href: '#participate', label: 'Participate' },
   { href: '#comparison', label: 'Comparison' },
   { href: '#financials', label: 'Financials' },
+  { href: '#briefings', label: '12h Briefings' },
   { href: '#education', label: 'Investor education' },
 ];
 
@@ -79,6 +81,7 @@ export function RaisePage() {
         <Comparison />
         <Founder />
         <Financials />
+        <Briefings />
         <Education />
         <Close />
       </main>
@@ -104,7 +107,7 @@ function Header() {
           ))}
         </nav>
         <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta !px-4 !py-2 text-sm" onClick={() => book('header')}>
-          Book 20 min
+          Book 15 min
         </a>
       </div>
       <nav className="flex gap-4 overflow-x-auto px-4 pb-3 lg:hidden" aria-label="Page">
@@ -156,7 +159,10 @@ function Hero({ tier, demoHref }: { tier: Tier; demoHref: string }) {
         </dl>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta" onClick={() => book('hero')}>
-            Book 20 min with Roman
+            Book 15 min with Roman
+          </a>
+          <a href="https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f" target="_blank" rel="noreferrer" className="raise-cta-ghost" onClick={() => book('hero-live-twin')}>
+            Speak with Roman&apos;s AI Twin
           </a>
           <a href={demoHref} className="raise-cta-ghost">
             Watch the synthetic huddle
@@ -473,7 +479,7 @@ function Participate({ selectedId, onSelect }: { selectedId: string; onSelect: (
                 className="raise-cta !py-2 text-sm"
                 onClick={() => book(`tier-${tier.id}`)}
               >
-                Book 20 min
+                Book 15 min
               </a>
             </div>
           </article>
@@ -483,7 +489,7 @@ function Participate({ selectedId, onSelect }: { selectedId: string; onSelect: (
         <article className="rounded-3xl border border-white/10 p-5">
           <h3 className="text-lg font-semibold">Angel path</h3>
           <p className="mt-2 text-sm leading-relaxed text-[var(--cream-dim)]">
-            A direct conversation toward the proposed post-money SAFE. Roman books 20 minutes at the link used across
+            A direct conversation toward the proposed post-money SAFE. Roman books 15 minutes at the link used across
             WisdomTwin. Larger checks can ask for the working sessions above. Nothing is funded in the meeting.
           </p>
         </article>
@@ -597,7 +603,7 @@ function Founder() {
         </p>
         <footer className="mt-6 text-sm text-[var(--brand-gold)]">Roman Bodnarchuk, Co-Founder and CEO</footer>
         <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta mt-6" onClick={() => book('founder')}>
-          Book 20 min
+          Book 15 min
         </a>
       </blockquote>
     </section>
@@ -672,6 +678,54 @@ function Financials() {
   );
 }
 
+function Briefings() {
+  return (
+    <section id="briefings" className="scroll-mt-28 border-b border-white/10 bg-black/15">
+      <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
+        <p className="raise-kicker">12-hour executive publishing cadence</p>
+        <h2 className="raise-display mt-3 max-w-3xl text-4xl">
+          Published articles &amp; synchronized executive briefings.
+        </h2>
+        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--cream-dim)]">
+          Every 12 hours (9:00 AM and 9:00 PM America/Toronto), WisdomTwin and N5R publish a new executive briefing on
+          governed role-specific judgment and measured workplace AI workflows. All product demonstrations remain
+          synthetic and founder-built.
+        </p>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {PUBLISHED_BRIEFINGS.map((item) => (
+            <article key={item.title} className="raise-card flex flex-col justify-between rounded-3xl p-5">
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-semibold tracking-wide text-[var(--brand-gold)] uppercase">
+                    {item.wave}
+                  </span>
+                  <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-[11px] text-[var(--cream-dim)]">
+                    {item.category}
+                  </span>
+                </div>
+                <h3 className="raise-display mt-3 text-2xl text-[var(--cream)]">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--cream-dim)]">{item.summary}</p>
+              </div>
+              <div className="mt-5 flex flex-wrap items-center gap-3 pt-2">
+                <a
+                  href={item.ctaHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="raise-cta !px-4 !py-2 text-xs"
+                  onClick={() => book(`briefing-${item.wave}`)}
+                >
+                  {item.ctaLabel}
+                </a>
+                <span className="text-xs text-[var(--cream-dim)]">{item.scheduleLabel}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Education() {
   return (
     <section id="education" className="scroll-mt-28 mx-auto max-w-6xl px-4 py-16 md:px-6">
@@ -730,7 +784,7 @@ function Close() {
         <p className="raise-kicker">WisdomTwin preserves institutional judgment.</p>
         <h2 className="raise-display mt-4 text-4xl md:text-5xl">Discuss the proposed round. Do not send money to this page.</h2>
         <p className="mx-auto mt-4 max-w-2xl text-[var(--cream-dim)] leading-relaxed">
-          Book twenty minutes. Bring the decision you would want governed, or the questions you would ask before a SAFE
+          Book fifteen minutes. Bring the decision you would want governed, or the questions you would ask before a SAFE
           exists. The public product story lives at{' '}
           <a href={SITE_URL} className="text-[var(--cream)] underline">
             wisdomtwin.ai
@@ -739,7 +793,7 @@ function Close() {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta" onClick={() => book('close')}>
-            Book 20 min
+            Book 15 min
           </a>
           <a href={INVESTOR_OVERVIEW_URL} className="raise-cta-ghost" target="_blank" rel="noreferrer">
             Read the investor overview
@@ -756,8 +810,8 @@ function Footer() {
       <div className="mx-auto max-w-6xl space-y-4 text-xs leading-relaxed text-[var(--cream-dim)]">
         <p className="text-sm text-[var(--cream)]">{TAGLINE}</p>
         <p>
-          WisdomTwin, Inc., a Delaware corporation, founder-built in Toronto. 90 Stadium Road, Suite 911, Toronto, ON
-          M5V 3W5, Canada. {FOUNDER_EMAIL}. Text {FOUNDER_PHONE_DISPLAY}.
+          WisdomTwin, Inc., a Delaware corporation, founder-built in Toronto. 99 Yorkville Ave, Unit 200, Toronto,
+          Ontario, Canada. {FOUNDER_EMAIL}. Text {FOUNDER_PHONE_DISPLAY}.
         </p>
         <p>
           This page is an informational briefing for prospective angels and for readers studying how a future exempt
@@ -786,7 +840,7 @@ function MobileBar() {
           <span className="block text-[var(--cream)]">Not open for funds</span>
         </p>
         <a href={CALENDLY_URL} target="_blank" rel="noreferrer" className="raise-cta !py-2 text-sm" onClick={() => book('mobile-bar')}>
-          Book 20 min
+          Book 15 min
         </a>
       </div>
     </div>
