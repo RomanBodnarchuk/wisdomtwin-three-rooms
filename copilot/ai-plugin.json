@@ -1,0 +1,71 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.1/schema.json",
+  "schema_version": "v2.1",
+  "name_for_human": "WisdomTwin",
+  "description_for_human": "Ask role-specific digital twins about the judgment behind past decisions, thresholds, dissent, and policy gates.",
+  "description_for_model": "Use this plugin when the user asks about past decisions, reasoning, thresholds, dissent notes, or judgment of specific executive roles (CFO, CTO, CRO, CMO, LEGAL, CCO, CEO), or wants to start an Audio Executive Huddle. Do not use it for general document search or drafting.",
+  "contact_email": "roman@wisdomtwin.ai",
+  "legal_info_url": "https://wisdomtwin.ai/company",
+  "privacy_policy_url": "https://wisdomtwin.ai/privacy",
+  "api": {
+    "type": "openapi",
+    "url": "openapi.yaml"
+  },
+  "auth": {
+    "type": "OAuthPluginVault",
+    "reference_id": "entra_obo_wisdomtwin_ref"
+  },
+  "functions": [
+    {
+      "name": "queryTwin",
+      "description": "Ask a role's digital twin (CFO, CTO, CRO, CMO, LEGAL, CCO, CEO) a question about past decisions, approval thresholds, counterfactual 'never-do' boundaries, and precedent.",
+      "capabilities": {
+        "response_semantics": {
+          "data_path": "$.judgments",
+          "properties": {
+            "title": "$.title",
+            "subtitle": "$.decision",
+            "url": "$.source.deep_link"
+          },
+          "static_template": {
+            "type": "AdaptiveCard",
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "version": "1.5",
+            "body": [
+              {
+                "type": "TextBlock",
+                "text": "WisdomTwin — ${role} Precedent",
+                "weight": "Bolder",
+                "size": "Medium"
+              },
+              {
+                "type": "TextBlock",
+                "text": "${decision}",
+                "wrap": true
+              },
+              {
+                "type": "TextBlock",
+                "text": "Role Holder: ${role_holder_name} · Date: ${decided_date} · Governance: ${governance_action}",
+                "isSubtle": true,
+                "size": "Small",
+                "wrap": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "listRoles",
+      "description": "List every executive role that has a Wisdom Twin built, including document count, historical date range covered, and non-negotiable 'never-do' boundaries."
+    },
+    {
+      "name": "getJudgment",
+      "description": "Drill into one specific DecisionEpisode judgment record by judgmentId to inspect verbatim evidence quotes, dissent notes, and threshold drift."
+    },
+    {
+      "name": "startHuddle",
+      "description": "Start a multi-role Audio Executive Huddle session across selected executive role twins and return a live session join URL."
+    }
+  ]
+}

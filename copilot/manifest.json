@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.19",
+  "version": "3.8.0",
+  "id": "d6a10000-4b8f-4e1a-9a30-91fd0ef03800",
+  "developer": {
+    "name": "WisdomTwin, Inc.",
+    "websiteUrl": "https://wisdomtwin.ai",
+    "privacyUrl": "https://wisdomtwin.ai/privacy",
+    "termsOfUseUrl": "https://wisdomtwin.ai/terms",
+    "mpnId": "0000000"
+  },
+  "name": {
+    "short": "WisdomTwin",
+    "full": "WisdomTwin — Role-Specific Institutional Judgment for Microsoft 365 Copilot"
+  },
+  "description": {
+    "short": "WisdomTwin preserves institutional judgment across executive roles.",
+    "full": "Copilot answers from what you can see; WisdomTwin answers from what the role knows. WisdomTwin synthesizes multi-year decision episodes across every leader who has held an executive role (CFO, CTO, CRO, CMO, Chief Legal Officer), preserving policy gates, vote tallies, dissent notes, Purview sensitivity labels, and governed human escalation."
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#0B1F3A",
+  "copilotAgents": {
+    "declarativeAgents": [
+      {
+        "id": "wisdomtwin-judgment-agent",
+        "file": "declarativeAgent.json"
+      }
+    ]
+  },
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "wisdomtwin.ai",
+    "api.wisdomtwin.ai"
+  ],
+  "webApplicationInfo": {
+    "id": "00000000-0000-0000-0000-00000000d6a1",
+    "resource": "api://wisdomtwin.ai/00000000-0000-0000-0000-00000000d6a1"
+  }
+}
