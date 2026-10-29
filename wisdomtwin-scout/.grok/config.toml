@@ -1,0 +1,25 @@
+# MCP servers for a Grok Build workspace.
+# This Cursor cloud session did not run `grok mcp add` or `grok mcp login`.
+# No tokens are stored here. Fill secrets outside the repository.
+
+[mcp_servers.hubspot]
+url = "https://mcp.hubspot.com/anthropic"
+startup_timeout_sec = 60
+tool_timeout_sec = 120
+
+[mcp_servers.firsttouch]
+url = "https://mcp.firsttouch.ai"
+startup_timeout_sec = 60
+tool_timeout_sec = 120
+
+# X monitoring stays commented until a remote server and token exist.
+# Do not install a third-party stdio scraper into this public repository.
+#
+# [mcp_servers.x]
+# url = "<your-remote-x-mcp-url>"
+# headers = { "Authorization" = "Bearer ${X_API_TOKEN}" }
+
+[subagents]
+regulated-finder = "Reads .grok/agents/regulated-finder.md"
+investor-tracker = "Reads .grok/agents/investor-tracker.md"
+profile-builder = "Reads .grok/agents/profile-builder.md"
