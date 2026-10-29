@@ -1,29 +1,36 @@
-# Synchronized 12-Hour Multi-Channel Publishing & HubSpot B2B Campaign Engine
+# Synchronized 12-Hour Multi-Channel Publishing & HubSpot All-B2B Campaign Engine
 
 **Prepared for**: Roman Bodnarchuk (`roman@n5r.com` / `roman@wisdomtwin.ai`)  
-**Synchronized Launch Waves**:
-- **Wave 1 (Morning Edition)**: **Thursday, October 29, 2026 at 9:00 AM EDT** (`2026-10-29T13:00:00Z` / Unix `1793278800`)
-- **Wave 2 (Evening Edition — +12 Hours)**: **Thursday, October 29, 2026 at 9:00 PM EDT** (`2026-10-30T01:00:00Z` / Unix `1793322000`)
+**Synchronized 12-Hour Launch Waves**:
+- **Wave 1 (Day 1 Morning)**: **Thursday, October 29, 2026 at 9:00 AM EDT** (`2026-10-29T13:00:00Z` / Unix `1793278800`)
+- **Wave 2 (Day 1 Evening — +12 Hours)**: **Thursday, October 29, 2026 at 9:00 PM EDT** (`2026-10-30T01:00:00Z` / Unix `1793322000`)
 - **Wave 3 (Day 2 Morning — +24 Hours)**: **Friday, October 30, 2026 at 9:00 AM EDT** (`2026-10-30T13:00:00Z` / Unix `1793365200`)
 - **Wave 4 (Day 2 Evening — +36 Hours)**: **Friday, October 30, 2026 at 9:00 PM EDT** (`2026-10-31T01:00:00Z` / Unix `1793408400`)
 
 ---
 
-## 1. Live Staged Campaign Assets & Platform IDs (Verified in Your Connected Portals)
+## 1. Live Staged Campaign Assets & Platform IDs (33 Total Assets Verified in Your Connected Portals)
 
-All assets below have been created and staged in **DRAFT** or **Scheduled Unpublished** state in your live accounts, 100% compliant with all 12 Outbound QA Gate checks (zero em dashes, zero placeholders, conditional Ontario Job Grant language, direct `https://wisdomtwin.ai/demo#demo-named-call-title` and Calendly URLs, live Tavus Digital Twin CTA, and full legal entity signatures).
+All **33 live platform assets** below have been created and staged in **DRAFT** or **Scheduled Unpublished** state across your connected HubSpot, LinkedIn, Facebook, and Instagram accounts, 100% compliant with all 12 Outbound QA Gate checks (zero em dashes, zero placeholders, conditional Ontario Job Grant language, direct `https://wisdomtwin.ai/demo#demo-named-call-title` and Calendly URLs, live Tavus Digital Twin CTA, and full legal entity signatures).
 
-### A. HubSpot Marketing Emails (Portal `66868` — Qualified B2B Contacts with First Name, Last Name, Business Email & Company Name)
+### A. HubSpot Marketing Emails (Portal `66868` — All Qualified B2B Business Contacts with First Name, Last Name, Business Email & Company Name)
 
-| Wave | Scheduled Time (EDT) | HubSpot Email ID | State | Name & Subject | Target Segment & Suppressions |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Wave 1** | **Thu Oct 29, 2026 · 9:00 AM EDT** (`2026-10-29T13:00:00Z`) | `225847299238` | `DRAFT` | **Name**: `N5R Ontario fit check 2026-10-29 9am ET`<br>**Subject**: `{{ contact.firstname\|default("Hello") }}, a 15-minute fit check for practical AI training` | **Include**: List `1066` (`Canadian B2B business email 2026-10-16 Ontario`, 1,718 B2B contacts) + List `942`<br>**Exclude**: Prior Wave Lists `1043, 1047, 1052, 1053, 1054, 1064, 1069, 1070, 1071` + Graymail suppressed |
-| **Wave 2** | **Thu Oct 29, 2026 · 9:00 PM EDT** (`2026-10-30T01:00:00Z`) | `225847352094` | `DRAFT` | **Name**: `WisdomTwin & N5R Executive Briefing 2026-10-29 9pm ET (12h Cadence Wave 2)`<br>**Subject**: `{{ contact.firstname\|default("Hello") }}, how {{ contact.company\|default("your team") }} can preserve senior decision judgment` | **Include**: List `1066` (`Canadian B2B business email 2026-10-16 Ontario`, 1,718 B2B contacts) + List `942`<br>**Exclude**: Prior Wave Lists `1043, 1047, 1052, 1053, 1054, 1064, 1069, 1070, 1071` + Graymail suppressed |
+Every All-B2B wave email below is wired to:
+- **Included Target Lists (`contactIlsLists.include`)**:
+  - `1066` (`Canadian B2B business email 2026-10-16 Ontario` — **1,718** contacts)
+  - `1067` (`Canadian B2B business email 2026-10-16 Rest of Canada` — **212** contacts)
+  - `1065` (`N5R Ontario AI Training - Additional Business Contacts - 2026-10-22` — **406** contacts)
+  - `725` (`Database of leads with both First name and company name` — **7,835** contacts)
+- **Excluded Suppression Lists (`contactIlsLists.exclude`)**:
+  - `369` (`Hard Bounces` — 8,926), `370` (`Email Unsubscribes` — 14,355), `372` (`Marked as Spam` — 5), `962` (`SUPPRESSED - Hard Bounced Contacts`), `1040` (`WT Pre-Seed Drafts DO NOT SEND`), `1042` (`SUPPRESSION - Bad Address`), `1061` (`MT_Suppress` — 42,335 consumer/free-webmail exclusions), plus prior wave lists `1043, 1047, 1052, 1053, 1054, 1064, 1069, 1070, 1071, 1072` and `suppressGraymail: true`.
 
-#### HubSpot Database Qualification Breakdown (Portal `66868` — Live SQL Audit)
-- **Total Contacts with `firstname`, `lastname`, `email`, and `company` populated**: **8,678**
-- **Opted-In Business Contacts (excluding free webmail `@gmail`, `@yahoo`, `@hotmail`, `@outlook`, `@icloud`, `@rogers`, `@bell`, `@sympatico` and excluding all bounces/opt-outs)**: **4,434**
-- **Strict Qualified B2B Segment Preview (excluding `Person`/`Unknown` company placeholders + excluding suppression lists `369, 370, 372, 962, 1040, 1042, 1061`)**: **2,778** across North America (**740** in Ontario/Canada; **392** net-new Ontario B2B contacts never touched by prior Oct 9–27 waves).
+| Wave | Scheduled Time (EDT) | HubSpot Email ID | State | Name & Subject |
+| :--- | :--- | :--- | :--- | :--- |
+| **Wave 1 (All-B2B)** | **Thu Oct 29, 2026 · 9:00 AM EDT** (`2026-10-29T13:00:00Z`) | **`225847352140`** | `DRAFT` | **Name**: `N5R & WisdomTwin All-B2B Fit Check 2026-10-29 9am ET (12h Cadence Wave 1)`<br>**Subject**: `{{ contact.firstname\|default("Hello") }}, a 15-minute AI workflow fit check for {{ contact.company\|default("your team") }}` |
+| **Wave 1 (Ontario-Only Option)** | **Thu Oct 29, 2026 · 9:00 AM EDT** (`2026-10-29T13:00:00Z`) | **`225847299238`** | `DRAFT` | **Name**: `N5R Ontario fit check 2026-10-29 9am ET`<br>**Subject**: `{{ contact.firstname\|default("Hello") }}, a 15-minute fit check for practical AI training` |
+| **Wave 2 (+12h All-B2B)** | **Thu Oct 29, 2026 · 9:00 PM EDT** (`2026-10-30T01:00:00Z`) | **`225847352094`** | `DRAFT` | **Name**: `WisdomTwin & N5R Executive Briefing 2026-10-29 9pm ET (12h Cadence Wave 2)`<br>**Subject**: `{{ contact.firstname\|default("Hello") }}, how {{ contact.company\|default("your team") }} can preserve senior decision judgment` |
+| **Wave 3 (+24h All-B2B)** | **Fri Oct 30, 2026 · 9:00 AM EDT** (`2026-10-30T13:00:00Z`) | **`225847352143`** | `DRAFT` | **Name**: `N5R & WisdomTwin 3 Workflows Playbook 2026-10-30 9am ET (12h Cadence Wave 3)`<br>**Subject**: `{{ contact.firstname\|default("Hello") }}, 3 AI workflows for {{ contact.company\|default("your team") }} before year-end` |
+| **Wave 4 (+36h All-B2B)** | **Fri Oct 30, 2026 · 9:00 PM EDT** (`2026-10-31T01:00:00Z`) | **`225847352155`** | `DRAFT` | **Name**: `WisdomTwin & N5R Governance Briefing 2026-10-30 9pm ET (12h Cadence Wave 4)`<br>**Subject**: `{{ contact.firstname\|default("Hello") }}, how {{ contact.company\|default("your team") }} can enforce AI authority guardrails` |
 
 ---
 
@@ -31,8 +38,10 @@ All assets below have been created and staged in **DRAFT** or **Scheduled Unpubl
 
 | Wave | Target Publish Time (EDT) | HubSpot Blog Post ID | State | Title & URL Slug |
 | :--- | :--- | :--- | :--- | :--- |
-| **Wave 1** | **Thu Oct 29, 2026 · 9:00 AM EDT** | `225846205741` | `DRAFT` | **Title**: *Why Generic AI Prompts Fail (And How Ontario Employers Build Real Workflow ROI)*<br>**Slug**: `en-us/blog/why-generic-ai-prompts-fail-ontario-employers-workflow-roi` |
-| **Wave 2** | **Thu Oct 29, 2026 · 9:00 PM EDT** | `225846118260` | `DRAFT` | **Title**: *Document Search Retrieves Files. AI Judgment Twins Preserve How Your Best Leaders Decide.*<br>**Slug**: `en-us/blog/document-search-vs-governed-ai-judgment-twins` |
+| **Wave 1** | **Thu Oct 29, 2026 · 9:00 AM EDT** | **`225846205741`** | `DRAFT` | **Title**: *Why Generic AI Prompts Fail (And How Ontario Employers Build Real Workflow ROI)*<br>**Slug**: `en-us/blog/why-generic-ai-prompts-fail-ontario-employers-workflow-roi` |
+| **Wave 2** | **Thu Oct 29, 2026 · 9:00 PM EDT** | **`225846118260`** | `DRAFT` | **Title**: *Document Search Retrieves Files. AI Judgment Twins Preserve How Your Best Leaders Decide.*<br>**Slug**: `en-us/blog/document-search-vs-governed-ai-judgment-twins` |
+| **Wave 3** | **Fri Oct 30, 2026 · 9:00 AM EDT** | **`225846205833`** | `DRAFT` | **Title**: *The 3 Recurring Workflows Every Leadership Team Should Upgrade With AI Before Year-End*<br>**Slug**: `en-us/blog/3-recurring-workflows-leadership-teams-upgrade-with-ai` |
+| **Wave 4** | **Fri Oct 30, 2026 · 9:00 PM EDT** | **`225846205835`** | `DRAFT` | **Title**: *Why Authority Boundaries and Safe-Decline Guardrails Are the Missing Layer in Enterprise AI*<br>**Slug**: `en-us/blog/authority-boundaries-safe-decline-guardrails-enterprise-ai` |
 
 ---
 
@@ -42,34 +51,38 @@ All assets below have been created and staged in **DRAFT** or **Scheduled Unpubl
 | :--- | :--- | :--- | :--- | :--- |
 | **Wave 1** | **Thu Oct 29, 2026 · 9:00 AM EDT** | `urn:li:share:7521414480434597888` | `DRAFT` | *Most enterprise AI training fails for a simple reason: it teaches employees generic prompt tricks instead of fixing a real recurring workflow...* |
 | **Wave 2** | **Thu Oct 29, 2026 · 9:00 PM EDT** | `urn:li:share:7521414484557758464` | `DRAFT` | *Every regulated enterprise has two versions of how decisions get made: the official policy PDF, and the actual judgment calls senior leaders make...* |
+| **Wave 3** | **Fri Oct 30, 2026 · 9:00 AM EDT** | `urn:li:share:7521416824593293312` | `DRAFT` | *When leadership teams ask where to start with workplace AI, the answer is never a 100-page prompt guide. It is upgrading 3 recurring weekly workflows...* |
+| **Wave 4** | **Fri Oct 30, 2026 · 9:00 PM EDT** | `urn:li:share:7521416830352011264` | `DRAFT` | *The biggest risk with enterprise AI is not just a wrong sentence: it is an ungoverned AI assistant guessing on a decision that exceeds the user's authority threshold...* |
 
 ---
 
-### D. Facebook Managed Pages (8 Unpublished Scheduled Posts Across All 4 AI/Brand Pages)
+### D. Facebook Managed Pages (16 Scheduled Unpublished Posts Across All 4 AI/Brand Pages)
 
-All 8 posts are staged with `published: false` at the exact synchronized Unix UTC timestamps (`1793278800` = **Thu Oct 29, 9:00 AM EDT** and `1793322000` = **Thu Oct 29, 9:00 PM EDT**):
+All 16 posts are staged with `published: false` at the exact synchronized Unix UTC timestamps (`1793278800` = **Thu Oct 29, 9:00 AM EDT**, `1793322000` = **Thu Oct 29, 9:00 PM EDT**, `1793365200` = **Fri Oct 30, 9:00 AM EDT**, `1793408400` = **Fri Oct 30, 9:00 PM EDT**):
 
-| Facebook Page | Page ID | Wave 1 Post ID (Thu Oct 29, 9:00 AM EDT) | Wave 2 Post ID (Thu Oct 29, 9:00 PM EDT) |
-| :--- | :--- | :--- | :--- |
-| **WisdomTwin.ai** | `1100627689807127` | `1100627689807127_122157381885353831` | `1100627689807127_122157381921353831` |
-| **Microdosing AI** | `1092564677262680` | `1092564677262680_122131879916916540` | `1092564677262680_122131879940916540` |
-| **Buy Back Your Time with AI** | `730559250139660` | `730559250139660_122177431670962018` | `730559250139660_122177431706962018` |
-| **10XAINews.com** | `676723595516986` | `676723595516986_122192869310824552` | `676723595516986_122192869328824552` |
+| Facebook Page | Page ID | Wave 1 (Thu 9AM EDT) | Wave 2 (Thu 9PM EDT) | Wave 3 (Fri 9AM EDT) | Wave 4 (Fri 9PM EDT) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **WisdomTwin.ai** | `1100627689807127` | `..._122157381885353831` | `..._122157381921353831` | `..._122157383487353831` | `..._122157383547353831` |
+| **Microdosing AI** | `1092564677262680` | `..._122131879916916540` | `..._122131879940916540` | `..._122131880738916540` | `..._122131880756916540` |
+| **Buy Back Your Time with AI** | `730559250139660` | `..._122177431670962018` | `..._122177431706962018` | `..._122177432744962018` | `..._122177432780962018` |
+| **10XAINews.com** | `676723595516986` | `..._122192869310824552` | `..._122192869328824552` | `..._122192870648824552` | `..._122192870684824552` |
 
 ---
 
 ### E. Instagram Business (`@10xai.news` — IG User ID `27910746915283482`)
 
-Staged as unpublished Instagram Media Containers (ready for `INSTAGRAM_POST_IG_USER_MEDIA_PUBLISH` at 9:00 AM EDT and 9:00 PM EDT):
+4 Staged Instagram Media Containers (ready for `INSTAGRAM_POST_IG_USER_MEDIA_PUBLISH`):
 - **Wave 1 (Thu Oct 29, 9:00 AM EDT)**: Container ID `17913549321502845`
 - **Wave 2 (Thu Oct 29, 9:00 PM EDT)**: Container ID `17913549348502845`
+- **Wave 3 (Fri Oct 30, 9:00 AM EDT)**: Container ID `17913550275502845`
+- **Wave 4 (Fri Oct 30, 9:00 PM EDT)**: Container ID `17913550296502845`
 
 ---
 
-## 2. Copy-Paste Pack for Channels Requiring Browser / Plan Action (Beehiiv, X/Twitter, Substack, Reddit, YouTube Community)
+## 2. Copy-Paste Pack for Channels Requiring Browser / Plan Action (Beehiiv, X/Twitter, Substack, Reddit)
 
 ### Why These Channels Need 1-Click Manual / Browser Action:
-1. **Beehiiv (`10XAI.News` `pub_80678e5b-be52-4296-85ae-5ea284a1fd26`, `MicrodosingAI.com` `pub_2803abeb-2fa8-4608-8409-f0072ef20392`, `StrategicAICoach.com` `pub_568d853f-9c17-4d6a-96db-16b1f32b08fc`)**: Notice that `10XAI.News` already has a confirmed post scheduled in the Beehiiv web UI, while API `POST /publications/{id}/posts` returns `400: The API key or publication plan cannot create posts for this publication` (Beehiiv restricts REST API post creation to Enterprise API plans, so new posts must be pasted in the Beehiiv web editor).
+1. **Beehiiv (`10XAI.News` `pub_80678e5b-be52-4296-85ae-5ea284a1fd26`, `MicrodosingAI.com` `pub_2803abeb-2fa8-4608-8409-f0072ef20392`, `StrategicAICoach.com` `pub_568d853f-9c17-4d6a-96db-16b1f32b08fc`)**: `10XAI.News` already has post `post_47147a9e-fdd9-4e6f-913e-dccff3ae1232` confirmed in Beehiiv, while API `POST /publications/{id}/posts` returns `400: The API key or publication plan cannot create posts for this publication` (Beehiiv restricts REST API post creation to Enterprise API plans, so new posts must be pasted in the Beehiiv web editor).
 2. **X / Twitter (`@romanbodnarchuk`, ID `21490278`) & Pipedream**: Your Pipedream workflow `AI News Tweet Storm Generator (p_BjC6JZK)` halted on Oct 28 at 8:58 PM EDT (`1a1852a95e875fea`) with `Error 402: Your wallet has insufficient funds (balance: -51563) at https://pipedream.com/billing/settings`. Top up Pipedream billing or paste the threads below directly on X.
 
 ---
@@ -103,7 +116,7 @@ When a manager faces a supplier waiver, a pricing exception, or a capital thresh
 
 ---
 
-#### X / Twitter Thread — Wave 1 (9:00 AM EDT)
+#### X / Twitter Thread — Wave 1 (Thu Oct 29 · 9:00 AM EDT)
 - **Post 1/4**:
 Most enterprise AI training fails because it teaches prompt tricks instead of fixing one recurring weekly workflow.
 
@@ -162,7 +175,7 @@ We used our own twin to win a government RFP for Talent Lab. Talent Lab's CEO sa
 
 ---
 
-#### X / Twitter Thread — Wave 2 (9:00 PM EDT)
+#### X / Twitter Thread — Wave 2 (Thu Oct 29 · 9:00 PM EDT)
 - **Post 1/4**:
 Every regulated company has two versions of how decisions get made:
 1. The policy PDF on SharePoint
@@ -189,13 +202,3 @@ https://maker.tavus.io/deployments/8a2f084c-7f8a-40f8-a2ab-821ad5208b7f
 
 Book a 15-minute WisdomTwin Buyer Call:
 https://calendly.com/romanbodnarchuk/wisdomtwin-ai-15-minute-buyer-call
-
----
-
-### Wave 3 (Friday, Oct 30, 2026 at 9:00 AM EDT — +24 Hours) & Wave 4 (Friday, Oct 30, 2026 at 9:00 PM EDT — +36 Hours)
-
-#### Wave 3 (Fri Oct 30, 9:00 AM EDT): "The 3 Workflows Every Ontario Leadership Team Should Automate Before Year-End"
-- **Core Angle**: Detailed walkthrough of (1) Client Meeting -> CRM Follow-Up with Human Verification, (2) Weekly Executive & Site Reporting, and (3) RFP/Proposal Precedent Check, paired with the 15-minute N5R Ontario Job Grant fit check (`https://calendly.com/romanbodnarchuk/roman-bodnarchuk-n5r-ai-15-minute-business-call`).
-
-#### Wave 4 (Fri Oct 30, 9:00 PM EDT): "Why Authority Boundaries & Safe-Decline Guardrails Are the Missing Layer in Enterprise AI"
-- **Core Angle**: How regulated healthcare, banking, and real estate leadership teams prevent AI hallucination by enforcing explicit authority ceilings (`$11M` board cap, mandatory escalation when exceptions exceed policy) inside Microsoft 365 Copilot (`https://wisdomtwin.ai/demo#demo-named-call-title`).
