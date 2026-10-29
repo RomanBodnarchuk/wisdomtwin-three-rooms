@@ -469,6 +469,59 @@ export const SOURCES: Array<{ label: string; href: string; note: string }> = [
   },
 ];
 
+export interface PublishedBriefing {
+  wave: string;
+  scheduleLabel: string;
+  title: string;
+  summary: string;
+  category: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export const PUBLISHED_BRIEFINGS: PublishedBriefing[] = [
+  {
+    wave: 'Wave 1 · Thu Oct 29, 2026 · 9:00 AM EDT',
+    scheduleLabel: '12-Hour Cadence · Morning Edition',
+    title: 'Why Generic AI Prompts Fail (And How Ontario Employers Build Real Workflow ROI)',
+    summary:
+      'How leadership teams replace ad-hoc prompting with measured 12-week AI workflows tracked against a Week-1 baseline, and evaluate Canada-Ontario Job Grant (COJG) support up to CAD $10,000 per eligible trainee (subject to Ministry approval before training starts and employer contributions; funding is not guaranteed).',
+    category: 'N5R.AI & WisdomTwin',
+    ctaLabel: 'Book 15-min N5R Fit Check',
+    ctaHref: 'https://calendly.com/romanbodnarchuk/roman-bodnarchuk-n5r-ai-15-minute-business-call',
+  },
+  {
+    wave: 'Wave 2 · Thu Oct 29, 2026 · 9:00 PM EDT',
+    scheduleLabel: '12-Hour Cadence · Evening Edition',
+    title: 'Document Search Retrieves Files. AI Judgment Twins Preserve How Your Best Leaders Decide.',
+    summary:
+      'A regulated decision already has a name on it. Why standard document search loses the reasoning chain — and how WisdomTwin structures one critical role’s approved evidence, principles, thresholds, and escalation rules with a named human accountable.',
+    category: 'WisdomTwin Governance',
+    ctaLabel: 'Book 15-min Founder Briefing',
+    ctaHref: CALENDLY_URL,
+  },
+  {
+    wave: 'Wave 3 · Fri Oct 30, 2026 · 9:00 AM EDT',
+    scheduleLabel: '12-Hour Cadence · Morning Edition',
+    title: 'The 12-Week AI Workflow Baseline: How Ontario Teams Reclaim 2,500+ Hours a Year',
+    summary:
+      'When 40 employees have AI chat logins and only 2 know how to use them, work pools around the bottleneck. How reclaiming 1 verified hour per week across a 50-person team returns 2,500 hours per year.',
+    category: 'N5R.AI Practical AI',
+    ctaLabel: 'Book 15-min N5R Fit Check',
+    ctaHref: 'https://calendly.com/romanbodnarchuk/roman-bodnarchuk-n5r-ai-15-minute-business-call',
+  },
+  {
+    wave: 'Wave 4 · Fri Oct 30, 2026 · 9:00 PM EDT',
+    scheduleLabel: '12-Hour Cadence · Evening Edition',
+    title: 'One Role, One Evidence Set: Why Regulated Enterprises Cannot Use Public Chatbots for Exceptions',
+    summary:
+      'Why commercial credit exceptions, underwriting referrals, and procurement waivers require deterministic safe-decline and human sign-off outside the model.',
+    category: 'WisdomTwin Regulated',
+    ctaLabel: 'Watch 2:54 Synthetic Demo',
+    ctaHref: 'https://wisdomtwin.ai/demo#demo-named-call-title',
+  },
+];
+
 export const CATEGORY_NOTES = [
   {
     title: 'Typed decisions, not chat',

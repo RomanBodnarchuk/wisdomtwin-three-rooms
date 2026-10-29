@@ -18,6 +18,7 @@ import {
   PERK_LABELS,
   PROBLEM_POINTS,
   PROCEEDS,
+  PUBLISHED_BRIEFINGS,
   RISKS,
   SITE_URL,
   SOURCES,
@@ -38,6 +39,7 @@ const NAV = [
   { href: '#participate', label: 'Participate' },
   { href: '#comparison', label: 'Comparison' },
   { href: '#financials', label: 'Financials' },
+  { href: '#briefings', label: '12h Briefings' },
   { href: '#education', label: 'Investor education' },
 ];
 
@@ -79,6 +81,7 @@ export function RaisePage() {
         <Comparison />
         <Founder />
         <Financials />
+        <Briefings />
         <Education />
         <Close />
       </main>
@@ -667,6 +670,54 @@ function Financials() {
             <article key={risk.title} className="raise-card rounded-3xl p-5">
               <h4 className="font-semibold">{risk.title}</h4>
               <p className="mt-2 text-sm leading-relaxed text-[var(--cream-dim)]">{risk.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Briefings() {
+  return (
+    <section id="briefings" className="scroll-mt-28 border-b border-white/10 bg-black/15">
+      <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
+        <p className="raise-kicker">12-hour executive publishing cadence</p>
+        <h2 className="raise-display mt-3 max-w-3xl text-4xl">
+          Published articles &amp; synchronized executive briefings.
+        </h2>
+        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--cream-dim)]">
+          Every 12 hours (9:00 AM and 9:00 PM America/Toronto), WisdomTwin and N5R publish a new executive briefing on
+          governed role-specific judgment and measured workplace AI workflows. All product demonstrations remain
+          synthetic and founder-built.
+        </p>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {PUBLISHED_BRIEFINGS.map((item) => (
+            <article key={item.title} className="raise-card flex flex-col justify-between rounded-3xl p-5">
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-semibold tracking-wide text-[var(--brand-gold)] uppercase">
+                    {item.wave}
+                  </span>
+                  <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-[11px] text-[var(--cream-dim)]">
+                    {item.category}
+                  </span>
+                </div>
+                <h3 className="raise-display mt-3 text-2xl text-[var(--cream)]">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--cream-dim)]">{item.summary}</p>
+              </div>
+              <div className="mt-5 flex flex-wrap items-center gap-3 pt-2">
+                <a
+                  href={item.ctaHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="raise-cta !px-4 !py-2 text-xs"
+                  onClick={() => book(`briefing-${item.wave}`)}
+                >
+                  {item.ctaLabel}
+                </a>
+                <span className="text-xs text-[var(--cream-dim)]">{item.scheduleLabel}</span>
+              </div>
             </article>
           ))}
         </div>
